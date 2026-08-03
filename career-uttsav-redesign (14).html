@@ -3459,13 +3459,13 @@ footer{
 
       <div class="reg-field">
         <label for="ambClassSelect">Class</label>
-        <select class="reg-input" id="ambClassSelect" required>
-          <option value="" disabled selected>Select your class</option>
-          <option value="9">Class 9</option>
-          <option value="10">Class 10</option>
-          <option value="11">Class 11 (I PUC)</option>
-          <option value="12">Class 12 (II PUC)</option>
-        </select>
+          <select class="reg-input" id="ambClassSelect" required>
+            <option value="" disabled selected>Select your class</option>
+            <option value="Class 9">Class 9</option>
+            <option value="Class 10">Class 10</option>
+            <option value="Class 11">Class 11 (I PUC)</option>
+            <option value="Class 12">Class 12 (II PUC)</option>
+          </select>
         <div class="reg-error">Please select your class</div>
       </div>
 
@@ -3912,6 +3912,83 @@ footer{
   /* ---- Registration modal ---- */
   /* Admin API origin - override with window.CU_ADMIN_API before this script if needed */
   var CU_ADMIN_API = (window.CU_ADMIN_API || 'http://localhost:3000').replace(/\/$/, '');
+
+  function postRegistration(payload){
+    return fetch(CU_ADMIN_API + '/api/registrations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function(res){
+      return res.json().then(function(data){
+        return { ok: res.ok, status: res.status, data: data };
+      }).catch(function(){
+        return { ok: res.ok, status: res.status, data: null };
+      });
+    });
+  }
+
+  function getSelectedEventId(root, group){
+    var chip = root.querySelector('.reg-chips[data-group="' + group + '"] .reg-chip.selected');
+    return chip ? (chip.getAttribute('data-event-id') || '') : '';
+  }
+
+  function validateEventCity(root, group){
+    var groupEl = root.querySelector('.reg-chips[data-group="' + group + '"]');
+    if(!groupEl) return false;
+    var field = groupEl.closest('.reg-field');
+    var has = !!groupEl.querySelector('.reg-chip.selected');
+    setError(field, !has);
+    return has;
+  }
+
+  function showFormApiError(formEl, message){
+    var existing = formEl.querySelector('.form-api-error');
+    if(!existing){
+      existing = document.createElement('div');
+      existing.className = 'form-api-error';
+      existing.style.cssText = 'margin:12px 0 0;padding:12px 14px;border-radius:12px;background:#FDECEC;color:#9B1F18;font-size:13.5px;font-weight:600;line-height:1.4;';
+      formEl.appendChild(existing);
+    }
+    existing.textContent = message || 'Something went wrong. Please try again.';
+    existing.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+
+  function clearFormApiError(formEl){
+    var existing = formEl.querySelector('.form-api-error');
+    if(existing) existing.remove();
+  }
+
+  var EVENT_CITY_CHIPS_HTML =
+    '<div class="reg-field">' +
+      '<label>Event City</label>' +
+      '<div class="reg-chips" data-group="__GROUP__">' +
+        '<button type="button" class="reg-chip blue" data-value="Bangalore" data-event-id="evt-001">Bangalore</button>' +
+        '<button type="button" class="reg-chip blue" data-value="Mysore" data-event-id="evt-002">Mysore</button>' +
+        '<button type="button" class="reg-chip blue" data-value="Hubli" data-event-id="evt-003">Hubli</button>' +
+      '</div>' +
+      '<div class="reg-error">Please select an event city</div>' +
+    '</div>';
+
+  function ensureEventCityField(formEl, group){
+    if(formEl.querySelector('.reg-chips[data-group="' + group + '"]')) return;
+    var wrap = document.createElement('div');
+    wrap.innerHTML = EVENT_CITY_CHIPS_HTML.replace('__GROUP__', group);
+    var field = wrap.firstChild;
+    var sub = formEl.querySelector('.reg-sub');
+    if(sub && sub.nextSibling){
+      formEl.insertBefore(field, sub.nextSibling);
+    } else {
+      formEl.insertBefore(field, formEl.firstChild);
+    }
+    field.querySelectorAll('.reg-chip').forEach(function(chip){
+      chip.addEventListener('click', function(){
+        field.querySelectorAll('.reg-chip').forEach(function(c){ c.classList.remove('selected'); });
+        chip.classList.add('selected');
+        field.classList.remove('err');
+        clearFormApiError(formEl);
+      });
+    });
+  }
 
   var regOverlay = document.getElementById('regOverlay');
   var regCard = regOverlay.querySelector('.reg-card');
@@ -4383,6 +4460,8 @@ footer{
 
   function openAmbModal(){
     ambLastFocused = document.activeElement;
+    ensureEventCityField(ambFormEl, 'ambEventCity');
+    clearFormApiError(ambFormEl);
     ambFormEl.style.display = 'block';
     ambFoot.style.display = 'flex';
     ambSuccessView.style.display = 'none';
@@ -4419,6 +4498,42 @@ footer{
     this.value = this.value.replace(/\D/g, '').slice(0, 10);
   });
 
+  ambSubmit.addEventListener('click', function(){
+    ensureEventCityField(ambFormEl, 'ambEventCity');
+    if(!validateAmbForm()){
+      var firstErr = document.querySelector('#ambForm .reg-field.err');
+      if(firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    clearFormApiError(ambFormEl);
+    ambSubmit.classList.add('loading');
+    var payload = {
+      kind: 'student_ambassador',
+      eventId: getSelectedEventId(ambFormEl, 'ambEventCity'),
+      ambassadorName: document.getElementById('ambName2').value.trim(),
+      ambassadorClass: document.getElementById('ambClassSelect').value,
+      ambassadorSchoolCollege: document.getElementById('ambSchool').value.trim(),
+      ambassadorAge: parseInt(document.getElementById('ambAge').value, 10),
+      ambassadorPhone: document.getElementById('ambMobile').value.trim(),
+      ambassadorEmail: document.getElementById('ambEmail').value.trim()
+    };
+    postRegistration(payload)
+      .then(function(result){
+        ambSubmit.classList.remove('loading');
+        if(!result.ok){
+          showFormApiError(ambFormEl, (result.data && result.data.error) || 'Could not save your application. Please try again.');
+          return;
+        }
+        ambFormEl.style.display = 'none';
+        ambFoot.style.display = 'none';
+        ambSuccessView.style.display = 'block';
+      })
+      .catch(function(){
+        ambSubmit.classList.remove('loading');
+        showFormApiError(ambFormEl, 'Could not reach the registration server. Make sure the admin dashboard is running, then try again.');
+      });
+  });
+
   function validateAmbForm(){
     var ok = true;
     var name = document.getElementById('ambName2');
@@ -4435,23 +4550,9 @@ footer{
     if(!isValidMobile(mobile.value)){ setError(mobile.closest('.reg-field'), true); ok = false; } else setError(mobile.closest('.reg-field'), false);
     email.value = email.value.trim();
     if(!hasEmailValue(email.value)){ setError(email.closest('.reg-field'), true); ok = false; } else setError(email.closest('.reg-field'), false);
+    if(!validateEventCity(ambFormEl, 'ambEventCity')) ok = false;
     return ok;
   }
-
-  ambSubmit.addEventListener('click', function(){
-    if(!validateAmbForm()){
-      var firstErr = document.querySelector('#ambForm .reg-field.err');
-      if(firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
-      return;
-    }
-    ambSubmit.classList.add('loading');
-    setTimeout(function(){
-      ambSubmit.classList.remove('loading');
-      ambFormEl.style.display = 'none';
-      ambFoot.style.display = 'none';
-      ambSuccessView.style.display = 'block';
-    }, 650);
-  });
 
   /* ---- School registration modal ---- */
   var schoolOverlay = document.getElementById('schoolOverlay');
@@ -4465,6 +4566,8 @@ footer{
 
   function openSchoolModal(){
     schoolLastFocused = document.activeElement;
+    ensureEventCityField(schoolFormEl, 'schoolEventCity');
+    clearFormApiError(schoolFormEl);
     schoolFormEl.style.display = 'block';
     schoolFoot.style.display = 'flex';
     schoolSuccessView.style.display = 'none';
@@ -4508,22 +4611,43 @@ footer{
     if(!isValidMobile(phone.value)){ setError(phone.closest('.reg-field'), true); ok = false; } else setError(phone.closest('.reg-field'), false);
     email.value = email.value.trim();
     if(!hasEmailValue(email.value)){ setError(email.closest('.reg-field'), true); ok = false; } else setError(email.closest('.reg-field'), false);
+    if(!validateEventCity(schoolFormEl, 'schoolEventCity')) ok = false;
     return ok;
   }
 
   schoolSubmit.addEventListener('click', function(){
+    ensureEventCityField(schoolFormEl, 'schoolEventCity');
     if(!validateSchoolForm()){
       var firstErr = document.querySelector('#schoolForm .reg-field.err');
       if(firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
       return;
     }
+    clearFormApiError(schoolFormEl);
     schoolSubmit.classList.add('loading');
-    setTimeout(function(){
-      schoolSubmit.classList.remove('loading');
-      schoolFormEl.style.display = 'none';
-      schoolFoot.style.display = 'none';
-      schoolSuccessView.style.display = 'block';
-    }, 650);
+    var payload = {
+      kind: 'school',
+      eventId: getSelectedEventId(schoolFormEl, 'schoolEventCity'),
+      schoolContactName: document.getElementById('schoolContactName').value.trim(),
+      schoolName: document.getElementById('schoolName').value.trim(),
+      schoolCity: document.getElementById('schoolCity').value.trim(),
+      schoolContactNumber: document.getElementById('schoolPhone').value.trim(),
+      schoolContactEmail: document.getElementById('schoolEmail').value.trim()
+    };
+    postRegistration(payload)
+      .then(function(result){
+        schoolSubmit.classList.remove('loading');
+        if(!result.ok){
+          showFormApiError(schoolFormEl, (result.data && result.data.error) || 'Could not save your registration. Please try again.');
+          return;
+        }
+        schoolFormEl.style.display = 'none';
+        schoolFoot.style.display = 'none';
+        schoolSuccessView.style.display = 'block';
+      })
+      .catch(function(){
+        schoolSubmit.classList.remove('loading');
+        showFormApiError(schoolFormEl, 'Could not reach the registration server. Make sure the admin dashboard is running, then try again.');
+      });
   });
 
   /* ---- Exhibitor registration modal ---- */
@@ -4538,6 +4662,8 @@ footer{
 
   function openExhibitorModal(){
     exhibitorLastFocused = document.activeElement;
+    ensureEventCityField(exhibitorFormEl, 'exhibitorEventCity');
+    clearFormApiError(exhibitorFormEl);
     exhibitorFormEl.style.display = 'block';
     exhibitorFoot.style.display = 'flex';
     exhibitorSuccessView.style.display = 'none';
@@ -4581,22 +4707,43 @@ footer{
     if(!isValidMobile(phone.value)){ setError(phone.closest('.reg-field'), true); ok = false; } else setError(phone.closest('.reg-field'), false);
     email.value = email.value.trim();
     if(!hasEmailValue(email.value)){ setError(email.closest('.reg-field'), true); ok = false; } else setError(email.closest('.reg-field'), false);
+    if(!validateEventCity(exhibitorFormEl, 'exhibitorEventCity')) ok = false;
     return ok;
   }
 
   exhibitorSubmit.addEventListener('click', function(){
+    ensureEventCityField(exhibitorFormEl, 'exhibitorEventCity');
     if(!validateExhibitorForm()){
       var firstErr = document.querySelector('#exhibitorForm .reg-field.err');
       if(firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
       return;
     }
+    clearFormApiError(exhibitorFormEl);
     exhibitorSubmit.classList.add('loading');
-    setTimeout(function(){
-      exhibitorSubmit.classList.remove('loading');
-      exhibitorFormEl.style.display = 'none';
-      exhibitorFoot.style.display = 'none';
-      exhibitorSuccessView.style.display = 'block';
-    }, 650);
+    var payload = {
+      kind: 'partner_registration',
+      eventId: getSelectedEventId(exhibitorFormEl, 'exhibitorEventCity'),
+      partnerRegContactName: document.getElementById('exhibitorName').value.trim(),
+      partnerRegInstitutionName: document.getElementById('exhibitorInstitution').value.trim(),
+      partnerRegCity: document.getElementById('exhibitorCity').value.trim(),
+      partnerRegContactNumber: document.getElementById('exhibitorPhone').value.trim(),
+      partnerRegContactEmail: document.getElementById('exhibitorEmail').value.trim()
+    };
+    postRegistration(payload)
+      .then(function(result){
+        exhibitorSubmit.classList.remove('loading');
+        if(!result.ok){
+          showFormApiError(exhibitorFormEl, (result.data && result.data.error) || 'Could not save your registration. Please try again.');
+          return;
+        }
+        exhibitorFormEl.style.display = 'none';
+        exhibitorFoot.style.display = 'none';
+        exhibitorSuccessView.style.display = 'block';
+      })
+      .catch(function(){
+        exhibitorSubmit.classList.remove('loading');
+        showFormApiError(exhibitorFormEl, 'Could not reach the registration server. Make sure the admin dashboard is running, then try again.');
+      });
   });
 
 })();
