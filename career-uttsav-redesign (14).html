@@ -4014,6 +4014,9 @@ footer{
     regOverlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     currentStep = 1;
+    regDuplicateBanner.classList.remove('show');
+    clearFormApiError(regForm);
+    clearRegSubmitError();
     renderStep();
     setTimeout(function(){ var f = regForm.querySelector('.reg-step.active input'); if(f) f.focus(); }, 350);
   }
@@ -4172,25 +4175,30 @@ footer{
     return ok;
   }
 
-  /* ---- Duplicate-registration guard ----
-     In production this check must happen server-side against the real database
-     before a record is created. Here it's simulated against this browser's
-     local record of past submissions so the UX can be wired up end-to-end. */
-  var DUP_KEY = 'cu_registrations_v1';
-  function getStoredRegistrations(){
-    try { return JSON.parse(localStorage.getItem(DUP_KEY)) || []; }
-    catch(e){ return []; }
-  }
-  function isDuplicate(mobile, email){
-    var records = getStoredRegistrations();
-    var m = mobile.trim();
-    var e = email.trim().toLowerCase();
-    return records.some(function(r){ return r.mobile === m || r.email === e; });
-  }
-  function storeRegistration(mobile, email){
-    var records = getStoredRegistrations();
-    records.push({ mobile: mobile.trim(), email: email.trim().toLowerCase() });
-    try { localStorage.setItem(DUP_KEY, JSON.stringify(records)); } catch(e){ /* storage unavailable */ }
+  /* ---- Duplicate-registration guard (live check against admin API) ---- */
+  var DUPLICATE_MESSAGE = "It looks like you've already registered for this event with this mobile number or email. No need to register again; we've got you covered!";
+
+  function checkRegistrationDuplicate(eventId, mobile, email){
+    var params = new URLSearchParams();
+    if(eventId) params.set('eventId', eventId);
+    if(email && email.trim()) params.set('email', email.trim());
+    if(mobile && mobile.trim()) params.set('phone', mobile.trim());
+    return fetch(CU_ADMIN_API + '/api/registrations/check?' + params.toString(), {
+      cache: 'no-store'
+    }).then(function(res){
+      return res.json().then(function(data){
+        if(!res.ok){
+          return { duplicate: false, message: null, error: (data && data.error) ? data.error : 'Could not verify registration status.' };
+        }
+        return {
+          duplicate: Boolean(data.duplicate),
+          message: data.message || DUPLICATE_MESSAGE,
+          error: null
+        };
+      });
+    }).catch(function(){
+      return { duplicate: false, message: null, error: 'Could not reach the registration server.' };
+    });
   }
   var regDuplicateBanner = document.getElementById('regDuplicateBanner');
 
@@ -4260,19 +4268,24 @@ footer{
     regNext.classList.add('loading');
     var payload = buildStudentPayload();
 
-    fetch(CU_ADMIN_API + '/api/registrations', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(function(res){
-      return res.json().then(function(data){
-        return { ok: res.ok, status: res.status, data: data };
-      }).catch(function(){
-        return { ok: res.ok, status: res.status, data: null };
-      });
+    checkRegistrationDuplicate(payload.eventId, payload.phone, payload.email)
+    .then(function(check){
+      if(check.error){
+        regSubmitInFlight = false;
+        regNext.classList.remove('loading');
+        showRegSubmitError(check.error);
+        return null;
+      }
+      if(check.duplicate){
+        regSubmitInFlight = false;
+        regNext.classList.remove('loading');
+        showRegSubmitError(check.message || DUPLICATE_MESSAGE);
+        return null;
+      }
+      return postRegistration(payload);
     })
     .then(function(result){
+      if(!result) return;
       regSubmitInFlight = false;
       regNext.classList.remove('loading');
       if(!result.ok){
@@ -4282,7 +4295,6 @@ footer{
       }
       var passId = result.data && (result.data.registrationNumber || result.data.id);
       buildPass(passId);
-      storeRegistration(document.getElementById('regMobile').value, document.getElementById('regEmail').value);
       currentStep = 4;
       renderStep();
       regForm.closest('.reg-card').querySelector('.reg-body').scrollTop = 0;
@@ -4307,12 +4319,28 @@ footer{
     if(currentStep === 1){
       var mobileVal = document.getElementById('regMobile').value;
       var emailVal = document.getElementById('regEmail').value;
-      if(isDuplicate(mobileVal, emailVal)){
-        regDuplicateBanner.classList.add('show');
-        regDuplicateBanner.scrollIntoView({ behavior:'smooth', block:'center' });
-        return;
-      }
+      if(regSubmitInFlight) return;
+      regSubmitInFlight = true;
+      regNext.classList.add('loading');
       regDuplicateBanner.classList.remove('show');
+      checkRegistrationDuplicate('', mobileVal, emailVal).then(function(check){
+        regSubmitInFlight = false;
+        regNext.classList.remove('loading');
+        if(check.error){
+          showFormApiError(regForm, check.error);
+          return;
+        }
+        if(check.duplicate){
+          regDuplicateBanner.classList.add('show');
+          regDuplicateBanner.scrollIntoView({ behavior:'smooth', block:'center' });
+          return;
+        }
+        clearRegSubmitError();
+        currentStep = Math.min(currentStep + 1, TOTAL_STEPS);
+        renderStep();
+        regForm.closest('.reg-card').querySelector('.reg-body').scrollTop = 0;
+      });
+      return;
     }
     if(currentStep === 3){
       submitStudentRegistration();
