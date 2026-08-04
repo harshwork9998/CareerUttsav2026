@@ -597,19 +597,23 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 
 .journey-track{
   position:relative;
-  --node-y: 50%;
   max-width:1080px;
   margin:0 auto;
+  display:grid;
+  grid-template-columns:minmax(0, 1fr);
+  grid-template-rows:auto auto auto;
+  row-gap:6px;
 }
 
-/* Spine  -  aligned to milestone nodes via --node-y */
+/* Spine sits in the shared middle row with the milestone dots */
 .journey-spine{
-  position:absolute;
+  grid-row:2;
+  grid-column:1;
+  align-self:center;
+  position:relative;
   left:calc(100% / 12);
-  right:calc(100% / 12);
-  top:var(--node-y);
+  width:calc(100% * 10 / 12);
   height:5px;
-  transform:translateY(-50%);
   border-radius:999px;
   background:rgba(20,18,26,0.08);
   overflow:hidden;
@@ -622,7 +626,7 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   border-radius:inherit;
   background:var(--red);
   box-shadow:0 0 12px rgba(229,55,43,0.25);
-  transform:scaleX(var(--journey-progress));
+  transform:scaleX(var(--journey-progress, 1));
   transform-origin:left center;
   transition:transform .55s var(--ease);
 }
@@ -632,11 +636,12 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 
 .journey-milestones{
   list-style:none;
+  grid-row:1 / -1;
+  grid-column:1;
   display:grid;
   grid-template-columns:repeat(6, 1fr);
-  grid-template-rows:auto auto auto;
+  grid-template-rows:subgrid;
   column-gap:10px;
-  row-gap:6px;
   align-items:stretch;
   min-height:0;
   position:relative;
@@ -857,9 +862,14 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 /* Tablet */
 @media (max-width:1100px){
   .journey-head{ margin-bottom:28px; }
+  .journey-track{
+    display:block;
+  }
   .journey-milestones{
     grid-template-columns:repeat(3,1fr);
     grid-template-rows:none;
+    grid-row:auto;
+    grid-column:auto;
     gap:28px 16px;
     min-height:0;
   }
@@ -887,24 +897,39 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   .journey-head .eyebrow{ justify-content:flex-start; }
   .journey-head h3{ font-size:clamp(18px,5.2vw,28px); }
   .journey-head p{ white-space:normal; }
+  .journey-track{
+    display:block;
+    position:relative;
+  }
   .journey-milestones{
     grid-template-columns:1fr;
+    grid-template-rows:none;
+    grid-row:auto;
+    grid-column:auto;
     gap:0;
     padding-left:34px;
     position:relative;
   }
   .journey-spine{
     display:block;
-    left:7px; right:auto;
-    top:12px; bottom:12px;
-    width:4px; height:auto;
+    position:absolute;
+    grid-row:auto;
+    grid-column:auto;
+    align-self:auto;
+    left:7px;
+    right:auto;
+    top:12px;
+    bottom:12px;
+    width:4px;
+    height:auto;
+    margin:0;
     transform:none;
     background:rgba(20,18,26,0.08);
   }
   .journey-spine-fill{
     width:100%;
     height:100%;
-    transform:scaleY(var(--journey-progress));
+    transform:scaleY(var(--journey-progress, 1));
     transform-origin:top center;
     background:var(--red);
   }
@@ -3922,21 +3947,7 @@ footer{
       });
     }
 
-    function syncSpine(){
-      var node = track.querySelector('.jm-node');
-      if(!node) return;
-      var trackRect = track.getBoundingClientRect();
-      var nodeRect = node.getBoundingClientRect();
-      var y = (nodeRect.top + nodeRect.height / 2) - trackRect.top;
-      track.style.setProperty('--node-y', y + 'px');
-    }
-
     setProgress(1);
-    syncSpine();
-    window.addEventListener('resize', syncSpine);
-    if(document.fonts && document.fonts.ready){
-      document.fonts.ready.then(syncSpine);
-    }
 
     milestones.forEach(function(m){
       m.addEventListener('mouseenter', function(){
