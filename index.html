@@ -339,7 +339,7 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 }
 .marquee-track{
   display:flex; gap:48px; white-space:nowrap;
-  animation:marquee 50s linear infinite;
+  animation:marquee 34s linear infinite;
   width:max-content;
 }
 .marquee-track span{
@@ -4270,26 +4270,19 @@ footer{
     });
   });
 
-  /* seminar multi-select, max 3 */
+  /* seminar multi-select (no hard cap; UI still shows /3 copy) */
   var seminarGrid = document.getElementById('regSeminarGrid');
   var seminarCounter = document.getElementById('regSeminarCounter');
   function updateSeminarLimit(){
     var selected = seminarGrid.querySelectorAll('.reg-seminar-chip.selected').length;
     seminarCounter.textContent = selected;
     seminarGrid.querySelectorAll('.reg-seminar-chip').forEach(function(chip){
-      if(!chip.classList.contains('selected')){
-        chip.classList.toggle('disabled', selected >= 3);
-      }
+      chip.classList.remove('disabled');
     });
   }
   seminarGrid.querySelectorAll('.reg-seminar-chip').forEach(function(chip){
     chip.addEventListener('click', function(){
-      var selected = seminarGrid.querySelectorAll('.reg-seminar-chip.selected').length;
-      if(chip.classList.contains('selected')){
-        chip.classList.remove('selected');
-      } else if(selected < 3){
-        chip.classList.add('selected');
-      }
+      chip.classList.toggle('selected');
       updateSeminarLimit();
     });
   });
