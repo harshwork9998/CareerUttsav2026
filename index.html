@@ -3442,8 +3442,8 @@ footer{
 
         <div class="reg-field">
           <label for="regEmail">Email Address</label>
-          <input class="reg-input" id="regEmail" type="text" autocomplete="email" required>
-          <div class="reg-error">Please enter your email</div>
+          <input class="reg-input" id="regEmail" type="email" autocomplete="email" required>
+          <div class="reg-error">Please enter a valid email address</div>
         </div>
 
         <div class="reg-duplicate" id="regDuplicateBanner">
@@ -4290,6 +4290,7 @@ footer{
   function setError(fieldEl, show){ fieldEl.classList.toggle('err', show); }
   function isValidMobile(v){ return /^[6-9]\d{9}$/.test(v.trim()); }
   function hasEmailValue(v){ return v.trim().length > 0; }
+  function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || '').trim()); }
 
   /* ---- Real-time, non-nagging validation: only flags a field once the user
          has actually left it, and clears the error the moment it's fixed ---- */
@@ -4310,7 +4311,7 @@ footer{
   }
   wireLiveValidation('regName', function(v){ return v.trim().length >= 2; });
   wireLiveValidation('regMobile', isValidMobile);
-  wireLiveValidation('regEmail', hasEmailValue);
+  wireLiveValidation('regEmail', isValidEmail);
   wireLiveValidation('regSchool', function(v){ return v.trim().length >= 2; });
   wireLiveValidation('regCity', function(v){ return v.trim().length >= 2; });
 
@@ -4585,7 +4586,7 @@ footer{
     email.value = email.value.trim();
     if(name.value.trim().length < 2){ setError(name.closest('.reg-field'), true); ok = false; } else setError(name.closest('.reg-field'), false);
     if(!isValidMobile(mobile.value)){ setError(mobile.closest('.reg-field'), true); ok = false; } else setError(mobile.closest('.reg-field'), false);
-    if(!hasEmailValue(email.value)){ setError(email.closest('.reg-field'), true); ok = false; } else setError(email.closest('.reg-field'), false);
+    if(!isValidEmail(email.value)){ setError(email.closest('.reg-field'), true); ok = false; } else setError(email.closest('.reg-field'), false);
     if(ok && (!mobileVerified || mobile.value.trim() !== verifiedMobileNumber || !phoneVerificationToken)){
       setError(mobile.closest('.reg-field'), true);
       if(!regOtpPanel.classList.contains('show')){
@@ -4749,6 +4750,13 @@ footer{
       regNext.classList.remove('loading');
       if(!result.ok){
         var msg = (result.data && result.data.error) ? result.data.error : 'Could not save your registration. Please try again.';
+        if(/email/i.test(msg)){
+          currentStep = 1;
+          renderStep();
+          setError(document.getElementById('regEmail').closest('.reg-field'), true);
+          showFormApiError(regForm, msg);
+          return;
+        }
         showRegSubmitError(msg);
         return;
       }
