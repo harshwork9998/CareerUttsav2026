@@ -3,6 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+(function () {
+  try {
+    var BREAKPOINT = 900;
+    var GOING = 'cuGoingTo';
+    var goingTo = sessionStorage.getItem(GOING);
+
+    // Arrived here on purpose from mobile — stay, don't bounce.
+    if (goingTo === 'desktop') {
+      sessionStorage.removeItem(GOING);
+      return;
+    }
+
+    function isMobileWidth() {
+      var w = window.innerWidth || document.documentElement.clientWidth || 0;
+      return w <= BREAKPOINT || window.matchMedia('(max-width: ' + BREAKPOINT + 'px)').matches;
+    }
+
+    function goMobile() {
+      if (!isMobileWidth()) return false;
+      sessionStorage.setItem(GOING, 'mobile');
+      location.replace('mobile.html' + (location.hash || ''));
+      return true;
+    }
+
+    if (goMobile()) return;
+
+    // Chrome Inspect often applies device metrics a tick late.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { goMobile(); });
+    });
+    setTimeout(goMobile, 0);
+    setTimeout(goMobile, 100);
+  } catch (e) {}
+})();
+</script>
 <title>Career Uttsav: Your Passport to Tomorrow</title>
 <meta name="description" content="India's most trusted career discovery event for students after 10th & 12th. Meet universities, get expert guidance, discover your strengths.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
