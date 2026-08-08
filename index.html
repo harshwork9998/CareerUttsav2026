@@ -3,42 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>
-(function () {
-  try {
-    var BREAKPOINT = 900;
-    var GOING = 'cuGoingTo';
-    var goingTo = sessionStorage.getItem(GOING);
-
-    // Arrived here on purpose from mobile — stay, don't bounce.
-    if (goingTo === 'desktop') {
-      sessionStorage.removeItem(GOING);
-      return;
-    }
-
-    function isMobileWidth() {
-      var w = window.innerWidth || document.documentElement.clientWidth || 0;
-      return w <= BREAKPOINT || window.matchMedia('(max-width: ' + BREAKPOINT + 'px)').matches;
-    }
-
-    function goMobile() {
-      if (!isMobileWidth()) return false;
-      sessionStorage.setItem(GOING, 'mobile');
-      location.replace('mobile.html' + (location.hash || ''));
-      return true;
-    }
-
-    if (goMobile()) return;
-
-    // Chrome Inspect often applies device metrics a tick late.
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { goMobile(); });
-    });
-    setTimeout(goMobile, 0);
-    setTimeout(goMobile, 100);
-  } catch (e) {}
-})();
-</script>
 <title>Career Uttsav: Your Passport to Tomorrow</title>
 <meta name="description" content="India's most trusted career discovery event for students after 10th & 12th. Meet universities, get expert guidance, discover your strengths.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -398,7 +362,7 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   background:var(--red);
   color:#fff;
   padding:70px 0;
-  clip-path:polygon(0 4%, 100% 0, 100% 96%, 0 100%);
+  clip-path:none;
   margin:-30px 0 -30px;
 }
 .stats-grid{
@@ -414,6 +378,12 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 }
 .stat .label{ margin-top:10px; font-size:14.5px; font-weight:600; color:rgba(255,255,255,0.85); }
 @media (max-width:860px){
+  /* Kill the desktop parallelogram — it reads as a skewed card once the band is 2×2 */
+  .stats{
+    clip-path: none;
+    -webkit-clip-path: none;
+    margin: 0;
+  }
   .stats-grid{ grid-template-columns:repeat(2,1fr); gap:36px 20px; }
   .stat{ border-left:none; padding-left:0; border-top:2px solid rgba(255,255,255,0.3); padding-top:16px; }
   .stat:first-child{ border-top:none; padding-top:0; }
@@ -2440,6 +2410,818 @@ footer{
   background-repeat:repeat;
   background-size:560px 560px;
 }
+
+/* ============================================================
+   MOBILE EXPERIENCE OVERRIDES
+   Desktop design above 700px must remain untouched
+   ============================================================ */
+
+@media (max-width: 700px) {
+  /* --- Foundations: tokens --- */
+  :root{
+    --mobile-gutter: 18px;
+    --mobile-tap: 44px;
+    --mobile-vh: 100dvh;
+  }
+
+  /* --- Foundations: overflow + page shell --- */
+  html{
+    overflow-x: clip;
+  }
+  body{
+    overflow-x: clip;
+    min-height: var(--mobile-vh);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* --- Foundations: gutters --- */
+  .wrap{
+    padding-left: var(--mobile-gutter);
+    padding-right: var(--mobile-gutter);
+  }
+
+  /* --- Foundations: responsive media --- */
+  img,
+  video{
+    max-width: 100%;
+    height: auto;
+  }
+  iframe{
+    max-width: 100%;
+  }
+
+  /* --- Foundations: section spacing --- */
+  .section{
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+  .section-tight{
+    padding-top: 52px;
+    padding-bottom: 52px;
+  }
+  .section-head{
+    margin-bottom: 32px;
+  }
+  .section-head p{
+    font-size: 15.5px;
+    line-height: 1.55;
+  }
+
+  /* --- Foundations: typography --- */
+  h1, h2, h3, h4{
+    letter-spacing: -0.02em;
+    overflow-wrap: break-word;
+  }
+  p{
+    overflow-wrap: break-word;
+  }
+
+  /* --- Foundations: buttons / touch targets --- */
+  .btn{
+    min-height: var(--mobile-tap);
+    padding-top: 14px;
+    padding-bottom: 14px;
+    padding-left: 22px;
+    padding-right: 22px;
+    font-size: 15px;
+  }
+
+  /* Tone down hover lift on touch devices (global only) */
+  @media (hover: none){
+    .btn-primary:hover,
+    .btn-ghost:hover,
+    .btn-light:hover{
+      transform: none;
+    }
+  }
+
+  /* --- Utility bar --- */
+  :root{
+    --mobile-util-h: 40px;
+  }
+  .util-bar{
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+  .util-bar-inner{
+    justify-content: center;
+    align-items: center;
+    gap: 10px 16px;
+    flex-wrap: nowrap;
+    height: var(--mobile-util-h);
+    min-height: var(--mobile-util-h);
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 12px;
+    line-height: 1.2;
+    box-sizing: border-box;
+  }
+  .util-bar a{
+    gap: 6px;
+    min-height: 0;
+    max-width: 100%;
+    opacity: 1;
+  }
+  .util-bar a svg{
+    width: 12px;
+    height: 12px;
+  }
+
+  /* --- Navigation bar --- */
+  .nav{
+    top: var(--mobile-util-h);
+    padding: 8px 0;
+  }
+  .nav.scrolled{
+    padding: 6px 0;
+  }
+  .nav-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 48px;
+  }
+  .nav-logo{
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: calc(100% - 56px);
+  }
+  .nav-logo img{
+    height: 44px;
+    width: auto;
+    max-height: 44px;
+  }
+  .nav-inner{
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    flex: 0 0 auto;
+    /* backdrop-filter creates a containing block and collapses the fixed menu */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .nav-cta{
+    display: none;
+  }
+
+  /* Burger: 44×44 touch target, clean open/close */
+  .nav-burger{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--mobile-tap);
+    height: var(--mobile-tap);
+    min-width: var(--mobile-tap);
+    min-height: var(--mobile-tap);
+    gap: 5px;
+    padding: 0;
+    margin: 0;
+    z-index: 1200;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .nav-burger span{
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--ink);
+    border-radius: 2px;
+    transform-origin: center;
+    transition: transform .3s var(--ease), opacity .25s var(--ease), background-color .25s var(--ease);
+  }
+  .nav-burger.open span{
+    background: #fff;
+  }
+  .nav-burger.open span:nth-child(1){
+    transform: translateY(7px) rotate(45deg);
+  }
+  .nav-burger.open span:nth-child(2){
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  .nav-burger.open span:nth-child(3){
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Fullscreen mobile menu — viewport units so off-screen slide never depends on parent width */
+  .nav-links{
+    position: fixed;
+    inset: 0 0 auto auto; /* reset 920px inset:0, keep top/left anchoring */
+    top: 0;
+    left: 0;
+    right: auto;
+    bottom: auto;
+    width: 100vw;
+    width: 100dvw;
+    max-width: none;
+    height: var(--mobile-vh);
+    min-height: var(--mobile-vh);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding:
+      max(72px, calc(env(safe-area-inset-top, 0px) + 64px))
+      max(24px, env(safe-area-inset-right, 0px))
+      max(32px, env(safe-area-inset-bottom, 0px))
+      max(24px, env(safe-area-inset-left, 0px));
+    background-color: var(--ink);
+    background-image: var(--doodle);
+    background-repeat: repeat;
+    background-size: 560px 560px;
+    z-index: 1100;
+    transform: translate3d(100vw, 0, 0);
+    transform: translate3d(100dvw, 0, 0);
+    transition: transform .5s var(--ease);
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    pointer-events: none;
+  }
+  .nav-links.open{
+    transform: translate3d(0, 0, 0);
+    pointer-events: auto;
+  }
+  .nav-links li{
+    width: min(100%, 320px);
+    text-align: center;
+  }
+  .nav-links a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--mobile-tap);
+    padding: 12px 16px;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: clamp(22px, 7vw, 28px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .nav-links a::after{
+    bottom: 8px;
+    background: var(--yellow);
+  }
+
+  /* Menu open: cover util bar, lock page scroll */
+  body.nav-menu-open{
+    overflow: hidden;
+  }
+  body.nav-menu-open .nav{
+    z-index: 1102;
+  }
+  body.nav-menu-open .util-bar{
+    z-index: 1101;
+  }
+
+  /* ============================================================
+     Hero — mobile single-column composition
+     ============================================================ */
+  .hero{
+    min-height: 0;
+    justify-content: flex-start;
+    padding-top: calc(var(--mobile-util-h) + 76px);
+    padding-bottom: 0;
+  }
+  .hero-grid{
+    grid-template-columns: 1fr;
+    gap: 28px;
+    align-items: start;
+    width: 100%;
+    max-width: 100%;
+  }
+  .hero-copy{
+    max-width: 100%;
+  }
+  .hero-copy .eyebrow{
+    font-size: 12px;
+    letter-spacing: 0.11em;
+    line-height: 1.35;
+  }
+  .hero-copy h1{
+    font-size: clamp(40px, 11.5vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin: 14px 0 16px;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    text-wrap: balance;
+  }
+  /* Let heading / lead reflow on phones (desktop <br> line breaks stay in HTML) */
+  .hero-copy h1 br,
+  .hero-copy p.lead br{
+    display: none;
+  }
+  .hero-copy h1 em{
+    color: var(--red);
+  }
+  .hero-copy p.lead{
+    white-space: normal;
+    font-size: 16.5px;
+    line-height: 1.55;
+    max-width: 34ch;
+    margin-bottom: 22px;
+    font-weight: 500;
+  }
+  .hero-actions{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 4px;
+    width: 100%;
+    max-width: 100%;
+  }
+  .hero-actions .btn{
+    width: 100%;
+    max-width: 100%;
+    min-height: 48px;
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 15px;
+  }
+
+  /* Boarding pass — keep personality, fit the phone */
+  .pass-card{
+    width: calc(100% - 8px);
+    max-width: calc(100% - 8px);
+    justify-self: center;
+    margin-top: 8px;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 22px 18px 20px;
+    border-radius: 22px;
+    transform: rotate(1.25deg);
+    box-sizing: border-box;
+  }
+  .pass-card:hover{
+    transform: rotate(0.5deg) translateY(-2px);
+  }
+  @media (hover: none){
+    .pass-card:hover{
+      transform: rotate(1.25deg);
+    }
+  }
+  .pass-top{
+    margin-bottom: 16px;
+    gap: 10px;
+  }
+  .pass-top img{
+    height: 22px;
+    max-width: 42%;
+    width: auto;
+    object-fit: contain;
+  }
+  .pass-tag{
+    font-size: 10.5px;
+    padding: 5px 9px;
+    flex-shrink: 0;
+  }
+  .pass-title{
+    font-size: clamp(22px, 6.5vw, 26px);
+    line-height: 1.12;
+    white-space: normal;
+    overflow-wrap: break-word;
+    margin-bottom: 6px;
+  }
+  .pass-sub{
+    white-space: normal;
+    font-size: 13.5px;
+    line-height: 1.4;
+    margin-bottom: 18px;
+  }
+  .pass-divider{
+    margin: 0 -18px 18px;
+  }
+  .pass-fields{
+    grid-template-columns: 1fr 1fr;
+    column-gap: 14px;
+    row-gap: 14px;
+  }
+  .pass-field .k{
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .pass-field .v{
+    font-size: 15px;
+    line-height: 1.2;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+  .pass-barcode{
+    margin-top: 18px;
+    height: 28px;
+  }
+
+  /* Side rail crowds the first screen on phones — keep desktop only */
+  .side-social{
+    display: none;
+  }
+
+  /* Marquee — present but restrained, no page overflow */
+  .hero-marquee{
+    margin-top: 36px;
+    margin-bottom: 0;
+    padding: 14px 0 18px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+  .marquee-track{
+    gap: 28px;
+  }
+  .marquee-track span{
+    font-size: 15px;
+    gap: 12px;
+  }
+  .marquee-track span::after{
+    font-size: 11px;
+  }
+
+  /* ============================================================
+     Stats band — mobile 2×2 editorial layout
+     ============================================================ */
+  .stats{
+    /* Level rectangle only — no angled clip on phones */
+    clip-path: none !important;
+    -webkit-clip-path: none !important;
+    padding: 28px 0 30px;
+    margin: 0 !important;
+    min-height: 0;
+    color: #fff;
+    position: relative;
+    z-index: 0;
+  }
+  .stats-grid{
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    align-items: stretch;
+  }
+  .stat{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
+    /* Reset desktop / 860px border-padding patterns */
+    border: none;
+    border-left: none;
+    border-top: none;
+    padding: 14px 12px;
+    min-width: 0;
+    min-height: 0;
+    box-sizing: border-box;
+  }
+  .stat:first-child{
+    border-left: none;
+    border-top: none;
+    padding-left: 12px;
+    padding-top: 14px;
+  }
+  /* Subtle cross separators — organize without boxing */
+  .stat:nth-child(odd){
+    border-right: 1px solid rgba(255, 255, 255, 0.28);
+    padding-right: 14px;
+  }
+  .stat:nth-child(even){
+    padding-left: 14px;
+  }
+  .stat:nth-child(-n + 2){
+    border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+    padding-bottom: 14px;
+  }
+  .stat:nth-child(n + 3){
+    padding-top: 14px;
+  }
+  .stat .num{
+    font-size: clamp(24px, 7.2vw, 34px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+    max-width: 100%;
+    color: #fff;
+  }
+  .stat .label{
+    margin-top: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: rgba(255, 255, 255, 0.92);
+    max-width: 16ch;
+  }
+
+  /* ============================================================
+     About — mobile single-column (image → story → benefits)
+     ============================================================ */
+  #about{
+    padding: 48px 0 0;
+    overflow: hidden;
+  }
+  .about-grid{
+    grid-template-columns: 1fr;
+    gap: 28px;
+    align-items: start;
+    width: 100%;
+    max-width: 100%;
+  }
+  .about-media{
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+  }
+  .about-carousel{
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    border-radius: 20px;
+  }
+  /* Keep cover crop — override foundation img { height:auto } */
+  .about-carousel-slide img{
+    max-width: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  /* Hide floating chip on phones — desktop keeps it */
+  .about-media .float-chip{
+    display: none;
+  }
+  .about-copy{
+    width: 100%;
+    max-width: 100%;
+  }
+  .about-copy h2{
+    font-size: clamp(26px, 7.2vw, 34px);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    margin-top: 4px;
+    margin-bottom: 12px;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+  .about-copy h2 em{
+    font-style: normal;
+    color: var(--red);
+  }
+  .about-copy p{
+    font-size: 16px;
+    line-height: 1.55;
+    margin-bottom: 18px;
+  }
+  .about-list{
+    gap: 4px;
+    margin-bottom: 0;
+  }
+  .about-list li{
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 15px;
+    line-height: 1.45;
+    padding: 10px 0;
+    min-height: 44px;
+  }
+  .about-list li .emoji{
+    width: 28px;
+    min-width: 28px;
+    font-size: 18px;
+    line-height: 1.45;
+    margin-top: 0;
+    display: inline-flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  /* --- Small-phone refinements --- */
+  :root{
+    --mobile-gutter: 16px;
+  }
+
+  body{
+    font-size: 15.5px;
+  }
+
+  .section{
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+  .section-tight{
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+  .section-head{
+    margin-bottom: 28px;
+  }
+  .section-head p{
+    font-size: 15px;
+  }
+
+  .btn{
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 14.5px;
+  }
+
+  .util-bar-inner{
+    font-size: 11.5px;
+    gap: 8px 12px;
+  }
+  .nav-logo img{
+    height: 40px;
+    max-height: 40px;
+  }
+  .nav-links a{
+    font-size: clamp(20px, 7.2vw, 26px);
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+
+  /* Hero small-phone refinements */
+  .hero{
+    padding-top: calc(var(--mobile-util-h) + 70px);
+  }
+  .hero-grid{
+    gap: 24px;
+  }
+  .hero-copy h1{
+    font-size: clamp(40px, 12.2vw, 48px);
+    margin: 12px 0 14px;
+  }
+  .hero-copy p.lead{
+    font-size: 16px;
+    max-width: 100%;
+    margin-bottom: 18px;
+  }
+  .hero-actions .btn{
+    min-height: 48px;
+    font-size: 14.5px;
+  }
+  .pass-card{
+    padding: 20px 16px 18px;
+    transform: rotate(1deg);
+  }
+  .pass-divider{
+    margin: 0 -16px 16px;
+  }
+  .pass-fields{
+    column-gap: 12px;
+    row-gap: 12px;
+  }
+  .pass-field .v{
+    font-size: 14px;
+  }
+  .hero-marquee{
+    margin-top: 28px;
+    padding: 12px 0 16px;
+  }
+  .marquee-track span{
+    font-size: 14px;
+  }
+
+  /* Stats — tighter 2×2 on small phones */
+  .stats{
+    clip-path: none;
+    padding: 24px 0 26px;
+    margin: 0;
+  }
+  .stat{
+    padding: 12px 10px;
+  }
+  .stat:first-child{
+    padding-left: 10px;
+    padding-top: 12px;
+  }
+  .stat:nth-child(odd){
+    padding-right: 12px;
+  }
+  .stat:nth-child(even){
+    padding-left: 12px;
+  }
+  .stat:nth-child(-n + 2){
+    padding-bottom: 12px;
+  }
+  .stat:nth-child(n + 3){
+    padding-top: 12px;
+  }
+  .stat .num{
+    font-size: clamp(22px, 7vw, 30px);
+  }
+  .stat .label{
+    font-size: 12px;
+    max-width: 15ch;
+  }
+
+  /* About — small-phone tighten */
+  #about{
+    padding: 40px 0 0;
+  }
+  .about-grid{
+    gap: 22px;
+  }
+  .about-carousel{
+    aspect-ratio: 5 / 4;
+    border-radius: 18px;
+  }
+  .about-copy h2{
+    font-size: clamp(24px, 7vw, 30px);
+    margin-bottom: 10px;
+  }
+  .about-copy p{
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+  .about-list li{
+    padding: 8px 0;
+    font-size: 14.5px;
+  }
+}
+
+/* Very narrow phones: stack util contacts so nothing collides */
+@media (max-width: 360px) {
+  :root{
+    --mobile-util-h: 52px;
+  }
+  .util-bar-inner{
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 3px;
+    font-size: 11.5px;
+  }
+  .nav-logo img{
+    height: 38px;
+    max-height: 38px;
+  }
+
+  .hero{
+    padding-top: calc(var(--mobile-util-h) + 66px);
+  }
+  .hero-copy h1{
+    font-size: 40px;
+  }
+  .pass-card{
+    padding: 18px 14px 16px;
+    transform: rotate(0.75deg);
+  }
+  .pass-divider{
+    margin: 0 -14px 14px;
+  }
+  .pass-top img{
+    height: 20px;
+  }
+  .pass-title{
+    font-size: 21px;
+  }
+
+  /* Stats — keep 15,00,000+ on one line at 320 */
+  .stats{
+    clip-path: none;
+    padding: 22px 0 24px;
+    margin: 0;
+  }
+  .stat{
+    padding: 10px 8px;
+  }
+  .stat:first-child{
+    padding-left: 8px;
+    padding-top: 10px;
+  }
+  .stat:nth-child(odd){
+    padding-right: 10px;
+  }
+  .stat:nth-child(even){
+    padding-left: 10px;
+  }
+  .stat .num{
+    font-size: 22px;
+    letter-spacing: -0.05em;
+  }
+  .stat .label{
+    font-size: 11.5px;
+    margin-top: 6px;
+  }
+}
 </style>
 </head>
 <body>
@@ -2496,8 +3278,8 @@ footer{
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <span class="eyebrow">India's Leading Career Discovery Platform</span>
-      <h1>Confused about<br>life after <em>10th</em> or <em>12th</em>?</h1>
-      <p class="lead">Don't wait till the last minute to figure out your career.<br>Career Uttsav gives you early, real-world exposure to careers,<br>so you explore, understand and choose with confidence.</p>
+      <h1>Confused about <br>life after <em>10th</em> or <em>12th</em>?</h1>
+      <p class="lead">Don't wait till the last minute to figure out your career. <br>Career Uttsav gives you early, real-world exposure to careers, <br>so you explore, understand and choose with confidence.</p>
       <div class="hero-actions">
         <a href="https://careeruttsav.in/student-registration" class="btn btn-primary magnetic open-register">Get Your Pass for FREE →</a>
       </div>
@@ -3933,15 +4715,24 @@ footer{
   /* ---- Mobile menu ---- */
   var burger = document.getElementById('navBurger');
   var links = document.getElementById('navLinks');
+  function setNavMenuOpen(isOpen){
+    burger.classList.toggle('open', isOpen);
+    links.classList.toggle('open', isOpen);
+    document.body.classList.toggle('nav-menu-open', isOpen);
+    burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+  burger.setAttribute('aria-expanded', 'false');
+  burger.setAttribute('aria-controls', 'navLinks');
   burger.addEventListener('click', function(){
-    burger.classList.toggle('open');
-    links.classList.toggle('open');
+    setNavMenuOpen(!links.classList.contains('open'));
   });
   document.querySelectorAll('.nav-close-link').forEach(function(a){
     a.addEventListener('click', function(){
-      burger.classList.remove('open');
-      links.classList.remove('open');
+      setNavMenuOpen(false);
     });
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && links.classList.contains('open')) setNavMenuOpen(false);
   });
 
   /* ---- Nav scroll-spy (active underline by section) ---- */
