@@ -4935,7 +4935,20 @@ footer{
 
   /* ---- Registration modal ---- */
   /* Admin API origin - override with window.CU_ADMIN_API before this script if needed */
-  var CU_ADMIN_API = (window.CU_ADMIN_API || 'https://admin.careeruttsav.in').replace(/\/$/, '');
+  /* ---- Registration modal ---- */
+
+var CU_IS_LOCAL =
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1';
+
+var CU_ADMIN_API = (
+  window.CU_ADMIN_API ||
+  (
+    CU_IS_LOCAL
+      ? 'http://localhost:3002'
+      : 'https://admin.careeruttsav.in'
+  )
+).replace(/\/$/, '');
 
   function postRegistration(payload){
     return fetch(CU_ADMIN_API + '/api/registrations', {
