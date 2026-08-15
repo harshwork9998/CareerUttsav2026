@@ -361,12 +361,12 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   position:relative;
   background:var(--red);
   color:#fff;
-  padding:40px 0;
+  padding:32px 0;
   clip-path:none;
   margin:0;
 }
 .stats > .stats-grid{
-  max-width:1100px;
+  max-width:1280px;
   width:100%;
   margin-left:auto;
   margin-right:auto;
@@ -377,13 +377,13 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 .stats-grid{
   display:grid;
   grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) minmax(0,1.1fr) minmax(0,0.95fr);
-  column-gap:32px;
+  column-gap:40px;
   row-gap:20px;
   align-items:start;
 }
 .stat{
   text-align:left;
-  padding:0 0 0 20px;
+  padding:0 0 0 24px;
   border-left:2px solid rgba(255,255,255,0.3);
   min-width:0;
 }
@@ -393,7 +393,7 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 }
 .stat .num{
   font-family:var(--font-display);
-  font-size:clamp(40px, 4.4vw, 58px);
+  font-size:clamp(44px, 5vw, 68px);
   font-weight:800;
   line-height:1;
   letter-spacing:-0.04em;
@@ -401,8 +401,8 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   white-space:nowrap;
 }
 .stat .label{
-  margin-top:10px;
-  font-size:14px;
+  margin-top:8px;
+  font-size:15px;
   font-weight:600;
   line-height:1.35;
   color:rgba(255,255,255,0.85);
@@ -1135,6 +1135,8 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   text-align:center;
   white-space:normal;
   line-height:1.25;
+  border:none;
+  cursor:pointer;
 }
 .exp-card .tag{
   position:absolute; top:14px; right:14px; margin-top:0;
@@ -2316,6 +2318,36 @@ footer{
   min-width:0; width:auto; padding-left:26px; padding-right:26px;
 }
 
+/* Psychometric test info modal */
+.psycho-modal-card{ max-width:440px; }
+.psycho-modal-card .reg-head{ padding:18px 20px 14px; }
+.psycho-modal-card .reg-head-title h3{ font-size:24px; }
+.psycho-modal-body{
+  padding:8px 20px 6px;
+  overflow-y:auto;
+}
+.psycho-modal-body p{
+  color:var(--ink-soft);
+  font-size:14.5px;
+  line-height:1.55;
+  margin:0 0 12px;
+}
+.psycho-modal-body p:last-child{ margin-bottom:0; }
+.psycho-modal-body strong{ color:var(--ink); font-weight:700; }
+.psycho-modal-actions{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:16px 20px 20px;
+  border-top:1px solid var(--line);
+  flex-shrink:0;
+}
+.psycho-modal-actions .btn{
+  width:100%;
+  text-align:center;
+  justify-content:center;
+}
+
 
 /* ============================================================
    16. REGISTRATION MODAL
@@ -2599,14 +2631,14 @@ select.reg-input{
   margin-top:0;
   padding-top:12px;
 }
-/* 1. Presenting — most prominent */
+/* 1. Presenting - most prominent */
 #regOverlay .reg-card--split .partners-card--lead{
   padding:16px 18px 18px;
 }
 #regOverlay .reg-card--split .partners-card--lead .partners-logo-tile{
   height:68px;
 }
-/* 2. Co-Presenting — full width, next */
+/* 2. Co-Presenting - full width, next */
 #regOverlay .reg-card--split .partners-card--co{
   padding:14px 16px;
 }
@@ -2618,7 +2650,7 @@ select.reg-input{
 #regOverlay .reg-card--split .partners-card--co .partners-logo-tile{
   height:56px;
 }
-/* Supporting titled partners — quieter */
+/* Supporting titled partners - quieter */
 #regOverlay .reg-card--split .partners-card--support{
   padding:10px 12px;
 }
@@ -2650,7 +2682,7 @@ select.reg-input{
   font-size:11px;
   margin-bottom:8px;
 }
-/* 5. Stall — densest / lowest */
+/* 5. Stall - densest / lowest */
 #regOverlay .reg-card--split .partners-card--stall{
   padding:10px 12px;
 }
@@ -3023,7 +3055,7 @@ footer{
     transform: translateY(-7px) rotate(-45deg);
   }
 
-  /* Fullscreen mobile menu — viewport units so off-screen slide never depends on parent width */
+  /* Fullscreen mobile menu - viewport units so off-screen slide never depends on parent width */
   .nav-links{
     position: fixed;
     inset: 0 0 auto auto; /* reset 920px inset:0, keep top/left anchoring */
@@ -3098,7 +3130,7 @@ footer{
   }
 
   /* ============================================================
-     Hero — mobile single-column composition
+     Hero - mobile single-column composition
      ============================================================ */
   .hero{
     min-height: 0;
@@ -3167,7 +3199,7 @@ footer{
     font-size: 15px;
   }
 
-  /* Boarding pass — keep personality, fit the phone */
+  /* Boarding pass - keep personality, fit the phone */
   .pass-card{
     width: calc(100% - 8px);
     max-width: calc(100% - 8px);
@@ -3239,12 +3271,12 @@ footer{
     height: 28px;
   }
 
-  /* Side rail crowds the first screen on phones — keep desktop only */
+  /* Side rail crowds the first screen on phones - keep desktop only */
   .side-social{
     display: none;
   }
 
-  /* Marquee — present but restrained, no page overflow */
+  /* Marquee - present but restrained, no page overflow */
   .hero-marquee{
     margin-top: 36px;
     margin-bottom: 0;
@@ -3267,10 +3299,10 @@ footer{
   }
 
   /* ============================================================
-     Stats band — mobile 2×2 editorial layout
+     Stats band - mobile 2×2 editorial layout
      ============================================================ */
   .stats{
-    /* Level rectangle only — no angled clip on phones */
+    /* Level rectangle only - no angled clip on phones */
     clip-path: none !important;
     -webkit-clip-path: none !important;
     padding: 28px 0 30px;
@@ -3308,7 +3340,7 @@ footer{
     padding-left: 12px;
     padding-top: 14px;
   }
-  /* Subtle cross separators — organize without boxing */
+  /* Subtle cross separators - organize without boxing */
   .stat:nth-child(odd){
     border-right: 1px solid rgba(255, 255, 255, 0.28);
     padding-right: 14px;
@@ -3342,7 +3374,7 @@ footer{
   }
 
   /* ============================================================
-     About — mobile single-column (image → story → benefits)
+     About - mobile single-column (image → story → benefits)
      ============================================================ */
   #about{
     padding: 48px 0 0;
@@ -3367,7 +3399,7 @@ footer{
     aspect-ratio: 4 / 3;
     border-radius: 20px;
   }
-  /* Keep cover crop — override foundation img { height:auto } */
+  /* Keep cover crop - override foundation img { height:auto } */
   .about-carousel-slide img{
     max-width: none;
     width: 100%;
@@ -3375,7 +3407,7 @@ footer{
     object-fit: cover;
     display: block;
   }
-  /* Hide floating chip on phones — desktop keeps it */
+  /* Hide floating chip on phones - desktop keeps it */
   .about-media .float-chip{
     display: none;
   }
@@ -3512,7 +3544,7 @@ footer{
     font-size: 14px;
   }
 
-  /* Stats — tighter 2×2 on small phones */
+  /* Stats - tighter 2×2 on small phones */
   .stats{
     clip-path: none;
     padding: 24px 0 26px;
@@ -3545,7 +3577,7 @@ footer{
     max-width: 22ch;
   }
 
-  /* About — small-phone tighten */
+  /* About - small-phone tighten */
   #about{
     padding: 40px 0 0;
   }
@@ -3607,7 +3639,7 @@ footer{
     font-size: 21px;
   }
 
-  /* Stats — keep 15,00,000+ on one line at 320 */
+  /* Stats - keep 15,00,000+ on one line at 320 */
   .stats{
     clip-path: none;
     padding: 22px 0 24px;
@@ -3957,7 +3989,7 @@ footer{
         <span class="exp-icon">🧩</span>
         <h3>FREE Psychometric Test</h3>
         <p>Take a detailed psychometric test and receive a customised report worth ₹3,000 to understand your aptitude, interests and true potential.</p>
-        <a href="https://assessment.careerkaffe.com/" class="btn btn-primary magnetic allow-external exp-card-cta" target="_blank" rel="noopener">Register here for a FREE test!</a>
+        <button type="button" class="btn btn-primary magnetic exp-card-cta open-psycho-info">Take the Test</button>
         <span class="tag tag-yellow">Worth ₹3,000</span>
       </div>
       <div class="exp-card">
@@ -4331,7 +4363,7 @@ footer{
   <div class="wrap school-band-inner reveal">
     <div>
       <h3>Ready to exhibit at Career Uttsav 2026?</h3>
-      <p>Dedicated stall zones, on-ground support and high footfall from local & nearby schools across Mysore, Hubli and Bangalore.</p>
+      <p>Dedicated stall zones, on-ground support and high footfall from schools across Bangalore and nearby regions.</p>
     </div>
     <div class="school-band-actions">
       <button type="button" class="btn btn-light magnetic open-exhibitor-form">Register as Exhibitor</button>
@@ -4633,20 +4665,10 @@ footer{
         </div>
       </div>
 
-      <!-- STEP 3  -  EVENT + SEMINARS -->
+      <!-- STEP 3  -  INTERESTS / SEMINARS -->
       <div class="reg-step" data-step="3">
-        <h4>Pick your event 🎈</h4>
-        <p class="reg-sub">Which city are you attending, and what excites you most?</p>
-
-        <div class="reg-field">
-          <label>Event City</label>
-          <div class="reg-chips" data-group="eventCity">
-            <button type="button" class="reg-chip blue" data-value="Bangalore" data-event-id="evt-001">Bangalore</button>
-            <button type="button" class="reg-chip blue" data-value="Mysore" data-event-id="evt-002">Mysore</button>
-            <button type="button" class="reg-chip blue" data-value="Hubli" data-event-id="evt-003">Hubli</button>
-          </div>
-          <div class="reg-error">Please select an event city</div>
-        </div>
+        <h4>What are you curious about? 🎈</h4>
+        <p class="reg-sub">Pick the seminars that excite you most. We'll save you a front-row seat.</p>
 
         <div class="reg-field">
           <div class="reg-seminar-count"><span>Seminars You're Curious About</span><span><b id="regSeminarCounter">0</b>/3 selected</span></div>
@@ -4831,6 +4853,29 @@ footer{
       </div>
     </aside>
 
+  </div>
+</div>
+
+<!-- ============================================================
+     PSYCHOMETRIC TEST INFO MODAL
+     ============================================================ -->
+<div class="reg-overlay" id="psychoOverlay" aria-hidden="true">
+  <div class="reg-card amb-modal-card psycho-modal-card" role="dialog" aria-modal="true" aria-labelledby="psychoTitle">
+    <div class="reg-head">
+      <div class="reg-head-title">
+        <h3 id="psychoTitle">FREE Psychometric Test</h3>
+      </div>
+      <button class="reg-close" id="psychoClose" aria-label="Close psychometric test info">✕</button>
+    </div>
+    <div class="psycho-modal-body">
+      <p>Take a free psychometric test and get a personalised report worth <strong>₹3,000</strong>. It helps you understand your strengths, interests and what careers may suit you.</p>
+      <p>If you already have a <strong>coupon code</strong>, you can take the test online right away.</p>
+      <p>Don't have a coupon yet? Register for Career Uttsav and generate your free coupon code at the event.</p>
+    </div>
+    <div class="psycho-modal-actions">
+      <a href="https://assessment.careerkaffe.com/" class="btn btn-primary allow-external" id="psychoHaveCoupon" target="_blank" rel="noopener">I have a coupon code</a>
+      <button type="button" class="btn btn-ghost" id="psychoRegisterEvent">Register for the event</button>
+    </div>
   </div>
 </div>
 
@@ -5433,19 +5478,8 @@ var CU_ADMIN_API = (
     });
   }
 
-  function getSelectedEventId(root, group){
-    var chip = root.querySelector('.reg-chips[data-group="' + group + '"] .reg-chip.selected');
-    return chip ? (chip.getAttribute('data-event-id') || '') : '';
-  }
-
-  function validateEventCity(root, group){
-    var groupEl = root.querySelector('.reg-chips[data-group="' + group + '"]');
-    if(!groupEl) return false;
-    var field = groupEl.closest('.reg-field');
-    var has = !!groupEl.querySelector('.reg-chip.selected');
-    setError(field, !has);
-    return has;
-  }
+  const CURRENT_EVENT_ID = 'evt-001';
+  const CURRENT_EVENT_CITY = 'Bangalore';
 
   function showFormApiError(formEl, message){
     var existing = formEl.querySelector('.form-api-error');
@@ -5462,38 +5496,6 @@ var CU_ADMIN_API = (
   function clearFormApiError(formEl){
     var existing = formEl.querySelector('.form-api-error');
     if(existing) existing.remove();
-  }
-
-  var EVENT_CITY_CHIPS_HTML =
-    '<div class="reg-field">' +
-      '<label>Event City</label>' +
-      '<div class="reg-chips" data-group="__GROUP__">' +
-        '<button type="button" class="reg-chip blue" data-value="Bangalore" data-event-id="evt-001">Bangalore</button>' +
-        '<button type="button" class="reg-chip blue" data-value="Mysore" data-event-id="evt-002">Mysore</button>' +
-        '<button type="button" class="reg-chip blue" data-value="Hubli" data-event-id="evt-003">Hubli</button>' +
-      '</div>' +
-      '<div class="reg-error">Please select an event city</div>' +
-    '</div>';
-
-  function ensureEventCityField(formEl, group){
-    if(formEl.querySelector('.reg-chips[data-group="' + group + '"]')) return;
-    var wrap = document.createElement('div');
-    wrap.innerHTML = EVENT_CITY_CHIPS_HTML.replace('__GROUP__', group);
-    var field = wrap.firstChild;
-    var sub = formEl.querySelector('.reg-sub');
-    if(sub && sub.nextSibling){
-      formEl.insertBefore(field, sub.nextSibling);
-    } else {
-      formEl.insertBefore(field, formEl.firstChild);
-    }
-    field.querySelectorAll('.reg-chip').forEach(function(chip){
-      chip.addEventListener('click', function(){
-        field.querySelectorAll('.reg-chip').forEach(function(c){ c.classList.remove('selected'); });
-        chip.classList.add('selected');
-        field.classList.remove('err');
-        clearFormApiError(formEl);
-      });
-    });
   }
 
   var regOverlay = document.getElementById('regOverlay');
@@ -5513,6 +5515,45 @@ var CU_ADMIN_API = (
   var regSubmitInFlight = false;
 
   var nextLabels = { 1:'Continue', 2:'Continue', 3:'Reserve My Seat →' };
+
+  /* ---- Psychometric test info modal ---- */
+  var psychoOverlay = document.getElementById('psychoOverlay');
+  var psychoClose = document.getElementById('psychoClose');
+  var psychoRegisterEvent = document.getElementById('psychoRegisterEvent');
+  var psychoLastFocused = null;
+
+  function openPsychoModal(){
+    psychoLastFocused = document.activeElement;
+    psychoOverlay.classList.add('open');
+    psychoOverlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function(){ if(psychoClose) psychoClose.focus(); }, 350);
+  }
+  function closePsychoModal(){
+    psychoOverlay.classList.remove('open');
+    psychoOverlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if(psychoLastFocused) psychoLastFocused.focus();
+  }
+  document.querySelectorAll('.open-psycho-info').forEach(function(el){
+    el.addEventListener('click', function(e){ e.preventDefault(); openPsychoModal(); });
+  });
+  if(psychoClose) psychoClose.addEventListener('click', closePsychoModal);
+  if(psychoOverlay) psychoOverlay.addEventListener('click', function(e){
+    if(e.target === psychoOverlay) closePsychoModal();
+  });
+  if(psychoRegisterEvent){
+    psychoRegisterEvent.addEventListener('click', function(){
+      closePsychoModal();
+      openRegModal();
+    });
+  }
+  var psychoHaveCoupon = document.getElementById('psychoHaveCoupon');
+  if(psychoHaveCoupon){
+    psychoHaveCoupon.addEventListener('click', function(){
+      closePsychoModal();
+    });
+  }
 
   function openRegModal(){
     lastFocused = document.activeElement;
@@ -5543,7 +5584,9 @@ var CU_ADMIN_API = (
   regDone.addEventListener('click', closeRegModal);
   regOverlay.addEventListener('click', function(e){ if(e.target === regOverlay) closeRegModal(); });
   document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && regOverlay.classList.contains('open')) closeRegModal();
+    if(e.key !== 'Escape') return;
+    if(psychoOverlay && psychoOverlay.classList.contains('open')){ closePsychoModal(); return; }
+    if(regOverlay.classList.contains('open')) closeRegModal();
   });
 
   function renderStep(){
@@ -5925,11 +5968,6 @@ var CU_ADMIN_API = (
   }
   function validateStep3(){
     var ok = true;
-    var cityGroup = regForm.querySelector('.reg-chips[data-group="eventCity"]');
-    var cityField = cityGroup.closest('.reg-field');
-    var hasCity = cityGroup.querySelector('.reg-chip.selected');
-    setError(cityField, !hasCity);
-    if(!hasCity) ok = false;
     var seminarsSelected = seminarGrid.querySelectorAll('.reg-seminar-chip.selected').length;
     if(seminarsSelected < 1) ok = false;
     return ok;
@@ -5964,12 +6002,11 @@ var CU_ADMIN_API = (
 
   function buildPass(registrationNumber){
     function getVal(sel){ var el = document.getElementById(sel); return el ? el.value.trim() : ''; }
-    function getChip(g){ var s = regForm.querySelector('.reg-chips[data-group="' + g + '"] .reg-chip.selected'); return s ? s.getAttribute('data-value') : '-'; }
     var seminars = Array.prototype.slice.call(seminarGrid.querySelectorAll('.reg-seminar-chip.selected')).map(function(c){ return c.getAttribute('data-value'); });
     var classLabel = document.getElementById('regClass').value || '-';
     document.getElementById('regPassName').textContent = getVal('regName') || 'Guest Student';
     document.getElementById('regPassSchool').textContent = getVal('regSchool') || '-';
-    document.getElementById('regPassCity').textContent = getChip('eventCity');
+    document.getElementById('regPassCity').textContent = CURRENT_EVENT_CITY;
     document.getElementById('regPassClass').textContent = classLabel;
     document.getElementById('regPassSeminars').textContent = seminars.length + ' selected';
     document.getElementById('regPassId').textContent = registrationNumber || ('CU-' + Math.random().toString(36).slice(2,8).toUpperCase());
@@ -5981,15 +6018,13 @@ var CU_ADMIN_API = (
       var s = regForm.querySelector('.reg-chips[data-group="' + g + '"] .reg-chip.selected');
       return s ? s.getAttribute('data-value') : '';
     }
-    var eventChip = regForm.querySelector('.reg-chips[data-group="eventCity"] .reg-chip.selected');
-    var eventId = eventChip ? (eventChip.getAttribute('data-event-id') || '') : '';
     var seminars = Array.prototype.slice.call(seminarGrid.querySelectorAll('.reg-seminar-chip.selected')).map(function(c){
       return c.getAttribute('data-value');
     });
     return {
       kind: 'student',
       client: 'public',
-      eventId: eventId,
+      eventId: CURRENT_EVENT_ID,
       studentName: getVal('regName'),
       email: getVal('regEmail'),
       phone: getVal('regMobile'),
@@ -6098,7 +6133,7 @@ var CU_ADMIN_API = (
       regSubmitInFlight = true;
       regNext.classList.add('loading');
       regDuplicateBanner.classList.remove('show');
-      checkRegistrationDuplicate('', mobileVal, emailVal).then(function(check){
+      checkRegistrationDuplicate(CURRENT_EVENT_ID, mobileVal, emailVal).then(function(check){
         regSubmitInFlight = false;
         regNext.classList.remove('loading');
         if(check.error){
@@ -6253,7 +6288,6 @@ var CU_ADMIN_API = (
 
   function openAmbModal(){
     ambLastFocused = document.activeElement;
-    ensureEventCityField(ambFormEl, 'ambEventCity');
     clearFormApiError(ambFormEl);
     ambFormEl.style.display = 'block';
     ambFoot.style.display = 'flex';
@@ -6292,7 +6326,6 @@ var CU_ADMIN_API = (
   });
 
   ambSubmit.addEventListener('click', function(){
-    ensureEventCityField(ambFormEl, 'ambEventCity');
     if(!validateAmbForm()){
       var firstErr = document.querySelector('#ambForm .reg-field.err');
       if(firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
@@ -6302,7 +6335,7 @@ var CU_ADMIN_API = (
     ambSubmit.classList.add('loading');
     var payload = {
       kind: 'student_ambassador',
-      eventId: getSelectedEventId(ambFormEl, 'ambEventCity'),
+      eventId: CURRENT_EVENT_ID,
       ambassadorName: document.getElementById('ambName2').value.trim(),
       ambassadorClass: document.getElementById('ambClassSelect').value,
       ambassadorSchoolCollege: document.getElementById('ambSchool').value.trim(),
@@ -6343,7 +6376,6 @@ var CU_ADMIN_API = (
     if(!isValidMobile(mobile.value)){ setError(mobile.closest('.reg-field'), true); ok = false; } else setError(mobile.closest('.reg-field'), false);
     email.value = email.value.trim();
     if(!hasEmailValue(email.value)){ setError(email.closest('.reg-field'), true); ok = false; } else setError(email.closest('.reg-field'), false);
-    if(!validateEventCity(ambFormEl, 'ambEventCity')) ok = false;
     return ok;
   }
 
@@ -6359,7 +6391,6 @@ var CU_ADMIN_API = (
 
   function openSchoolModal(){
     schoolLastFocused = document.activeElement;
-    ensureEventCityField(schoolFormEl, 'schoolEventCity');
     clearFormApiError(schoolFormEl);
     schoolFormEl.style.display = 'block';
     schoolFoot.style.display = 'flex';
@@ -6404,12 +6435,10 @@ var CU_ADMIN_API = (
     if(!isValidMobile(phone.value)){ setError(phone.closest('.reg-field'), true); ok = false; } else setError(phone.closest('.reg-field'), false);
     email.value = email.value.trim();
     if(!hasEmailValue(email.value)){ setError(email.closest('.reg-field'), true); ok = false; } else setError(email.closest('.reg-field'), false);
-    if(!validateEventCity(schoolFormEl, 'schoolEventCity')) ok = false;
     return ok;
   }
 
   schoolSubmit.addEventListener('click', function(){
-    ensureEventCityField(schoolFormEl, 'schoolEventCity');
     if(!validateSchoolForm()){
       var firstErr = document.querySelector('#schoolForm .reg-field.err');
       if(firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
@@ -6419,7 +6448,7 @@ var CU_ADMIN_API = (
     schoolSubmit.classList.add('loading');
     var payload = {
       kind: 'school',
-      eventId: getSelectedEventId(schoolFormEl, 'schoolEventCity'),
+      eventId: CURRENT_EVENT_ID,
       schoolContactName: document.getElementById('schoolContactName').value.trim(),
       schoolName: document.getElementById('schoolName').value.trim(),
       schoolCity: document.getElementById('schoolCity').value.trim(),
@@ -6455,7 +6484,6 @@ var CU_ADMIN_API = (
 
   function openExhibitorModal(){
     exhibitorLastFocused = document.activeElement;
-    ensureEventCityField(exhibitorFormEl, 'exhibitorEventCity');
     clearFormApiError(exhibitorFormEl);
     exhibitorFormEl.style.display = 'block';
     exhibitorFoot.style.display = 'flex';
@@ -6500,12 +6528,10 @@ var CU_ADMIN_API = (
     if(!isValidMobile(phone.value)){ setError(phone.closest('.reg-field'), true); ok = false; } else setError(phone.closest('.reg-field'), false);
     email.value = email.value.trim();
     if(!hasEmailValue(email.value)){ setError(email.closest('.reg-field'), true); ok = false; } else setError(email.closest('.reg-field'), false);
-    if(!validateEventCity(exhibitorFormEl, 'exhibitorEventCity')) ok = false;
     return ok;
   }
 
   exhibitorSubmit.addEventListener('click', function(){
-    ensureEventCityField(exhibitorFormEl, 'exhibitorEventCity');
     if(!validateExhibitorForm()){
       var firstErr = document.querySelector('#exhibitorForm .reg-field.err');
       if(firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
@@ -6515,7 +6541,7 @@ var CU_ADMIN_API = (
     exhibitorSubmit.classList.add('loading');
     var payload = {
       kind: 'partner_registration',
-      eventId: getSelectedEventId(exhibitorFormEl, 'exhibitorEventCity'),
+      eventId: CURRENT_EVENT_ID,
       partnerRegContactName: document.getElementById('exhibitorName').value.trim(),
       partnerRegInstitutionName: document.getElementById('exhibitorInstitution').value.trim(),
       partnerRegCity: document.getElementById('exhibitorCity').value.trim(),
