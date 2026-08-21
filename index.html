@@ -2792,29 +2792,17 @@ select.reg-input{
   }
 }
 
-.reg-mobile-row{ display:flex; gap:10px; align-items:flex-start; }
-.reg-mobile-row .reg-input{ flex:1; min-width:0; }
-.reg-otp-btn{
-  flex:0 0 auto; height:48px; padding:0 16px; border-radius:12px; border:1.5px solid var(--ink);
-  background:var(--ink); color:#fff; font-weight:700; font-size:13.5px; cursor:pointer;
-  white-space:nowrap; transition:opacity .2s ease;
-}
-.reg-otp-btn:hover{ opacity:.92; }
-.reg-otp-btn:disabled{ opacity:.45; cursor:not-allowed; }
 .reg-otp-panel{
   display:none; margin-top:12px; padding:14px; border-radius:14px;
   background:rgba(20,18,26,0.04); border:1px solid rgba(20,18,26,0.08);
 }
 .reg-otp-panel.show{ display:block; }
-.reg-otp-actions{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:10px; }
-.reg-otp-verify{
-  height:44px; padding:0 18px; border-radius:12px; border:none;
-  background:var(--red); color:#fff; font-weight:700; font-size:13.5px; cursor:pointer;
+.reg-otp-resend-row{
+  display:flex; align-items:center; justify-content:flex-start; margin-top:10px;
 }
-.reg-otp-verify:disabled{ opacity:.45; cursor:not-allowed; }
 .reg-otp-resend{
   background:none; border:none; color:var(--blue); font-weight:700; font-size:13px;
-  cursor:pointer; padding:8px 4px;
+  cursor:pointer; padding:4px 0;
 }
 .reg-otp-resend:disabled{ color:var(--ink-soft); cursor:not-allowed; opacity:.7; }
 .reg-verified-badge{
@@ -2827,10 +2815,6 @@ select.reg-input{
 .reg-otp-status{ font-size:12.5px; font-weight:600; margin-top:8px; line-height:1.4; }
 .reg-otp-status.err{ color:var(--red-dark); }
 .reg-otp-status.ok{ color:#147A3E; }
-@media (max-width:520px){
-  .reg-mobile-row{ flex-direction:column; }
-  .reg-otp-btn{ width:100%; }
-}
 
 /* Site-wide doodle on every major surface */
 body,
@@ -4571,30 +4555,26 @@ footer{
           <div class="reg-error">Please enter your full name</div>
         </div>
 
+        <div class="reg-field">
+          <label for="regEmail">Email Address</label>
+          <input class="reg-input" id="regEmail" type="email" autocomplete="email" required>
+          <div class="reg-error">Please enter a valid email address</div>
+        </div>
+
         <div class="reg-field" id="regMobileField">
-          <label for="regMobile">Your Mobile Number</label>
-          <div class="reg-mobile-row">
-            <input class="reg-input" id="regMobile" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel" required>
-            <button type="button" class="reg-otp-btn" id="regSendOtpBtn">Send OTP</button>
-          </div>
+          <label for="regMobile">Mobile Number</label>
+          <input class="reg-input" id="regMobile" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel" required>
           <div class="reg-error">Enter a valid 10-digit number starting 6–9</div>
           <div class="reg-otp-status" id="regOtpStatus" aria-live="polite"></div>
           <div class="reg-verified-badge" id="regMobileVerifiedBadge" aria-live="polite">Verified ✓</div>
           <div class="reg-otp-panel" id="regOtpPanel">
             <label for="regOtpCode">Enter OTP</label>
             <input class="reg-input" id="regOtpCode" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6-digit code">
-            <div class="reg-otp-actions">
-              <button type="button" class="reg-otp-verify" id="regVerifyOtpBtn">Verify OTP</button>
+            <div class="reg-otp-resend-row">
               <button type="button" class="reg-otp-resend" id="regResendOtpBtn" disabled>Resend OTP</button>
             </div>
             <p class="reg-otp-hint" id="regOtpHint">OTP expires in 5 minutes. You can resend after 30 seconds.</p>
           </div>
-        </div>
-
-        <div class="reg-field">
-          <label for="regEmail">Email Address</label>
-          <input class="reg-input" id="regEmail" type="email" autocomplete="email" required>
-          <div class="reg-error">Please enter a valid email address</div>
         </div>
 
         <div class="reg-duplicate" id="regDuplicateBanner">
@@ -5515,6 +5495,7 @@ var CU_ADMIN_API = (
   var regSubmitInFlight = false;
 
   var nextLabels = { 1:'Continue', 2:'Continue', 3:'Reserve My Seat →' };
+  var regDuplicateBanner = document.getElementById('regDuplicateBanner');
 
   /* ---- Psychometric test info modal ---- */
   var psychoOverlay = document.getElementById('psychoOverlay');
@@ -5605,7 +5586,11 @@ var CU_ADMIN_API = (
       regFoot.style.display = 'none';
     } else {
       regFoot.style.display = 'flex';
-      regNext.querySelector('.label').textContent = nextLabels[currentStep];
+      if(currentStep === 1){
+        updateStep1NextLabel();
+      } else {
+        regNext.querySelector('.label').textContent = nextLabels[currentStep];
+      }
     }
   }
 
@@ -5683,18 +5668,29 @@ var CU_ADMIN_API = (
   var mobileVerified = false;
   var phoneVerificationToken = '';
   var verifiedMobileNumber = '';
+  var otpSentToMobile = '';
+  var otpAwaitingVerification = false;
   var otpResendTimer = null;
   var otpResendRemaining = 0;
   var otpRequestInFlight = false;
 
-  var regSendOtpBtn = document.getElementById('regSendOtpBtn');
   var regOtpPanel = document.getElementById('regOtpPanel');
   var regOtpCode = document.getElementById('regOtpCode');
-  var regVerifyOtpBtn = document.getElementById('regVerifyOtpBtn');
   var regResendOtpBtn = document.getElementById('regResendOtpBtn');
   var regMobileVerifiedBadge = document.getElementById('regMobileVerifiedBadge');
   var regOtpStatus = document.getElementById('regOtpStatus');
   var regOtpHint = document.getElementById('regOtpHint');
+
+  function updateStep1NextLabel(){
+    if(!regNext) return;
+    var labelEl = regNext.querySelector('.label');
+    if(!labelEl) return;
+    if(currentStep === 1 && otpAwaitingVerification && !mobileVerified){
+      labelEl.textContent = 'Verify & Continue';
+    } else {
+      labelEl.textContent = nextLabels[1];
+    }
+  }
 
   function setOtpStatus(message, kind){
     regOtpStatus.textContent = message || '';
@@ -5741,11 +5737,12 @@ var CU_ADMIN_API = (
     mobileVerified = true;
     phoneVerificationToken = token || '';
     verifiedMobileNumber = phone || '';
+    otpSentToMobile = phone || '';
+    otpAwaitingVerification = false;
     regMobileVerifiedBadge.classList.add('show');
     regOtpPanel.classList.remove('show');
-    regSendOtpBtn.disabled = true;
-    regSendOtpBtn.textContent = 'Verified';
     setOtpStatus('', null);
+    updateStep1NextLabel();
   }
 
   function clearMobileVerified(){
@@ -5753,12 +5750,12 @@ var CU_ADMIN_API = (
     phoneVerificationToken = '';
     verifiedMobileNumber = '';
     regMobileVerifiedBadge.classList.remove('show');
-    regSendOtpBtn.disabled = false;
-    regSendOtpBtn.textContent = 'Send OTP';
   }
 
   function resetMobileOtpState(){
     clearMobileVerified();
+    otpAwaitingVerification = false;
+    otpSentToMobile = '';
     clearOtpResendTimer();
     updateResendButton();
     regOtpPanel.classList.remove('show');
@@ -5767,6 +5764,7 @@ var CU_ADMIN_API = (
     if(regOtpHint){
       regOtpHint.textContent = 'OTP expires in 5 minutes. You can resend after 30 seconds.';
     }
+    updateStep1NextLabel();
   }
 
   function postOtp(path, payload){
@@ -5791,18 +5789,17 @@ var CU_ADMIN_API = (
     if(!isValidMobile(mobile)){
       setError(document.getElementById('regMobile').closest('.reg-field'), true);
       setOtpStatus('Enter a valid 10-digit mobile number starting 6–9.', 'err');
-      return;
+      return Promise.resolve(false);
     }
     setError(document.getElementById('regMobile').closest('.reg-field'), false);
-    if(otpRequestInFlight) return;
+    if(otpRequestInFlight) return Promise.resolve(false);
     otpRequestInFlight = true;
-    regSendOtpBtn.disabled = true;
-    regSendOtpBtn.textContent = 'Sending…';
     if(regResendOtpBtn) regResendOtpBtn.disabled = true;
-    regOtpPanel.classList.add('show');
-    setOtpStatus(isResend ? 'Sending a new OTP…' : 'Sending OTP…', null);
+    if(isResend || otpAwaitingVerification){
+      setOtpStatus(isResend ? 'Sending a new OTP…' : 'Sending OTP…', null);
+    }
 
-    postOtp('/api/send-otp', {
+    return postOtp('/api/send-otp', {
       phone: mobile,
       purpose: OTP_PURPOSE
     }).then(function(result){
@@ -5810,20 +5807,20 @@ var CU_ADMIN_API = (
       if(!result.ok){
         var err = (result.data && result.data.error) ? result.data.error : 'Could not send OTP. Please try again.';
         setOtpStatus(err, 'err');
-        if(!mobileVerified){
-          regSendOtpBtn.disabled = false;
-          regSendOtpBtn.textContent = 'Send OTP';
-        }
         var retry = result.data && result.data.retryAfterSeconds;
-        startResendCooldown(typeof retry === 'number' ? retry : 30);
-        return;
+        if(otpAwaitingVerification){
+          startResendCooldown(typeof retry === 'number' ? retry : 30);
+        } else {
+          updateResendButton();
+        }
+        return false;
       }
       clearMobileVerified();
+      otpAwaitingVerification = true;
+      otpSentToMobile = mobile;
       regOtpPanel.classList.add('show');
       regOtpCode.value = '';
       try { regOtpCode.focus(); } catch (e) {}
-      regSendOtpBtn.disabled = false;
-      regSendOtpBtn.textContent = 'Send OTP';
       var cooldown = (result.data && result.data.resendAfterSeconds) || 30;
       startResendCooldown(cooldown);
       var msg = 'OTP sent to ' + mobile + '.';
@@ -5831,15 +5828,18 @@ var CU_ADMIN_API = (
         msg += ' Dev code: ' + result.data.debugCode;
       }
       setOtpStatus(msg, 'ok');
+      updateStep1NextLabel();
+      return true;
     }).catch(function(err){
       otpRequestInFlight = false;
       console.error('Send OTP failed', err);
       setOtpStatus('Could not reach the OTP server at ' + CU_ADMIN_API + '. Make sure the admin dashboard is running (npm run dev).', 'err');
-      if(!mobileVerified){
-        regSendOtpBtn.disabled = false;
-        regSendOtpBtn.textContent = 'Send OTP';
+      if(otpAwaitingVerification){
+        startResendCooldown(30);
+      } else {
+        updateResendButton();
       }
-      startResendCooldown(30);
+      return false;
     });
   }
 
@@ -5849,64 +5849,50 @@ var CU_ADMIN_API = (
     if(!isValidMobile(mobile)){
       setError(document.getElementById('regMobile').closest('.reg-field'), true);
       setOtpStatus('Enter a valid mobile number first.', 'err');
-      return;
+      return Promise.resolve(false);
     }
     if(code.length !== 6){
       setOtpStatus('Enter the 6-digit OTP.', 'err');
-      return;
+      return Promise.resolve(false);
     }
-    if(otpRequestInFlight) return;
+    if(otpRequestInFlight) return Promise.resolve(false);
     otpRequestInFlight = true;
-    regVerifyOtpBtn.disabled = true;
     setOtpStatus('Verifying…', null);
 
-    postOtp('/api/verify-otp', {
+    return postOtp('/api/verify-otp', {
       phone: mobile,
       purpose: OTP_PURPOSE,
       code: code
     }).then(function(result){
       otpRequestInFlight = false;
-      regVerifyOtpBtn.disabled = false;
       if(!result.ok){
         var err = (result.data && result.data.error) ? result.data.error : 'OTP verification failed.';
         setOtpStatus(err, 'err');
-        return;
+        return false;
       }
       var token = result.data && result.data.verificationToken;
       if(!token){
         setOtpStatus('Verification succeeded but no token was returned. Please try again.', 'err');
-        return;
+        return false;
       }
       setMobileVerified(token, mobile);
       setOtpStatus('Mobile number verified.', 'ok');
       clearOtpResendTimer();
       updateResendButton();
       regDuplicateBanner.classList.remove('show');
+      return true;
     }).catch(function(){
       otpRequestInFlight = false;
-      regVerifyOtpBtn.disabled = false;
       setOtpStatus('Could not reach the OTP server. Please try again.', 'err');
+      return false;
     });
   }
 
-  if(regSendOtpBtn){
-    regSendOtpBtn.addEventListener('click', function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      requestMobileOtp(false);
-    });
-  }
   if(regResendOtpBtn){
     regResendOtpBtn.addEventListener('click', function(e){
       e.preventDefault();
-      if(regResendOtpBtn.disabled) return;
+      if(regResendOtpBtn.disabled || otpRequestInFlight || regSubmitInFlight) return;
       requestMobileOtp(true);
-    });
-  }
-  if(regVerifyOtpBtn){
-    regVerifyOtpBtn.addEventListener('click', function(e){
-      e.preventDefault();
-      verifyMobileOtp();
     });
   }
   regOtpCode.addEventListener('input', function(){
@@ -5915,32 +5901,38 @@ var CU_ADMIN_API = (
   regOtpCode.addEventListener('keydown', function(e){
     if(e.key === 'Enter'){
       e.preventDefault();
-      verifyMobileOtp();
+      e.stopPropagation();
+      if(otpAwaitingVerification && !mobileVerified){
+        regNext.click();
+      }
     }
   });
   document.getElementById('regMobile').addEventListener('input', function(){
-    if(mobileVerified && this.value.trim() !== verifiedMobileNumber){
-      clearMobileVerified();
-      regOtpPanel.classList.remove('show');
-      regOtpCode.value = '';
-      setOtpStatus('Mobile number changed. Please verify again.', 'err');
-      clearOtpResendTimer();
-      updateResendButton();
+    var current = this.value.trim();
+    if((otpAwaitingVerification || mobileVerified) && current !== otpSentToMobile){
+      resetMobileOtpState();
+      setOtpStatus('Mobile number changed. Click Continue to send a new OTP.', 'err');
     }
   });
 
-  function validateStep1(){
+  function validateStep1Basics(){
     var ok = true;
     var name = document.getElementById('regName');
     var mobile = document.getElementById('regMobile');
     var email = document.getElementById('regEmail');
     email.value = email.value.trim();
     if(name.value.trim().length < 2){ setError(name.closest('.reg-field'), true); ok = false; } else setError(name.closest('.reg-field'), false);
-    if(!isValidMobile(mobile.value)){ setError(mobile.closest('.reg-field'), true); ok = false; } else setError(mobile.closest('.reg-field'), false);
     if(!isValidEmail(email.value)){ setError(email.closest('.reg-field'), true); ok = false; } else setError(email.closest('.reg-field'), false);
+    if(!isValidMobile(mobile.value)){ setError(mobile.closest('.reg-field'), true); ok = false; } else setError(mobile.closest('.reg-field'), false);
+    return ok;
+  }
+
+  function validateStep1(){
+    var ok = validateStep1Basics();
+    var mobile = document.getElementById('regMobile');
     if(ok && (!mobileVerified || mobile.value.trim() !== verifiedMobileNumber || !phoneVerificationToken)){
       setError(mobile.closest('.reg-field'), true);
-      if(!regOtpPanel.classList.contains('show')){
+      if(!otpAwaitingVerification){
         setOtpStatus('Please verify your mobile number with OTP to continue.', 'err');
       } else {
         setOtpStatus('Please enter and verify the OTP to continue.', 'err');
@@ -5949,6 +5941,13 @@ var CU_ADMIN_API = (
     }
     return ok;
   }
+
+  regForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(currentStep >= TOTAL_STEPS || regSubmitInFlight || otpRequestInFlight) return;
+    regNext.click();
+  });
+
   function validateStep2(){
     var ok = true;
     var school = document.getElementById('regSchool');
@@ -5998,8 +5997,6 @@ var CU_ADMIN_API = (
       return { duplicate: false, message: null, error: 'Could not reach the registration server.' };
     });
   }
-  var regDuplicateBanner = document.getElementById('regDuplicateBanner');
-
   function buildPass(registrationNumber){
     function getVal(sel){ var el = document.getElementById(sel); return el ? el.value.trim() : ''; }
     var seminars = Array.prototype.slice.call(seminarGrid.querySelectorAll('.reg-seminar-chip.selected')).map(function(c){ return c.getAttribute('data-value'); });
@@ -6117,19 +6114,91 @@ var CU_ADMIN_API = (
   }
 
   regNext.addEventListener('click', function(){
-    var valid = true;
-    if(currentStep === 1) valid = validateStep1();
-    if(currentStep === 2) valid = validateStep2();
-    if(currentStep === 3) valid = validateStep3();
-    if(!valid){
-      var firstErr = regForm.querySelector('.reg-step.active .reg-field.err');
-      if(firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
-      return;
-    }
+    if(regSubmitInFlight || otpRequestInFlight) return;
+
     if(currentStep === 1){
-      var mobileVal = document.getElementById('regMobile').value;
-      var emailVal = document.getElementById('regEmail').value;
-      if(regSubmitInFlight) return;
+      if(!validateStep1Basics()){
+        var firstBasicsErr = regForm.querySelector('.reg-step.active .reg-field.err');
+        if(firstBasicsErr) firstBasicsErr.scrollIntoView({ behavior:'smooth', block:'center' });
+        return;
+      }
+
+      var mobileVal = document.getElementById('regMobile').value.trim();
+      var emailVal = document.getElementById('regEmail').value.trim();
+
+      /* Phase A: send OTP, stay on Step 1 */
+      if(!mobileVerified && !otpAwaitingVerification){
+        regSubmitInFlight = true;
+        regNext.classList.add('loading');
+        regDuplicateBanner.classList.remove('show');
+        clearFormApiError(regForm);
+        checkRegistrationDuplicate(CURRENT_EVENT_ID, mobileVal, emailVal).then(function(check){
+          if(check.error){
+            regSubmitInFlight = false;
+            regNext.classList.remove('loading');
+            showFormApiError(regForm, check.error);
+            return;
+          }
+          if(check.duplicate){
+            regSubmitInFlight = false;
+            regNext.classList.remove('loading');
+            regDuplicateBanner.classList.add('show');
+            regDuplicateBanner.scrollIntoView({ behavior:'smooth', block:'center' });
+            return;
+          }
+          requestMobileOtp(false).then(function(sent){
+            regSubmitInFlight = false;
+            regNext.classList.remove('loading');
+            if(!sent){
+              var otpField = document.getElementById('regMobileField');
+              if(otpField) otpField.scrollIntoView({ behavior:'smooth', block:'center' });
+            }
+          });
+        });
+        return;
+      }
+
+      /* Phase B: verify OTP, then advance */
+      if(!mobileVerified && otpAwaitingVerification){
+        regSubmitInFlight = true;
+        regNext.classList.add('loading');
+        regDuplicateBanner.classList.remove('show');
+        clearFormApiError(regForm);
+        verifyMobileOtp().then(function(ok){
+          if(!ok){
+            regSubmitInFlight = false;
+            regNext.classList.remove('loading');
+            var otpField = document.getElementById('regMobileField');
+            if(otpField) otpField.scrollIntoView({ behavior:'smooth', block:'center' });
+            return;
+          }
+          checkRegistrationDuplicate(CURRENT_EVENT_ID, mobileVal, emailVal).then(function(check){
+            regSubmitInFlight = false;
+            regNext.classList.remove('loading');
+            if(check.error){
+              showFormApiError(regForm, check.error);
+              return;
+            }
+            if(check.duplicate){
+              regDuplicateBanner.classList.add('show');
+              regDuplicateBanner.scrollIntoView({ behavior:'smooth', block:'center' });
+              return;
+            }
+            clearRegSubmitError();
+            currentStep = Math.min(currentStep + 1, TOTAL_STEPS);
+            renderStep();
+            regForm.closest('.reg-card').querySelector('.reg-body').scrollTop = 0;
+          });
+        });
+        return;
+      }
+
+      /* Phase C: already verified (e.g. returned after duplicate banner) */
+      if(!validateStep1()){
+        var firstErr = regForm.querySelector('.reg-step.active .reg-field.err');
+        if(firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
+        return;
+      }
       regSubmitInFlight = true;
       regNext.classList.add('loading');
       regDuplicateBanner.classList.remove('show');
@@ -6150,6 +6219,15 @@ var CU_ADMIN_API = (
         renderStep();
         regForm.closest('.reg-card').querySelector('.reg-body').scrollTop = 0;
       });
+      return;
+    }
+
+    var valid = true;
+    if(currentStep === 2) valid = validateStep2();
+    if(currentStep === 3) valid = validateStep3();
+    if(!valid){
+      var firstStepErr = regForm.querySelector('.reg-step.active .reg-field.err');
+      if(firstStepErr) firstStepErr.scrollIntoView({ behavior:'smooth', block:'center' });
       return;
     }
     if(currentStep === 3){
