@@ -4568,8 +4568,8 @@ footer{
           <div class="reg-otp-status" id="regOtpStatus" aria-live="polite"></div>
           <div class="reg-verified-badge" id="regMobileVerifiedBadge" aria-live="polite">Verified ✓</div>
           <div class="reg-otp-panel" id="regOtpPanel">
-            <label for="regOtpCode">Enter OTP</label>
-            <input class="reg-input" id="regOtpCode" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6-digit code">
+            <label for="regOtpCode">Enter 4 digit OTP</label>
+            <input class="reg-input" id="regOtpCode" type="text" inputmode="numeric" maxlength="4" autocomplete="one-time-code" placeholder="4-digit code">
             <div class="reg-otp-resend-row">
               <button type="button" class="reg-otp-resend" id="regResendOtpBtn" disabled>Resend OTP</button>
             </div>
@@ -5851,8 +5851,8 @@ var CU_ADMIN_API = (
       setOtpStatus('Enter a valid mobile number first.', 'err');
       return Promise.resolve(false);
     }
-    if(code.length !== 6){
-      setOtpStatus('Enter the 6-digit OTP.', 'err');
+    if(code.length !== 4){
+      setOtpStatus('Enter the 4-digit OTP.', 'err');
       return Promise.resolve(false);
     }
     if(otpRequestInFlight) return Promise.resolve(false);
@@ -5896,7 +5896,7 @@ var CU_ADMIN_API = (
     });
   }
   regOtpCode.addEventListener('input', function(){
-    this.value = this.value.replace(/\D/g, '').slice(0, 6);
+    this.value = this.value.replace(/\D/g, '').slice(0, 4);
   });
   regOtpCode.addEventListener('keydown', function(e){
     if(e.key === 'Enter'){
