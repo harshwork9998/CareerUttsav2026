@@ -43,7 +43,11 @@
 }
 
 *{ margin:0; padding:0; box-sizing:border-box; }
-html{ scroll-behavior:smooth; }
+html{
+  scroll-behavior:smooth;
+  overflow-x:clip;
+  max-width:100%;
+}
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior:auto; }
   *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
@@ -54,7 +58,8 @@ body{
   background-color:var(--paper);
   color:var(--ink);
   line-height:1.5;
-  overflow-x:hidden;
+  overflow-x:clip;
+  max-width:100%;
   -webkit-font-smoothing:antialiased;
 }
 
@@ -267,7 +272,7 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 }
 .hero-copy .eyebrow{
   font-size:16px;
-  letter-spacing:0.12em;
+  letter-spacing:0.06em;
 }
 .hero-copy .eyebrow::before{ display:none; }
 .hero-copy h1 em{
@@ -351,7 +356,7 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 
 @media (max-width:920px){
   .hero-grid{ grid-template-columns:1fr; }
-  .pass-card{ justify-self:start; margin-top:30px; margin-right:0; transform:rotate(2deg); max-width:100%; }
+  .pass-card{ justify-self:center; margin-top:30px; margin-right:auto; margin-left:auto; transform:rotate(2deg); max-width:490px; width:100%; }
 }
 
 /* ============================================================
@@ -682,9 +687,10 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   content:'';
   position:absolute;
   top:0; bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:100vw;
+  left:calc(50% - 50vw);
+  right:calc(50% - 50vw);
+  width:auto;
+  transform:none;
   background-color:var(--yellow-soft);
   background-image:var(--doodle);
   background-repeat:repeat;
@@ -716,229 +722,216 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   white-space:nowrap;
 }
 
+.journey-scrollhint{
+  display:none;
+}
+.journey-scrollhint svg{
+  color:var(--red);
+  animation:journeyNudge 1.8s ease-in-out infinite;
+}
+@keyframes journeyNudge{
+  0%,100%{ transform:translateX(0); }
+  50%{ transform:translateX(6px); }
+}
+
+.journey-track-outer{
+  position:relative;
+  overflow-x:clip;
+}
 .journey-track{
-  position:relative;
-  max-width:1080px;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:minmax(0, 1fr);
-  grid-template-rows:auto auto auto;
-  row-gap:6px;
-}
-
-/* Spine sits in the shared middle row with the milestone dots */
-.journey-spine{
-  grid-row:2;
-  grid-column:1;
-  align-self:center;
-  position:relative;
-  left:calc(100% / 12);
-  width:calc(100% * 10 / 12);
-  height:5px;
-  border-radius:999px;
-  background:rgba(20,18,26,0.08);
-  overflow:hidden;
-  z-index:0;
-  pointer-events:none;
-}
-.journey-spine-fill{
-  height:100%;
-  width:100%;
-  border-radius:inherit;
-  background:var(--red);
-  box-shadow:0 0 12px rgba(229,55,43,0.25);
-  transform:scaleX(var(--journey-progress, 1));
-  transform-origin:left center;
-  transition:transform .55s var(--ease);
-}
-.journey-track.is-hovering .journey-spine-fill{
-  transition:transform .35s var(--ease);
-}
-
-.journey-milestones{
-  list-style:none;
-  grid-row:1 / -1;
-  grid-column:1;
-  display:grid;
-  grid-template-columns:repeat(6, 1fr);
-  grid-template-rows:subgrid;
-  column-gap:10px;
+  display:flex;
   align-items:stretch;
-  min-height:0;
+  gap:24px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  padding:10px 40px 30px 10px;
+  scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(to right, transparent 0, black 28px, black calc(100% - 56px), transparent 100%);
+  mask-image:linear-gradient(to right, transparent 0, black 28px, black calc(100% - 56px), transparent 100%);
+}
+.journey-track::-webkit-scrollbar{ display:none; }
+
+.journey-item{
+  scroll-snap-align:center;
+  flex:0 0 296px;
+  position:relative;
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity 560ms var(--ease), transform 560ms var(--ease);
+}
+.journey-item.in-view{ opacity:1; transform:translateY(0); }
+
+.journey-card{
+  position:relative;
+  background:#fff;
+  border:1px solid rgba(20,18,26,0.10);
+  border-radius:18px;
+  padding:22px 20px;
+  height:100%;
+  overflow:hidden;
+  cursor:pointer;
+  box-shadow:0 14px 34px -16px rgba(20,18,26,0.22), 0 2px 8px -2px rgba(20,18,26,0.12);
+  transition:transform 480ms var(--ease), background 480ms var(--ease), border-color 480ms var(--ease), box-shadow 480ms var(--ease);
+}
+.journey-card:hover{
+  transform:translateY(-4px);
+  background:#FFFCFA;
+  box-shadow:0 22px 44px -16px rgba(20,18,26,0.28), 0 4px 10px -2px rgba(20,18,26,0.14);
+}
+.journey-item.expanded .journey-card{
+  border-color:rgba(229,55,43,0.4);
+  box-shadow:var(--shadow-soft), 0 0 0 1px rgba(229,55,43,0.15);
+}
+
+.journey-num{
+  position:absolute;
+  top:-14px; right:-8px;
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:clamp(76px,8vw,104px);
+  line-height:1;
+  letter-spacing:-0.04em;
+  background:linear-gradient(160deg, rgba(229,55,43,0.9), rgba(229,55,43,0.15));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  transform:rotate(-4deg);
+  pointer-events:none;
+  user-select:none;
+  z-index:0;
+}
+
+.journey-cardtop{
   position:relative;
   z-index:1;
-  margin:0;
-  padding:0;
-}
-
-.jm{
-  display:grid;
-  grid-template-rows:subgrid;
-  grid-row:1 / -1;
-  justify-items:stretch;
-  min-width:0;
-  opacity:0;
-  transform:translateY(28px);
-  transition:opacity .7s var(--ease), transform .7s var(--ease);
-}
-.journey-track.in .jm{ opacity:1; transform:translateY(0); }
-.journey-track.in .jm:nth-child(1){ transition-delay:.05s; }
-.journey-track.in .jm:nth-child(2){ transition-delay:.12s; }
-.journey-track.in .jm:nth-child(3){ transition-delay:.19s; }
-.journey-track.in .jm:nth-child(4){ transition-delay:.26s; }
-.journey-track.in .jm:nth-child(5){ transition-delay:.33s; }
-.journey-track.in .jm:nth-child(6){ transition-delay:.4s; }
-
-.jm-node{
-  grid-row:2;
-  justify-self:center;
-  align-self:center;
-  width:16px; height:16px;
-  border-radius:50%;
-  background:var(--red);
-  border:3px solid var(--red);
-  box-shadow:0 0 0 5px rgba(229,55,43,0.14);
-  z-index:2;
-  transition:transform .35s var(--ease), box-shadow .35s var(--ease);
-  position:relative;
-}
-.jm.is-reached .jm-node{
-  border-color:var(--red);
-  background:var(--red);
-  box-shadow:0 0 0 5px rgba(229,55,43,0.14);
-}
-.jm:hover .jm-node,
-.jm.is-active .jm-node{
-  transform:scale(1.28);
-  border-color:var(--red);
-  background:var(--red);
-  box-shadow:0 0 0 7px rgba(229,55,43,0.2);
-}
-
-.jm-card{
-  width:100%;
-  height:auto;
-  min-height:0;
-  box-sizing:border-box;
   display:flex;
-  flex-direction:column;
-  background:#fff;
-  border:1px solid rgba(20,18,26,0.07);
-  border-radius:18px;
-  padding:14px 16px;
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.65) inset,
-    0 12px 28px -20px rgba(20,18,26,0.22);
-  transition:transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease), background .4s var(--ease);
-  position:relative;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
 }
-.jm--up .jm-card{
-  grid-row:1;
-  align-self:end;
-  margin:0;
-}
-.jm--down .jm-card{
-  grid-row:3;
-  align-self:start;
-  margin:0;
-}
-.jm:hover .jm-card{
-  transform:translateY(-6px);
-  background:#FFFCFA;
-  border-color:rgba(229,55,43,0.16);
-  box-shadow:
-    0 0 0 1px rgba(229,55,43,0.06),
-    0 20px 40px -22px rgba(184,42,32,0.3);
-}
-
-.jm-icon{
-  width:30px; height:30px;
-  border-radius:9px;
-  display:inline-flex; align-items:center; justify-content:center;
-  background:rgba(229,55,43,0.06);
+.journey-icon-badge{
+  width:38px; height:38px;
+  border-radius:50%;
+  background:rgba(229,55,43,0.14);
+  border:1px solid rgba(229,55,43,0.3);
+  display:flex; align-items:center; justify-content:center;
   color:var(--red);
-  margin-bottom:10px;
-  flex-shrink:0;
+  flex:0 0 auto;
+  transition:transform 480ms var(--ease), background 480ms var(--ease);
 }
-.jm-icon svg{ width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.journey-icon-badge svg{
+  width:18px; height:18px;
+  stroke:currentColor; fill:none;
+  stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round;
+}
+.journey-item:not(.expanded):hover .journey-icon-badge{
+  transform:rotate(-8deg) scale(1.08);
+  background:rgba(229,55,43,0.22);
+}
+.journey-item.expanded .journey-icon-badge{ background:var(--red); color:#fff; }
 
-.jm-year{
-  position:absolute;
-  top:14px;
-  right:16px;
+.journey-yeartag{
   font-family:var(--font-display);
-  font-size:15px;
-  font-weight:800;
-  letter-spacing:0.04em;
-  text-transform:uppercase;
-  color:var(--red);
-  margin:0;
-  line-height:1;
-}
-.jm-title{
-  font-family:var(--font-display);
-  font-size:17px;
   font-weight:700;
-  letter-spacing:-0.02em;
-  line-height:1.15;
-  margin:0 0 6px;
-  color:var(--ink);
-  white-space:nowrap;
+  font-size:14px;
+  color:var(--ink-soft);
+  letter-spacing:0.01em;
 }
-.jm-stat{
+
+.journey-card-title{
+  position:relative; z-index:1;
   font-family:var(--font-display);
-  font-size:clamp(26px,2.2vw,34px);
-  font-weight:800;
-  letter-spacing:-0.03em;
-  line-height:1;
+  font-weight:700;
+  font-size:20px;
+  line-height:1.22;
+  margin:0 0 8px;
   color:var(--ink);
-  margin:0 0 2px;
 }
-.jm-stat span{
+.journey-blurb{
+  position:relative; z-index:1;
+  font-size:14.5px;
+  line-height:1.55;
+  color:var(--ink-soft);
+  margin:0;
+}
+.journey-stat{
+  position:relative; z-index:1;
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:32px;
+  line-height:1;
+  margin:12px 0 3px;
+  color:var(--ink);
+}
+.journey-stat span{
   font-size:0.55em;
   font-weight:700;
   color:var(--red);
-  letter-spacing:0;
   margin-left:2px;
 }
-.jm-stat-label{
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  color:var(--ink-soft);
-  margin:0 0 8px;
-}
-.jm-copy{
-  font-size:12.5px;
-  line-height:1.4;
-  color:var(--ink-soft);
-  margin:0 0 10px;
-  flex:1;
-}
-.jm-place{
-  display:flex;
-  align-items:center;
-  gap:6px;
+.journey-stat-label{
+  position:relative; z-index:1;
   font-size:12px;
   font-weight:600;
   color:var(--ink-soft);
-  margin-top:auto;
-  padding-top:0;
-}
-.jm-place svg{
-  width:12px; height:12px;
-  flex-shrink:0;
-  stroke:var(--red);
-  fill:none;
-  stroke-width:1.8;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  opacity:0.9;
+  margin-bottom:8px;
 }
 
-/* Destination  -  Today (same size, special finish) */
-.jm--now .jm-card{
+.journey-chips{
+  position:relative; z-index:1;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:12px;
+}
+.journey-chip{
+  font-size:12px;
+  font-weight:600;
+  background:rgba(20,18,26,0.05);
+  color:var(--ink-soft);
+  padding:4px 10px;
+  border-radius:20px;
+  border:1px solid rgba(20,18,26,0.10);
+}
+
+.journey-detail{
+  position:relative; z-index:1;
+  display:grid;
+  grid-template-rows:0fr;
+  opacity:0;
+  transition:grid-template-rows 480ms var(--ease), opacity 260ms ease;
+}
+.journey-item.expanded .journey-detail{ grid-template-rows:1fr; opacity:1; }
+.journey-detail-inner{ overflow:hidden; }
+.journey-detail-text{
+  font-size:14px;
+  line-height:1.6;
+  color:var(--ink-soft);
+  padding-top:14px;
+  margin-top:14px;
+  border-top:1px solid rgba(20,18,26,0.10);
+}
+
+.journey-expand-cue{
+  position:relative; z-index:1;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin-top:14px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--ink-soft);
+}
+.journey-expand-cue svg{
+  width:14px; height:14px;
+  stroke:currentColor; fill:none;
+  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+  transition:transform 480ms var(--ease);
+}
+.journey-item.expanded .journey-expand-cue svg{ transform:rotate(180deg); }
+
+.journey-item:last-child .journey-card{
   background:linear-gradient(145deg, #E5372B 0%, #C42A20 48%, #9B1F18 100%);
   border-color:transparent;
   color:#fff;
@@ -946,21 +939,9 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
     0 0 0 1px rgba(255,255,255,0.12) inset,
     0 24px 48px -18px rgba(229,55,43,0.55),
     0 0 36px -8px rgba(229,55,43,0.45);
+  animation:journeyPulseGlow 3.2s ease-in-out infinite;
 }
-.jm--now .jm-icon{
-  background:rgba(255,255,255,0.14);
-  color:#fff;
-}
-.jm--now .jm-year{ color:rgba(255,255,255,0.72); }
-.jm--now .jm-title{ color:#fff; }
-.jm--now .jm-stat{ color:#fff; }
-.jm--now .jm-stat span{ color:var(--yellow); }
-.jm--now .jm-stat-label{ color:rgba(255,255,255,0.65); }
-.jm--now .jm-copy{ color:rgba(255,255,255,0.78); }
-.jm--now .jm-place{ color:rgba(255,255,255,0.7); }
-.jm--now .jm-place svg{ stroke:var(--yellow); }
-.jm--now:hover .jm-card{
-  transform:translateY(-6px);
+.journey-item:last-child .journey-card:hover{
   background:linear-gradient(145deg, #E5372B 0%, #C42A20 48%, #9B1F18 100%);
   border-color:transparent;
   box-shadow:
@@ -968,119 +949,102 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
     0 28px 56px -16px rgba(229,55,43,0.65),
     0 0 48px -6px rgba(255,197,48,0.35);
 }
-.jm--now .jm-node{
+.journey-item:last-child.expanded .journey-card{
+  border-color:rgba(255,255,255,0.28);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.18) inset,
+    0 28px 56px -16px rgba(229,55,43,0.65),
+    0 0 0 1px rgba(255,255,255,0.12);
+}
+@keyframes journeyPulseGlow{
+  0%,100%{ box-shadow:0 0 0 0 rgba(229,55,43,0.0), 0 24px 48px -18px rgba(229,55,43,0.55); }
+  50%{ box-shadow:0 0 0 8px rgba(229,55,43,0.18), 0 28px 56px -16px rgba(229,55,43,0.65); }
+}
+.journey-item:last-child .journey-num{
+  top:-18px;
+  right:-14px;
+  background:none;
+  -webkit-background-clip:unset;
+  background-clip:unset;
+  -webkit-text-fill-color:currentColor;
+  color:rgba(255,255,255,0.34);
+  font-size:clamp(108px,11vw,140px);
+  line-height:0.82;
+  letter-spacing:-0.06em;
+  transform:rotate(-6deg);
+}
+.journey-item:last-child .journey-icon-badge{
+  background:rgba(255,255,255,0.14);
+  color:#fff;
+  border-color:rgba(255,255,255,0.28);
+}
+.journey-item:last-child.expanded .journey-icon-badge{
+  background:#fff;
+  color:var(--red);
+  border-color:#fff;
+}
+.journey-item:last-child .journey-yeartag,
+.journey-item:last-child .journey-card-title,
+.journey-item:last-child .journey-stat{ color:#fff; }
+.journey-item:last-child .journey-stat span{ color:var(--yellow); }
+.journey-item:last-child .journey-stat-label,
+.journey-item:last-child .journey-blurb,
+.journey-item:last-child .journey-expand-cue,
+.journey-item:last-child .journey-detail-text{ color:rgba(255,255,255,0.78); }
+.journey-item:last-child .journey-chip{
+  background:rgba(255,255,255,0.12);
+  color:rgba(255,255,255,0.88);
+  border-color:rgba(255,255,255,0.18);
+}
+.journey-item:last-child .journey-detail-text{
+  border-top-color:rgba(255,255,255,0.18);
+}
+
+.journey-card:focus-visible{ outline:2px solid var(--red); outline-offset:3px; }
+
+.journey-navrow{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  margin-top:10px;
+}
+.journey-arrowbtn{
+  width:44px; height:44px;
+  border-radius:50%;
+  border:1px solid rgba(20,18,26,0.10);
+  background:#fff;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--ink);
+  cursor:pointer;
+  transition:transform 220ms var(--ease), background 220ms var(--ease), color 220ms var(--ease), opacity 220ms var(--ease), border-color 220ms var(--ease);
+  flex:0 0 auto;
+  box-shadow:0 6px 16px -8px rgba(20,18,26,0.25);
+}
+.journey-arrowbtn:hover{ background:var(--red); color:#fff; border-color:var(--red); transform:translateY(-2px); }
+.journey-arrowbtn:active{ transform:translateY(0) scale(0.94); }
+.journey-arrowbtn:disabled{ opacity:0.3; cursor:default; pointer-events:none; }
+.journey-arrowbtn svg{
   width:18px; height:18px;
-  border-color:var(--red);
-  background:var(--red);
-  box-shadow:0 0 0 7px rgba(229,55,43,0.2), 0 0 16px rgba(229,55,43,0.35);
-  animation:jmPulse 2.4s ease-in-out infinite;
-}
-@keyframes jmPulse{
-  0%,100%{ box-shadow:0 0 0 7px rgba(229,55,43,0.18), 0 0 14px rgba(229,55,43,0.3); }
-  50%{ box-shadow:0 0 0 11px rgba(229,55,43,0.1), 0 0 24px rgba(229,55,43,0.4); }
+  stroke:currentColor; fill:none;
+  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
 }
 
-/* Tablet */
-@media (max-width:1100px){
-  .journey-head{ margin-bottom:28px; }
-  .journey-track{
-    display:block;
-  }
-  .journey-milestones{
-    grid-template-columns:repeat(3,1fr);
-    grid-template-rows:none;
-    grid-row:auto;
-    grid-column:auto;
-    gap:28px 16px;
-    min-height:0;
-  }
-  .journey-spine{ display:none; }
-  .jm{
-    display:flex;
-    flex-direction:column;
-    align-items:stretch;
-    gap:14px;
-    grid-row:auto;
-  }
-  .jm-node{ order:0; align-self:flex-start; margin-left:8px; grid-row:auto; }
-  .jm--up .jm-card,
-  .jm--down .jm-card{
-    margin:0;
-    grid-row:auto;
-  }
-  .jm-card{ order:1; }
+.journey-dots{ display:flex; align-items:center; gap:7px; }
+.journey-dotbtn{
+  width:8px; height:8px;
+  border-radius:50%;
+  background:rgba(20,18,26,0.16);
+  border:none;
+  padding:0;
+  cursor:pointer;
+  transition:width 260ms var(--ease), background 260ms var(--ease), transform 200ms var(--ease);
 }
+.journey-dotbtn:hover{ transform:scale(1.2); }
+.journey-dotbtn.active{ width:24px; border-radius:5px; background:var(--red); }
 
-/* Mobile  -  vertical story */
 @media (max-width:700px){
-  .about-journey{ margin-top:40px; padding-top:36px; padding-bottom:48px; }
-  .journey-head{ margin-bottom:28px; text-align:left; max-width:none; }
-  .journey-head .eyebrow{ justify-content:flex-start; }
-  .journey-head h3{ font-size:clamp(18px,5.2vw,28px); }
-  .journey-head p{ white-space:normal; }
-  .journey-track{
-    display:block;
-    position:relative;
-  }
-  .journey-milestones{
-    grid-template-columns:1fr;
-    grid-template-rows:none;
-    grid-row:auto;
-    grid-column:auto;
-    gap:0;
-    padding-left:34px;
-    position:relative;
-  }
-  .journey-spine{
-    display:block;
-    position:absolute;
-    grid-row:auto;
-    grid-column:auto;
-    align-self:auto;
-    left:7px;
-    right:auto;
-    top:12px;
-    bottom:12px;
-    width:4px;
-    height:auto;
-    margin:0;
-    transform:none;
-    background:rgba(20,18,26,0.08);
-  }
-  .journey-spine-fill{
-    width:100%;
-    height:100%;
-    transform:scaleY(var(--journey-progress, 1));
-    transform-origin:top center;
-    background:var(--red);
-  }
-  .jm{
-    display:grid;
-    grid-template-columns:1fr;
-    grid-template-rows:auto;
-    gap:0;
-    padding:0 0 28px;
-    align-items:start;
-    justify-items:stretch;
-  }
-  .jm:last-child{ padding-bottom:0; }
-  .jm-node{
-    position:absolute;
-    left:0;
-    margin:8px 0 0 -34px;
-    grid-row:auto;
-  }
-  .jm--up .jm-card,
-  .jm--down .jm-card{
-    grid-row:auto;
-    margin:0;
-  }
-  .jm{ position:relative; }
-  .jm-card{ width:100%; }
-  .jm--now .jm-card{ padding:16px 18px; }
-  .jm-card{ min-height:0; }
-  .jm--lg .jm-stat,
-  .jm--now .jm-stat{ font-size:30px; }
+  .journey-head h3{ white-space:normal; }
 }
 
 /* ============================================================
@@ -1127,16 +1091,19 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 .exp-card h3{ font-size:21px; margin-bottom:8px; font-family:var(--font-display); color:var(--ink); }
 .exp-card p{ font-size:14.5px; color:var(--ink-soft); line-height:1.55; flex:1; }
 .exp-card .exp-card-cta{
-  margin-top:16px;
+  margin-top:12px;
   margin-left:auto;
   align-self:flex-end;
-  padding:11px 18px;
-  font-size:13px;
+  width:auto;
+  padding:6px 12px;
+  font-size:11.5px;
+  min-height:0;
   text-align:center;
-  white-space:normal;
-  line-height:1.25;
+  white-space:nowrap;
+  line-height:1.2;
   border:none;
   cursor:pointer;
+  box-shadow:0 6px 16px -8px rgba(229,55,43,0.45);
 }
 .exp-card .tag{
   position:absolute; top:14px; right:14px; margin-top:0;
@@ -1172,7 +1139,8 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   pointer-events:none;
 }
 #school-cta{
-  overflow:visible;
+  overflow-x:clip;
+  overflow-y:visible;
 }
 .school-bookmark-rail{
   position:absolute;
@@ -1231,6 +1199,9 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   position:relative;
   z-index:1;
 }
+.school-band-inner > *{
+  min-width:0;
+}
 .school-band h3{
   font-family:var(--font-display);
   font-size:clamp(24px,3vw,34px);
@@ -1267,6 +1238,9 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   border-color:#fff !important;
 }
 #exhibit-cta p{ white-space:normal; max-width:640px; }
+@media (max-width:1100px){
+  .school-band p{ white-space:normal; }
+}
 @media (max-width:900px){
   .school-band{ padding:36px 0; }
   .school-bookmark{
@@ -1278,7 +1252,6 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
     grid-template-columns:1fr;
     gap:22px;
   }
-  .school-band p{ white-space:normal; }
   .school-band-actions{ justify-content:flex-start; }
 }
 
@@ -1439,13 +1412,6 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 @media (max-width:1100px){
   .mentor-grid{ grid-template-columns:repeat(3,1fr); gap:16px; }
 }
-@media (max-width:700px){
-  .mentor-grid{ grid-template-columns:repeat(2,1fr); gap:12px; }
-  .mentor-name{ font-size:11.5px; }
-  .mentor-role{ font-size:10.5px; }
-  .mentor-info{ padding:20px 10px 12px; margin-top:-22px; }
-}
-
 /* ============================================================
    9. UNIVERSITIES  -  partner logo marquee
    ============================================================ */
@@ -1509,10 +1475,6 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   object-position:center;
   display:block;
   mix-blend-mode:multiply;
-}
-#universities .partners-more{
-  margin-top:28px;
-  text-align:center;
 }
 /* Partners directory modal */
 .partners-overlay{
@@ -1781,10 +1743,18 @@ body.partners-modal-open{ overflow:hidden; }
   color:rgba(20,18,26,0.04); line-height:1; pointer-events:none;
 }
 .trust-grid{ display:grid; grid-template-columns:240px 1fr; gap:60px; align-items:center; position:relative; z-index:2; }
-.trust-photo-wrap{ position:relative; }
-.trust-photo-wrap::before{
+.trust-photo-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+}
+.trust-photo-frame{
+  position:relative;
+  width:100%;
+}
+.trust-photo-frame::before{
   content:''; position:absolute; inset:16px -16px -16px 16px; border:2px solid var(--yellow);
-  border-radius:16px; z-index:0;
+  border-radius:16px; z-index:0; pointer-events:none;
 }
 .trust-photo{
   position:relative; z-index:1; width:100%; height:300px; border-radius:16px; object-fit:cover;
@@ -1792,9 +1762,16 @@ body.partners-modal-open{ overflow:hidden; }
 }
 .trust-label{
   display:block;
+  position:relative;
+  z-index:2;
   font-size:14px;
-  font-weight:600;
+  font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
   color:var(--red);
+  margin-bottom:20px;
+}
+.trust-photo-wrap .trust-label{
   margin-bottom:18px;
 }
 .trust-label::before{
@@ -1812,8 +1789,8 @@ body.partners-modal-open{ overflow:hidden; }
   max-width:760px;
   color:var(--ink);
 }
-.trust-name{ font-weight:800; font-size:16px; color:var(--ink); }
-.trust-role{ font-size:13.5px; color:var(--ink-soft); }
+.trust-name{ font-weight:800; font-size:22px; color:var(--ink); line-height:1.15; }
+.trust-role{ font-size:16.5px; color:var(--ink-soft); font-weight:600; line-height:1.3; margin-top:2px; }
 .trust-byline{
   display:flex;
   align-items:center;
@@ -1880,7 +1857,11 @@ body.partners-modal-open{ overflow:hidden; }
    ============================================================ */
 #partner{ background:#fff; position:relative; overflow:hidden; padding-bottom:28px; }
 .partner-top{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:60px; align-items:center; margin-bottom:0; }
-.partner-copy h2{ font-size:clamp(32px,4vw,52px); margin-top:28px; margin-bottom:20px; }
+.partner-copy .eyebrow{
+  font-size:12px;
+  letter-spacing:0.12em;
+}
+.partner-copy h2{ font-size:clamp(32px,4vw,52px); margin-top:22px; margin-bottom:20px; }
 .partner-copy p{ font-size:17px; color:var(--ink-soft); margin-bottom:30px; max-width:520px; }
 .profiles-head{ margin-bottom:0; }
 .profiles-head h3{ font-family:var(--font-display); font-size:clamp(22px,2.4vw,28px); margin:0; }
@@ -2244,6 +2225,12 @@ footer{
 }
 .wa-float:hover{ transform:scale(1.1); }
 
+/* Mobile-only UI (shown inside @media max-width:700px) */
+.exp-scrollhint,
+.mobile-action-bar{
+  display: none;
+}
+
 /* ============================================================
    17. STUDENT AMBASSADORS (stack)
    ============================================================ */
@@ -2548,14 +2535,165 @@ select.reg-input{
 .reg-duplicate .ico{ font-size:18px; flex-shrink:0; }
 .reg-duplicate p{ font-size:13.5px; font-weight:600; color:var(--ink); margin:0; line-height:1.4; }
 
+.reg-choice{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-height:0;
+  padding:28px 24px 32px;
+  overflow:auto;
+}
+.reg-choice h4{
+  font-family:var(--font-display);
+  font-size:clamp(22px,2.4vw,28px);
+  margin:0 0 8px;
+  letter-spacing:-0.02em;
+}
+.reg-choice .reg-sub{ margin:0 0 24px; }
+.reg-choice-actions{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.reg-choice-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  width:100%;
+  min-height:52px;
+  padding:14px 20px;
+  border-radius:14px;
+  font-family:var(--font-body);
+  font-weight:700;
+  font-size:15px;
+  line-height:1.2;
+  text-align:center;
+  text-decoration:none;
+  cursor:pointer;
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease), border-color .25s var(--ease);
+}
+.reg-choice-btn:hover{ transform:translateY(-2px); }
+.reg-choice-btn--form{
+  background:var(--red);
+  color:#fff;
+  border:2px solid var(--red);
+  box-shadow:0 10px 24px -12px rgba(229,55,43,0.55);
+}
+.reg-choice-btn--form:hover{
+  background:var(--red-dark);
+  border-color:var(--red-dark);
+}
+.reg-choice-btn--wa{
+  background:#fff;
+  color:#128C7E;
+  border:2px solid #25D366;
+  box-shadow:0 8px 20px -14px rgba(37,211,102,0.45);
+}
+.reg-choice-btn--wa:hover{
+  background:#F3FFF8;
+  border-color:#1EBE5D;
+}
+.reg-choice-btn--wa svg{
+  width:22px;
+  height:22px;
+  flex-shrink:0;
+}
+.reg-flow{
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  min-height:0;
+}
+.reg-flow[hidden]{ display:none !important; }
+.reg-choice[hidden]{ display:none !important; }
+
 /* Split register modal: registration left + partners right */
 #regOverlay .reg-card--split{
   max-width:min(1100px, 96vw);
   width:100%;
-  display:grid;
+  display:grid !important;
   grid-template-columns:1fr;
-  grid-template-rows:minmax(0, 1fr);
+  grid-template-rows:auto auto auto;
   max-height:92vh;
+}
+#regOverlay .reg-partners-col{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  min-height:0;
+}
+#regOverlay .reg-partners-marquee{
+  flex-shrink:0;
+  background:#F0EBE2;
+  border-top:1px solid rgba(20,18,26,0.08);
+  padding:12px 0 14px;
+  overflow:hidden;
+}
+#regOverlay .reg-partners-marquee--inline{
+  display:none;
+  flex-direction:column;
+  padding:14px 16px 16px;
+  background:transparent;
+  border-top:1px solid rgba(20,18,26,0.08);
+  min-height:0;
+}
+#regOverlay .reg-partner-marquee-dual{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  gap:8px;
+  flex:0 0 auto;
+  min-height:0;
+}
+#regOverlay .reg-partners-marquee--inline .reg-partner-marquee{
+  flex:0 0 auto;
+}
+#regOverlay .reg-partners-marquee--inline .reg-partner-marquee .partner-marquee-track{
+  animation-duration:70s;
+  gap:8px;
+}
+#regOverlay .reg-partners-marquee--inline .reg-partner-marquee--reverse .partner-marquee-track{
+  animation-direction:reverse;
+}
+#regOverlay .reg-partners-marquee--inline .partner-chip{
+  padding:5px 8px;
+}
+#regOverlay .reg-partners-marquee--inline .partner-chip img{
+  width:92px;
+  height:34px;
+}
+#regOverlay .reg-partners-marquee-label{
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:rgba(20,18,26,0.42);
+  text-align:center;
+  margin:0 0 10px;
+  padding:0 16px;
+}
+#regOverlay .reg-partner-marquee{
+  margin-top:0;
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image:linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+#regOverlay .reg-partner-marquee .partner-marquee-track{
+  animation-duration:85s;
+  gap:10px;
+}
+#regOverlay .reg-partner-marquee .partner-chip{
+  padding:6px 10px;
+  background:#fff;
+  border-radius:10px;
+  border:1px solid rgba(20,18,26,0.06);
+  box-shadow:0 4px 14px -10px rgba(20,18,26,0.18);
+}
+#regOverlay .reg-partner-marquee .partner-chip img{
+  width:108px;
+  height:38px;
+  mix-blend-mode:multiply;
 }
 #regOverlay .reg-card--split .reg-main{
   display:flex;
@@ -2575,41 +2713,78 @@ select.reg-input{
   min-height:0;
   background:#F7F4EE;
   border-top:1px solid var(--line);
-  max-height:42vh;
-  padding:28px 30px;
+  max-height:none;
+  padding:24px 28px 20px;
   box-sizing:border-box;
 }
 #regOverlay .reg-card--split .reg-partners-head{
   flex:0 0 auto;
-  padding:0 0 14px;
+  padding:0 0 10px;
   border-bottom:none;
   background:transparent;
 }
-#regOverlay .reg-card--split .reg-partners-head h3{
-  font-family:var(--font-display);
-  font-size:clamp(20px, 2.1vw, 24px);
-  margin:0 0 4px;
-  color:var(--ink);
-  letter-spacing:-0.02em;
+#regOverlay .reg-event-chip{
+  display:grid;
+  grid-template-columns:auto minmax(0, 1fr);
+  gap:4px 16px;
+  align-items:start;
+  min-width:0;
+  padding:10px 12px;
+  background:#fff;
+  border:1px solid rgba(20,18,26,0.08);
+  border-radius:12px;
+  box-shadow:0 4px 14px -12px rgba(20,18,26,0.18);
 }
-#regOverlay .reg-card--split .reg-partners-head p{
-  margin:0;
+#regOverlay .reg-event-chip-row{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  min-width:0;
+}
+#regOverlay .reg-event-chip-row--venue{
+  gap:6px;
+  border-left:1px solid rgba(20,18,26,0.1);
+  padding-left:14px;
+  margin-left:6px;
+}
+#regOverlay .reg-event-chip-text{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  min-width:0;
+}
+#regOverlay .reg-event-chip-label{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:rgba(20,18,26,0.42);
+}
+#regOverlay .reg-event-chip-text strong{
   font-size:12px;
-  font-weight:500;
-  color:rgba(20,18,26,0.48);
-  letter-spacing:0.01em;
+  font-weight:600;
+  line-height:1.35;
+  color:var(--ink);
+  overflow-wrap:break-word;
+}
+#regOverlay .reg-event-chip-row--venue .reg-event-chip-text strong{
+  font-size:11.5px;
+  white-space:nowrap;
+}
+@media (max-width:899px){
+  #regOverlay .reg-event-chip-row--venue .reg-event-chip-text strong{
+    white-space:normal;
+  }
 }
 #regOverlay .reg-card--split .reg-partners-body{
-  flex:1 1 auto;
-  overflow:auto;
+  flex:0 0 auto;
+  overflow:visible;
   padding:0;
   display:flex;
   flex-direction:column;
-  gap:8px;
+  justify-content:flex-start;
+  gap:10px;
   min-height:0;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;
-  scrollbar-color:rgba(20,18,26,0.18) transparent;
 }
 #regOverlay .reg-card--split .reg-partners-grid{
   display:grid;
@@ -2758,20 +2933,117 @@ select.reg-input{
 @media (min-width:900px){
   #regOverlay .reg-card--split{
     max-width:min(1100px, 96vw);
-    max-height:min(88vh, 720px);
+    max-height:min(92vh, 760px);
     grid-template-columns:1fr 1fr;
-    align-items:stretch;
+    grid-template-rows:auto auto;
+    align-items:start;
   }
   #regOverlay .reg-card--split .reg-main{
-    max-height:min(88vh, 720px);
+    grid-column:1;
+    grid-row:1;
+    max-height:calc(min(92vh, 760px) - 88px);
     border-right:1px solid var(--line);
+    overflow:hidden;
+  }
+  #regOverlay .reg-card--split .reg-partners-col{
+    grid-column:2;
+    grid-row:1;
+    align-self:start;
+    background:#F7F4EE;
+  }
+  #regOverlay .reg-card--split.reg-card--form-active{
+    grid-template-rows:auto;
+    height:auto;
+    align-items:start;
+  }
+  #regOverlay .reg-card--split.reg-card--form-active .reg-main{
+    grid-column:1;
+    grid-row:1;
+    align-self:start;
+    max-height:min(92vh, 760px);
+    height:auto;
+    min-height:0;
+  }
+  #regOverlay .reg-card--split.reg-card--form-active .reg-partners-col{
+    align-self:start;
+    min-height:0;
+    max-height:none;
+    height:auto;
+  }
+  #regOverlay .reg-card--split.reg-card--form-active .reg-partners{
+    flex:0 0 auto;
+    max-height:none;
+    height:auto;
+    padding:18px 24px 6px;
+  }
+  #regOverlay .reg-card--split.reg-card--form-active .reg-partners-marquee--strip{
+    display:none;
+  }
+  #regOverlay .reg-card--split.reg-card--form-active .reg-partners-marquee--inline{
+    display:flex;
+    flex:0 0 auto;
+    margin-top:0;
+    padding:8px 16px 14px;
+    justify-content:flex-start;
+  }
+  #regOverlay .reg-card--split.reg-card--form-active .reg-partners-marquee-label{
+    margin-bottom:8px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active{
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-flow{
+    flex:1 1 auto;
+    min-height:0;
+    overflow:hidden;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-body{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-head{
+    padding:16px 22px 10px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-head-title h3{
+    font-size:24px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-stepper{
+    padding:10px 20px 8px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-body{
+    padding:14px 22px 4px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-step[data-step="1"] h4{
+    font-size:20px;
+    margin-bottom:4px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-step[data-step="1"] .reg-sub{
+    font-size:13.5px;
+    margin-bottom:12px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-step[data-step="1"] .reg-field{
+    margin-bottom:11px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-foot{
+    padding:10px 22px 14px;
   }
   #regOverlay .reg-card--split .reg-partners{
+    flex:1 1 auto;
     max-height:none;
-    height:100%;
+    height:auto;
     border-top:none;
-    background:#F7F4EE;
-    padding:30px 28px;
+    background:transparent;
+    padding:20px 24px 18px;
+  }
+  #regOverlay .reg-card--split.reg-card--form-active .reg-partners{
+    flex:0 0 auto;
+  }
+  #regOverlay .reg-partners-marquee--strip{
+    grid-column:1 / -1;
+    grid-row:2;
   }
 }
 @media (max-width:899px){
@@ -2781,8 +3053,40 @@ select.reg-input{
   #regOverlay .reg-card--split .reg-main{
     max-height:none;
   }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-head{
+    padding:16px 18px 10px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-stepper{
+    padding:10px 16px 8px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-body{
+    padding:14px 18px 4px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-step[data-step="1"] h4{
+    font-size:20px;
+    margin-bottom:4px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-step[data-step="1"] .reg-sub{
+    font-size:13.5px;
+    margin-bottom:12px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-step[data-step="1"] .reg-field{
+    margin-bottom:11px;
+  }
+  #regOverlay .reg-card--split .reg-main.reg-main--form-active .reg-foot{
+    padding:10px 18px 14px;
+  }
   #regOverlay .reg-card--split .reg-partners{
-    padding:22px 18px;
+    padding:18px 18px 16px;
+  }
+  #regOverlay .reg-card--split .reg-partners-col{
+    min-height:0;
+  }
+  #regOverlay .reg-card--split.reg-card--form-active .reg-partners-marquee--strip{
+    display:none;
+  }
+  #regOverlay .reg-card--split.reg-card--form-active .reg-partners-marquee--inline{
+    display:flex;
   }
   #regOverlay .reg-card--split .reg-partners-grid{
     grid-template-columns:1fr;
@@ -2848,9 +3152,11 @@ footer{
 @media (max-width: 700px) {
   /* --- Foundations: tokens --- */
   :root{
-    --mobile-gutter: 18px;
+    --mobile-gutter: 16px;
     --mobile-tap: 44px;
     --mobile-vh: 100dvh;
+    --mobile-section-y: 44px;
+    --mobile-card-radius: 14px;
   }
 
   /* --- Foundations: overflow + page shell --- */
@@ -2860,8 +3166,8 @@ footer{
   body{
     overflow-x: clip;
     min-height: var(--mobile-vh);
-    font-size: 16px;
-    line-height: 1.55;
+    font-size: 15px;
+    line-height: 1.5;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }
@@ -2884,19 +3190,19 @@ footer{
 
   /* --- Foundations: section spacing --- */
   .section{
-    padding-top: 64px;
-    padding-bottom: 64px;
+    padding-top: var(--mobile-section-y);
+    padding-bottom: var(--mobile-section-y);
   }
   .section-tight{
-    padding-top: 52px;
-    padding-bottom: 52px;
+    padding-top: 36px;
+    padding-bottom: 36px;
   }
   .section-head{
-    margin-bottom: 32px;
+    margin-bottom: 20px;
   }
   .section-head p{
-    font-size: 15.5px;
-    line-height: 1.55;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
   /* --- Foundations: typography --- */
@@ -2911,11 +3217,11 @@ footer{
   /* --- Foundations: buttons / touch targets --- */
   .btn{
     min-height: var(--mobile-tap);
-    padding-top: 14px;
-    padding-bottom: 14px;
-    padding-left: 22px;
-    padding-right: 22px;
-    font-size: 15px;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    padding-left: 18px;
+    padding-right: 18px;
+    font-size: 14px;
   }
 
   /* Tone down hover lift on touch devices (global only) */
@@ -2930,6 +3236,8 @@ footer{
   /* --- Utility bar --- */
   :root{
     --mobile-util-h: 40px;
+    --mobile-nav-block-h: 64px; /* nav padding + row (8 + 48 + 8) */
+    --mobile-hero-nav-gap: 28px; /* breathing room below nav before hero copy */
   }
   .util-bar{
     padding-left: env(safe-area-inset-left, 0px);
@@ -2980,9 +3288,9 @@ footer{
     max-width: calc(100% - 56px);
   }
   .nav-logo img{
-    height: 44px;
+    height: 40px;
     width: auto;
-    max-height: 44px;
+    max-height: 40px;
   }
   .nav-inner{
     background: none;
@@ -3114,17 +3422,17 @@ footer{
   }
 
   /* ============================================================
-     Hero - mobile single-column composition
+     Hero - compact single-column (TACS-inspired density)
      ============================================================ */
   .hero{
     min-height: 0;
     justify-content: flex-start;
-    padding-top: calc(var(--mobile-util-h) + 76px);
+    padding-top: calc(var(--mobile-util-h) + var(--mobile-nav-block-h) + var(--mobile-hero-nav-gap));
     padding-bottom: 0;
   }
   .hero-grid{
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 22px;
     align-items: start;
     width: 100%;
     max-width: 100%;
@@ -3133,21 +3441,33 @@ footer{
     max-width: 100%;
   }
   .hero-copy .eyebrow{
-    font-size: 12px;
-    letter-spacing: 0.11em;
-    line-height: 1.35;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    font-size: clamp(10px, 2.85vw, 12px);
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    font-weight: 700;
+    white-space: nowrap;
+    margin-bottom: 0;
   }
   .hero-copy h1{
-    font-size: clamp(40px, 11.5vw, 52px);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    margin: 14px 0 16px;
+    font-size: clamp(48px, 14.8vw, 68px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin: 14px 0 18px;
     max-width: 100%;
     overflow-wrap: break-word;
     text-wrap: balance;
   }
-  /* Let heading / lead reflow on phones (desktop <br> line breaks stay in HTML) */
-  .hero-copy h1 br,
+  /* Mobile heading: "about career" stays together; break after "career after" */
+  .hero-copy h1 br{
+    display: none;
+  }
+  .hero-copy h1 em br{
+    display: block;
+  }
   .hero-copy p.lead br{
     display: none;
   }
@@ -3156,103 +3476,69 @@ footer{
   }
   .hero-copy p.lead{
     white-space: normal;
-    font-size: 16.5px;
-    line-height: 1.55;
-    max-width: 34ch;
+    font-size: 18px;
+    line-height: 1.5;
+    max-width: 100%;
     margin-bottom: 22px;
     font-weight: 500;
+    color: var(--ink-soft);
   }
   .hero-actions{
     display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
-    margin-bottom: 4px;
+    margin-bottom: 0;
     width: 100%;
     max-width: 100%;
   }
   .hero-actions .btn{
     width: 100%;
     max-width: 100%;
-    min-height: 48px;
+    min-height: 50px;
     justify-content: center;
     white-space: normal;
     text-align: center;
     padding-left: 20px;
     padding-right: 20px;
-    font-size: 15px;
+    font-size: 16px;
   }
 
-  /* Boarding pass - keep personality, fit the phone */
+  /* Boarding pass - desktop proportions, scaled down uniformly on mobile */
   .pass-card{
-    width: calc(100% - 8px);
-    max-width: calc(100% - 8px);
+    --pass-mobile-scale: 0.84;
+    width: 100%;
+    max-width: 490px;
     justify-self: center;
     margin-top: 8px;
     margin-right: auto;
     margin-left: auto;
-    padding: 22px 18px 20px;
-    border-radius: 22px;
-    transform: rotate(1.25deg);
-    box-sizing: border-box;
+    zoom: var(--pass-mobile-scale);
+    transform: rotate(2deg);
   }
   .pass-card:hover{
-    transform: rotate(0.5deg) translateY(-2px);
+    transform: rotate(0deg) translateY(-6px);
   }
   @media (hover: none){
     .pass-card:hover{
-      transform: rotate(1.25deg);
+      transform: rotate(2deg);
     }
   }
-  .pass-top{
-    margin-bottom: 16px;
-    gap: 10px;
-  }
-  .pass-top img{
-    height: 22px;
-    max-width: 42%;
-    width: auto;
-    object-fit: contain;
-  }
-  .pass-tag{
-    font-size: 10.5px;
-    padding: 5px 9px;
-    flex-shrink: 0;
-  }
-  .pass-title{
-    font-size: clamp(22px, 6.5vw, 26px);
-    line-height: 1.12;
-    white-space: normal;
-    overflow-wrap: break-word;
-    margin-bottom: 6px;
-  }
-  .pass-sub{
-    white-space: normal;
-    font-size: 13.5px;
-    line-height: 1.4;
-    margin-bottom: 18px;
-  }
-  .pass-divider{
-    margin: 0 -18px 18px;
-  }
-  .pass-fields{
-    grid-template-columns: 1fr 1fr;
-    column-gap: 14px;
-    row-gap: 14px;
-  }
-  .pass-field .k{
-    font-size: 10px;
-    letter-spacing: 0.08em;
-  }
-  .pass-field .v{
-    font-size: 15px;
-    line-height: 1.2;
-    white-space: normal;
-    overflow-wrap: break-word;
-  }
-  .pass-barcode{
-    margin-top: 18px;
-    height: 28px;
+  @supports not (zoom: 1){
+    .pass-card{
+      zoom: unset;
+      transform: rotate(2deg) scale(var(--pass-mobile-scale));
+      transform-origin: top center;
+      margin-bottom: calc((1 - var(--pass-mobile-scale)) * -17rem);
+    }
+    .pass-card:hover{
+      transform: rotate(0deg) translateY(-6px) scale(var(--pass-mobile-scale));
+    }
+    @media (hover: none){
+      .pass-card:hover{
+        transform: rotate(2deg) scale(var(--pass-mobile-scale));
+      }
+    }
   }
 
   /* Side rail crowds the first screen on phones - keep desktop only */
@@ -3260,11 +3546,11 @@ footer{
     display: none;
   }
 
-  /* Marquee - present but restrained, no page overflow */
+  /* Marquee - slim accent strip */
   .hero-marquee{
-    margin-top: 36px;
+    margin-top: 20px;
     margin-bottom: 0;
-    padding: 14px 0 18px;
+    padding: 10px 0 12px;
     width: 100%;
     max-width: 100%;
     overflow: hidden;
@@ -3272,14 +3558,14 @@ footer{
     z-index: 1;
   }
   .marquee-track{
-    gap: 28px;
+    gap: 20px;
   }
   .marquee-track span{
-    font-size: 15px;
-    gap: 12px;
+    font-size: 13px;
+    gap: 10px;
   }
   .marquee-track span::after{
-    font-size: 11px;
+    font-size: 10px;
   }
 
   /* ============================================================
@@ -3289,7 +3575,7 @@ footer{
     /* Level rectangle only - no angled clip on phones */
     clip-path: none !important;
     -webkit-clip-path: none !important;
-    padding: 28px 0 30px;
+    padding: 18px 0 20px;
     margin: 0 !important;
     min-height: 0;
     color: #fff;
@@ -3313,7 +3599,7 @@ footer{
     border: none;
     border-left: none;
     border-top: none;
-    padding: 14px 12px;
+    padding: 8px 10px;
     min-width: 0;
     min-height: 0;
     box-sizing: border-box;
@@ -3321,26 +3607,26 @@ footer{
   .stat:first-child{
     border-left: none;
     border-top: none;
-    padding-left: 12px;
-    padding-top: 14px;
+    padding-left: 10px;
+    padding-top: 8px;
   }
   /* Subtle cross separators - organize without boxing */
   .stat:nth-child(odd){
-    border-right: 1px solid rgba(255, 255, 255, 0.28);
-    padding-right: 14px;
+    border-right: 1px solid rgba(255, 255, 255, 0.22);
+    padding-right: 10px;
   }
   .stat:nth-child(even){
-    padding-left: 14px;
+    padding-left: 10px;
   }
   .stat:nth-child(-n + 2){
-    border-bottom: 1px solid rgba(255, 255, 255, 0.28);
-    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+    padding-bottom: 8px;
   }
   .stat:nth-child(n + 3){
-    padding-top: 14px;
+    padding-top: 8px;
   }
   .stat .num{
-    font-size: clamp(24px, 7.2vw, 34px);
+    font-size: clamp(20px, 6vw, 26px);
     font-weight: 800;
     line-height: 1;
     letter-spacing: -0.04em;
@@ -3349,24 +3635,24 @@ footer{
     color: #fff;
   }
   .stat .label{
-    margin-top: 6px;
-    font-size: 12.5px;
+    margin-top: 4px;
+    font-size: 11px;
     font-weight: 600;
-    line-height: 1.3;
-    color: rgba(255, 255, 255, 0.92);
-    max-width: 22ch;
+    line-height: 1.25;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 18ch;
   }
 
   /* ============================================================
      About - mobile single-column (image → story → benefits)
      ============================================================ */
   #about{
-    padding: 48px 0 0;
+    padding: 36px 0 0;
     overflow: hidden;
   }
   .about-grid{
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 18px;
     align-items: start;
     width: 100%;
     max-width: 100%;
@@ -3380,8 +3666,9 @@ footer{
     width: 100%;
     max-width: 100%;
     height: auto;
-    aspect-ratio: 4 / 3;
-    border-radius: 20px;
+    aspect-ratio: 16 / 10;
+    max-height: 200px;
+    border-radius: var(--mobile-card-radius);
   }
   /* Keep cover crop - override foundation img { height:auto } */
   .about-carousel-slide img{
@@ -3400,189 +3687,918 @@ footer{
     max-width: 100%;
   }
   .about-copy h2{
-    font-size: clamp(26px, 7.2vw, 34px);
-    line-height: 1.15;
+    font-size: clamp(22px, 6.2vw, 28px);
+    line-height: 1.14;
     letter-spacing: -0.025em;
-    margin-top: 4px;
-    margin-bottom: 12px;
+    margin-top: 2px;
+    margin-bottom: 8px;
     text-wrap: balance;
     overflow-wrap: break-word;
+    text-align: center;
   }
   .about-copy h2 em{
     font-style: normal;
     color: var(--red);
   }
   .about-copy p{
-    font-size: 16px;
-    line-height: 1.55;
-    margin-bottom: 18px;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    text-align: center;
   }
   .about-list{
-    gap: 4px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 10px;
     margin-bottom: 0;
   }
   .about-list li{
     align-items: flex-start;
-    gap: 12px;
-    font-size: 15px;
-    line-height: 1.45;
-    padding: 10px 0;
-    min-height: 44px;
+    gap: 8px;
+    font-size: 12.5px;
+    line-height: 1.35;
+    padding: 6px 0;
+    min-height: 0;
   }
   .about-list li .emoji{
-    width: 28px;
-    min-width: 28px;
-    font-size: 18px;
-    line-height: 1.45;
+    width: 20px;
+    min-width: 20px;
+    font-size: 14px;
+    line-height: 1.35;
     margin-top: 0;
     display: inline-flex;
     align-items: flex-start;
     justify-content: center;
+  }
+
+  /* Softer doodle texture on phones */
+  body,
+  .hero,
+  .stats,
+  #about,
+  .about-journey::before,
+  #experience,
+  .school-band,
+  #framework,
+  #engage,
+  #mentors,
+  #gallery,
+  #trust,
+  #partner,
+  #universities,
+  #ambassadors,
+  #faq,
+  #cta,
+  footer{
+    background-size: 720px 720px;
+    background-blend-mode: soft-light;
+  }
+
+  /* Room for sticky mobile action bar */
+  body{
+    padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  }
+  body.nav-menu-open{
+    padding-bottom: 0;
+  }
+
+  /* Section heads — editorial, TACS-style centred rhythm */
+  .section-head{
+    max-width: 100%;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+  .section-head.center{
+    text-align: center;
+  }
+  .section-head h2{
+    font-size: clamp(22px, 6.4vw, 30px);
+    line-height: 1.14;
+    margin-top: 8px;
+    text-wrap: balance;
+  }
+  .section-head h2 br,
+  .section-head p br{
+    display: none;
+  }
+  #experience .section-head h2{
+    text-wrap: wrap;
+  }
+  #experience .section-head h2 .exp-h2-asm{
+    display: block;
+  }
+  .section-head p{
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 36ch;
+    margin-top: 8px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .section-head .eyebrow{
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    justify-content: center;
+  }
+
+  /* Journey timeline */
+  .about-journey{
+    margin-top: 28px;
+    padding-top: 24px;
+    padding-bottom: 28px;
+  }
+  .journey-head{
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .journey-head .eyebrow{
+    justify-content: center;
+  }
+  .journey-head h3{
+    font-size: clamp(20px, 5.8vw, 26px);
+    line-height: 1.14;
+    white-space: normal;
+    text-wrap: balance;
+  }
+  .journey-head p{
+    font-size: 13.5px;
+    white-space: normal;
+    line-height: 1.45;
+    max-width: 34ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .journey-track-outer{
+    margin-left: calc(var(--mobile-gutter) * -1);
+    margin-right: calc(var(--mobile-gutter) * -1);
+    overflow: visible;
+  }
+  .journey-item{
+    flex: 0 0 min(62vw, 220px);
+    scroll-snap-align: start;
+  }
+  .journey-track{
+    gap: 10px;
+    padding: 4px var(--mobile-gutter) 12px;
+    scroll-padding-inline: var(--mobile-gutter);
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .journey-card{
+    padding: 12px 12px 10px;
+    border-radius: 12px;
+  }
+  .journey-cardtop{
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .journey-num{
+    top: -4px;
+    right: -2px;
+    font-size: clamp(38px, 11vw, 50px);
+  }
+  .journey-icon-badge{
+    width: 28px;
+    height: 28px;
+  }
+  .journey-icon-badge svg{
+    width: 14px;
+    height: 14px;
+  }
+  .journey-card-title{
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .journey-blurb{
+    font-size: 11.5px;
+    line-height: 1.35;
+    margin-bottom: 8px;
+  }
+  .journey-yeartag{
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+  .journey-stat{
+    font-size: 24px;
+    margin: 6px 0 2px;
+  }
+  .journey-stat-label{
+    font-size: 9.5px;
+    margin-bottom: 6px;
+  }
+  .journey-chips{
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .journey-chip{
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+  .journey-detail-text{
+    font-size: 11.5px;
+    line-height: 1.5;
+    padding-top: 8px;
+    margin-top: 8px;
+  }
+  .journey-expand-cue{
+    font-size: 10.5px;
+    margin-top: 8px;
+  }
+  .journey-expand-cue svg{
+    width: 12px;
+    height: 12px;
+  }
+  .journey-navrow{
+    margin-top: 6px;
+  }
+  .journey-arrowbtn{
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Experience — horizontal swipe cards */
+  #experience{
+    padding: var(--mobile-section-y) 0;
+    overflow: hidden;
+  }
+  #experience .wrap{
+    padding-right: 0;
+  }
+  #experience .section-head{
+    padding-right: var(--mobile-gutter);
+  }
+  .exp-grid{
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 2px var(--mobile-gutter) 6px;
+    margin: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 24px), transparent 100%);
+    mask-image: linear-gradient(to right, black calc(100% - 24px), transparent 100%);
+  }
+  .exp-grid::-webkit-scrollbar{
+    display: none;
+  }
+  .exp-card{
+    flex: 0 0 min(68vw, 236px);
+    scroll-snap-align: start;
+    min-height: 210px;
+    padding: 16px 14px;
+    border-radius: var(--mobile-card-radius);
+    box-shadow: 0 8px 22px -16px rgba(20, 18, 26, 0.18);
+  }
+  .exp-card:hover{
+    transform: none;
+    box-shadow: 0 8px 22px -16px rgba(20, 18, 26, 0.18);
+  }
+  .exp-icon{
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  .exp-card h3{
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  .exp-card p{
+    font-size: 12.5px;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .exp-card .tag{
+    top: 10px;
+    right: 10px;
+    font-size: 9.5px;
+    padding: 4px 8px;
+  }
+  .exp-card .exp-card-cta{
+    width: auto;
+    max-width: 100%;
+    margin-top: auto;
+    margin-left: auto;
+    align-self: flex-end;
+    padding: 5px 10px;
+    font-size: 10px;
+    min-height: 0;
+    line-height: 1.2;
+    box-shadow: 0 4px 12px -6px rgba(229, 55, 43, 0.4);
+  }
+
+  /* School CTA band */
+  .school-band{
+    padding: 32px 0 30px;
+  }
+  .school-bookmark{
+    left: var(--mobile-gutter);
+    max-width: calc(100% - (var(--mobile-gutter) * 2));
+    font-size: 12.5px;
+    padding: 6px 11px;
+  }
+  .school-band-inner{
+    gap: 14px;
+  }
+  .school-band h3{
+    font-size: clamp(19px, 5.4vw, 24px);
+    line-height: 1.14;
+    margin-bottom: 6px;
+  }
+  .school-band p{
+    font-size: 13.5px;
+    line-height: 1.45;
+    white-space: normal;
+  }
+  .school-band p br{
+    display: none;
+  }
+  .school-band-actions{
+    width: 100%;
+  }
+  .school-band-actions .btn{
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Framework — horizontal career path strip */
+  #framework{
+    overflow: hidden;
+  }
+  #framework .wrap > .section-head{
+    padding-right: var(--mobile-gutter);
+  }
+  .framework-grid{
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin-left: calc(var(--mobile-gutter) * -1);
+    margin-right: 0;
+    padding: 2px var(--mobile-gutter) 4px var(--mobile-gutter);
+    scroll-padding-inline: var(--mobile-gutter);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .framework-grid::-webkit-scrollbar{
+    display: none;
+  }
+  .framework-card{
+    flex: 0 0 min(30vw, 100px);
+    scroll-snap-align: start;
+    padding: 18px 10px 14px;
+    border-radius: 12px;
+  }
+  .framework-card:hover{
+    transform: none;
+    box-shadow: var(--shadow-card);
+  }
+  .framework-card .letter{
+    font-size: 36px;
+    margin-bottom: 6px;
+  }
+  .framework-card .label{
+    font-size: 9.5px;
+  }
+  .framework-more{
+    margin-top: 12px;
+    text-align: center;
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+
+  /* Engage */
+  #engage{
+    padding: var(--mobile-section-y) 0;
+  }
+  .engage-layout{
+    gap: 20px;
+  }
+  .engage-copy h2{
+    font-size: clamp(22px, 6.2vw, 28px);
+    line-height: 1.14;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .engage-copy p{
+    font-size: 14px;
+    max-width: 100%;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .engage-venue,
+  .engage-venue-chip{
+    max-width: 100%;
+    width: 100%;
+  }
+  .engage-venue{
+    justify-content: center;
+  }
+  .engage-venue-chip{
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 12.5px;
+  }
+  .engage-item{
+    gap: 12px;
+    padding: 14px 0;
+  }
+  .engage-item .num{
+    width: 28px;
+    font-size: 17px;
+  }
+  .engage-item h4{
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .engage-item p{
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+
+  /* Mentors — compact horizontal strip */
+  #mentors{
+    overflow: hidden;
+  }
+  #mentors .wrap > .section-head{
+    padding-right: var(--mobile-gutter);
+  }
+  #mentors .section-head p{
+    white-space: normal;
+  }
+  .mentor-grid{
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin-left: calc(var(--mobile-gutter) * -1);
+    margin-right: 0;
+    padding: 2px var(--mobile-gutter) 4px var(--mobile-gutter);
+    scroll-padding-inline: var(--mobile-gutter);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .mentor-grid::-webkit-scrollbar{
+    display: none;
+  }
+  .mentor-card{
+    flex: 0 0 min(38vw, 138px);
+    scroll-snap-align: start;
+    border-radius: var(--mobile-card-radius);
+  }
+  .mentor-card:hover{
+    transform: none;
+  }
+  .mentor-photo{
+    aspect-ratio: 1 / 1;
+    border-radius: var(--mobile-card-radius) var(--mobile-card-radius) 0 0;
+  }
+  .mentor-info{
+    margin-top: -10px;
+    padding: 10px 10px 10px;
+    min-height: 0;
+    clip-path: none;
+    border-radius: 10px 10px 0 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .mentor-name{
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    line-height: 1.2;
+    margin-bottom: 3px;
+    width: 100%;
+  }
+  .mentor-role{
+    font-size: 9.5px;
+    line-height: 1.35;
+    width: 100%;
+  }
+
+  /* Gallery */
+  #gallery .section-head h2,
+  #gallery .section-head p{
+    white-space: normal;
+  }
+  .gallery-video-wrap{
+    border-radius: var(--mobile-card-radius);
+    margin-top: 2px;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 200px;
+  }
+
+  /* Trust */
+  .trust-grid{
+    gap: 16px;
+  }
+  #trust::before{
+    font-size: 220px;
+    top: -40px;
+  }
+  .trust-photo-wrap{
+    max-width: 168px;
+    margin: 0 auto 16px;
+    align-items: center;
+  }
+  .trust-photo-wrap .trust-label{
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-align: center;
+    width: 100%;
+    line-height: 1.2;
+  }
+  .trust-photo-wrap .trust-label::before{
+    display: none;
+  }
+  .trust-photo-wrap .trust-label::after{
+    content: '';
+    display: block;
+    width: 32px;
+    height: 2px;
+    margin: 8px auto 0;
+    background: var(--red);
+    border-radius: 1px;
+  }
+  .trust-photo-frame::before{
+    inset: 8px -8px -8px 8px;
+    border-radius: 12px;
+  }
+  .trust-photo{
+    height: 176px;
+    border-radius: 12px;
+  }
+  .trust-quote p{
+    font-size: clamp(15px, 4.2vw, 18px);
+    line-height: 1.4;
+    max-width: 100%;
+    margin-bottom: 14px;
+  }
+  .trust-name{
+    font-size: 16px;
+  }
+  .trust-role{
+    font-size: 13px;
+  }
+  .trust-social a{
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+  }
+
+  /* Partner */
+  .partner-top{
+    gap: 18px;
+  }
+  .partner-copy{
+    text-align: center;
+  }
+  .partner-copy .eyebrow{
+    display: inline-flex;
+    justify-content: center;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    margin-bottom: 0;
+  }
+  .partner-copy .eyebrow::before{
+    width: 16px;
+  }
+  .partner-copy h2{
+    font-size: clamp(22px, 6.2vw, 28px);
+    margin-top: 12px;
+    text-align: center;
+  }
+  .partner-copy p{
+    font-size: 14px;
+    max-width: 100%;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .profiles-card{
+    padding: 16px 14px;
+    border-radius: var(--mobile-card-radius);
+  }
+  .profiles-head h3{
+    font-size: 17px;
+  }
+  .profile-list{
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 10px;
+  }
+  .profile-item{
+    gap: 8px;
+  }
+  .profile-item span{
+    font-size: 11.5px;
+  }
+  .profile-icon{
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+  }
+  .profile-icon svg{
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Universities */
+  #universities{
+    padding: 16px 0 var(--mobile-section-y);
+  }
+  #universities .section-head h2{
+    font-size: clamp(19px, 5.4vw, 24px);
+    white-space: normal;
+  }
+  #universities .partner-chip{
+    padding: 4px;
+  }
+  #universities .partner-chip img{
+    width: auto !important;
+    height: auto !important;
+    max-height: 34px;
+    max-width: 110px;
+    object-fit: contain;
+  }
+
+  /* Ambassadors */
+  .amb-layout{
+    gap: 18px;
+    text-align: center;
+  }
+  .amb-copy h2{
+    font-size: clamp(20px, 5.8vw, 26px);
+  }
+  .amb-copy p{
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 13.5px;
+    max-width: 34ch;
+  }
+  .amb-stack-wrap{
+    justify-content: center;
+  }
+  .amb-stack{
+    width: 200px;
+    height: 250px;
+  }
+
+  /* FAQ */
+  #faq .section-head h2{
+    font-size: clamp(20px, 5.8vw, 26px);
+    white-space: normal;
+    line-height: 1.14;
+  }
+  #faq .section-head p{
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+  .faq-q{
+    padding: 14px 0;
+    font-size: 14.5px;
+    gap: 12px;
+    line-height: 1.35;
+  }
+  .faq-q .plus{
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    font-size: 18px;
+  }
+  .faq-item.open .faq-a{
+    max-height: 280px;
+    padding-bottom: 14px;
+  }
+  .faq-a p{
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  /* Final CTA */
+  #cta{
+    padding: var(--mobile-section-y) 0 calc(var(--mobile-section-y) + 8px);
+  }
+  .cta-inner{
+    text-align: center;
+  }
+  .cta-inner h2{
+    font-size: clamp(22px, 6.4vw, 30px);
+    line-height: 1.14;
+    margin-bottom: 10px;
+  }
+  .cta-inner h2 .cta-line{
+    white-space: normal;
+  }
+  .cta-inner p{
+    font-size: 14px;
+    margin-bottom: 16px;
+    line-height: 1.45;
+    max-width: 34ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cta-actions{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .cta-actions .btn{
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Footer */
+  footer{
+    padding: 28px 0 16px;
+  }
+  .footer-main{
+    gap: 18px;
+  }
+  .footer-brand p{
+    max-width: 100%;
+    font-size: 13px;
+  }
+  .footer-brand .footer-logo{
+    height: 72px;
+    max-width: 200px;
+  }
+  .footer-aside{
+    align-items: flex-start;
+    text-align: left;
+  }
+  .footer-contact-inline{
+    align-items: flex-start;
+  }
+  .footer-bottom{
+    margin-top: 22px;
+    padding-top: 14px;
+    font-size: 12px;
+  }
+
+  /* Hide floating WA — sticky bar covers it on mobile */
+  .wa-float{
+    display: none;
+  }
+
+  /* Sticky mobile action bar (TACS-inspired) */
+  .mobile-action-bar{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1050;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 10px var(--mobile-gutter) calc(10px + env(safe-area-inset-bottom, 0px));
+    background: rgba(251, 250, 243, 0.94);
+    border-top: 1px solid rgba(20, 18, 26, 0.1);
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    box-shadow: 0 -10px 30px -18px rgba(20, 18, 26, 0.28);
+  }
+  body.nav-menu-open .mobile-action-bar{
+    display: none;
+  }
+  .mobile-action-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 10px 10px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    border: 1.5px solid rgba(20, 18, 26, 0.14);
+    background: #fff;
+    color: var(--ink);
+    transition: background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease);
+  }
+  .mobile-action-btn svg{
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+  .mobile-action-wa{
+    color: #25D366;
+  }
+  .mobile-action-wa:hover{
+    border-color: #25D366;
+    color: #1EBE5D;
+  }
+  .mobile-action-reg{
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+    box-shadow: 0 8px 20px -10px rgba(229, 55, 43, 0.65);
+  }
+  .mobile-action-reg:hover{
+    background: var(--red-dark);
+    border-color: var(--red-dark);
+    color: #fff;
   }
 }
 
 @media (max-width: 480px) {
   /* --- Small-phone refinements --- */
   :root{
-    --mobile-gutter: 16px;
+    --mobile-gutter: 14px;
+    --mobile-section-y: 40px;
   }
 
   body{
-    font-size: 15.5px;
+    font-size: 14.5px;
   }
 
-  .section{
-    padding-top: 56px;
-    padding-bottom: 56px;
-  }
-  .section-tight{
-    padding-top: 48px;
-    padding-bottom: 48px;
-  }
   .section-head{
-    margin-bottom: 28px;
+    margin-bottom: 16px;
   }
   .section-head p{
-    font-size: 15px;
-  }
-
-  .btn{
-    padding-left: 20px;
-    padding-right: 20px;
-    font-size: 14.5px;
+    font-size: 13.5px;
   }
 
   .util-bar-inner{
-    font-size: 11.5px;
-    gap: 8px 12px;
+    font-size: 11px;
+    gap: 6px 10px;
   }
   .nav-logo img{
-    height: 40px;
-    max-height: 40px;
+    height: 38px;
+    max-height: 38px;
   }
   .nav-links a{
-    font-size: clamp(20px, 7.2vw, 26px);
-    padding-top: 11px;
-    padding-bottom: 11px;
+    font-size: clamp(19px, 6.8vw, 24px);
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 
-  /* Hero small-phone refinements */
-  .hero{
-    padding-top: calc(var(--mobile-util-h) + 70px);
-  }
   .hero-grid{
-    gap: 24px;
+    gap: 20px;
   }
   .hero-copy h1{
-    font-size: clamp(40px, 12.2vw, 48px);
-    margin: 12px 0 14px;
+    font-size: clamp(46px, 14vw, 62px);
   }
   .hero-copy p.lead{
-    font-size: 16px;
-    max-width: 100%;
-    margin-bottom: 18px;
-  }
-  .hero-actions .btn{
-    min-height: 48px;
-    font-size: 14.5px;
+    font-size: 17px;
   }
   .pass-card{
-    padding: 20px 16px 18px;
-    transform: rotate(1deg);
-  }
-  .pass-divider{
-    margin: 0 -16px 16px;
-  }
-  .pass-fields{
-    column-gap: 12px;
-    row-gap: 12px;
-  }
-  .pass-field .v{
-    font-size: 14px;
-  }
-  .hero-marquee{
-    margin-top: 28px;
-    padding: 12px 0 16px;
-  }
-  .marquee-track span{
-    font-size: 14px;
-  }
-
-  /* Stats - tighter 2×2 on small phones */
-  .stats{
-    clip-path: none;
-    padding: 24px 0 26px;
-    margin: 0;
-  }
-  .stat{
-    padding: 12px 10px;
-  }
-  .stat:first-child{
-    padding-left: 10px;
-    padding-top: 12px;
-  }
-  .stat:nth-child(odd){
-    padding-right: 12px;
-  }
-  .stat:nth-child(even){
-    padding-left: 12px;
-  }
-  .stat:nth-child(-n + 2){
-    padding-bottom: 12px;
-  }
-  .stat:nth-child(n + 3){
-    padding-top: 12px;
-  }
-  .stat .num{
-    font-size: clamp(22px, 7vw, 30px);
-  }
-  .stat .label{
-    font-size: 12px;
-    max-width: 22ch;
-  }
-
-  /* About - small-phone tighten */
-  #about{
-    padding: 40px 0 0;
-  }
-  .about-grid{
-    gap: 22px;
+    --pass-mobile-scale: 0.78;
   }
   .about-carousel{
-    aspect-ratio: 5 / 4;
-    border-radius: 18px;
+    max-height: 180px;
   }
-  .about-copy h2{
-    font-size: clamp(24px, 7vw, 30px);
-    margin-bottom: 10px;
+  .about-list{
+    grid-template-columns: 1fr;
   }
-  .about-copy p{
-    font-size: 16px;
-    margin-bottom: 14px;
+  .exp-card{
+    flex-basis: min(72vw, 220px);
+    min-height: 200px;
   }
-  .about-list li{
-    padding: 8px 0;
-    font-size: 14.5px;
+  .framework-card{
+    flex-basis: min(29vw, 96px);
+  }
+  .mentor-card{
+    flex-basis: min(36vw, 128px);
+  }
+  .mentor-name{
+    font-size: 10.5px;
+  }
+  .mentor-role{
+    font-size: 9px;
+  }
+  .gallery-video-wrap{
+    max-height: 180px;
+  }
+  .amb-stack{
+    width: 180px;
+    height: 228px;
+  }
+  .mobile-action-bar{
+    gap: 6px;
+  }
+  .mobile-action-btn{
+    font-size: 11.5px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 }
 
@@ -3603,26 +4619,15 @@ footer{
     max-height: 38px;
   }
 
-  .hero{
-    padding-top: calc(var(--mobile-util-h) + 66px);
-  }
   .hero-copy h1{
-    font-size: 40px;
+    font-size: clamp(44px, 13vw, 56px);
+  }
+  .hero-copy p.lead{
+    font-size: 16.5px;
   }
   .pass-card{
-    padding: 18px 14px 16px;
-    transform: rotate(0.75deg);
+    --pass-mobile-scale: 0.72;
   }
-  .pass-divider{
-    margin: 0 -14px 14px;
-  }
-  .pass-top img{
-    height: 20px;
-  }
-  .pass-title{
-    font-size: 21px;
-  }
-
   /* Stats - keep 15,00,000+ on one line at 320 */
   .stats{
     clip-path: none;
@@ -3707,7 +4712,7 @@ footer{
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <span class="eyebrow">India's Leading Career Discovery Platform</span>
-      <h1>Confused about <br>life after <em>10th</em> or <em>12th</em>?</h1>
+      <h1>Confused about <br><em>career after<br>10th</em> or <em>12th</em>?</h1>
       <p class="lead">Don't wait till the last minute to figure out your career. <br>Career Uttsav gives you early, real-world exposure to careers, <br>so you explore, understand and choose with confidence.</p>
       <div class="hero-actions">
         <a href="https://careeruttsav.in/student-registration" class="btn btn-primary magnetic open-register">Get Your Pass for FREE →</a>
@@ -3729,8 +4734,8 @@ footer{
           <div class="pass-field"><div class="k">Gate</div><div class="v">Career Uttsav</div></div>
         </div>
         <div class="pass-row">
-          <div class="pass-field"><div class="k">Cities</div><div class="v">25+</div></div>
-          <div class="pass-field"><div class="k">Destination</div><div class="v">Career Clarity</div></div>
+          <div class="pass-field"><div class="k">Date</div><div class="v">19-20 Dec '26</div></div>
+          <div class="pass-field"><div class="k">Venue</div><div class="v">Palace Grounds</div></div>
         </div>
       </div>
       <div class="pass-barcode"></div>
@@ -3779,9 +4784,6 @@ footer{
           <img src="about-gallery/01-career-clarity.png" alt="Students raising hands at Career Uttsav for career clarity" loading="eager">
         </div>
         <div class="about-carousel-slide">
-          <img src="about-gallery/02-celebration.png" alt="Students celebrating together at Career Uttsav" loading="lazy">
-        </div>
-        <div class="about-carousel-slide">
           <img src="about-gallery/05-student-question.png" alt="A student asking a question during a Career Uttsav seminar" loading="lazy">
         </div>
         <div class="about-carousel-slide">
@@ -3828,120 +4830,119 @@ footer{
       <p>From one city in 2013 to a trusted nationwide platform: a story of scale, trust and clarity.</p>
     </div>
 
-    <div class="journey-track" id="journeyTrack">
-      <div class="journey-spine" aria-hidden="true">
-        <div class="journey-spine-fill" id="journeySpineFill"></div>
+    <div class="journey-scrollhint" aria-hidden="true">
+      <span>Scroll or swipe to explore</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+    </div>
+
+    <div class="journey-track-outer">
+      <div class="journey-track" id="journeyTrack">
+        <div class="journey-item" data-index="0">
+          <div class="journey-card" role="button" tabindex="0" aria-expanded="false">
+            <div class="journey-num">13</div>
+            <div class="journey-cardtop">
+              <div class="journey-icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 5c1.6-1 3.4-1 5 0s3.4 1 5 0v8c-1.6 1-3.4 1-5 0s-3.4-1-5 0V5z"/></svg></div>
+              <div class="journey-yeartag">2013</div>
+            </div>
+            <h4 class="journey-card-title">The Beginning</h4>
+            <p class="journey-blurb">Launched to open careers beyond the usual paths.</p>
+            <div class="journey-chips"><span class="journey-chip">Bangalore</span><span class="journey-chip">Mangalore</span></div>
+            <div class="journey-detail"><div class="journey-detail-inner"><p class="journey-detail-text">Career Uttsav began in Bangalore and Mangalore with a vision to help students explore careers beyond conventional paths — the first step toward what would become a trusted nationwide platform.</p></div></div>
+            <div class="journey-expand-cue"><span>Read the full story</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+          </div>
+        </div>
+
+        <div class="journey-item" data-index="1">
+          <div class="journey-card" role="button" tabindex="0" aria-expanded="false">
+            <div class="journey-num">17</div>
+            <div class="journey-cardtop">
+              <div class="journey-icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg></div>
+              <div class="journey-yeartag">2017</div>
+            </div>
+            <h4 class="journey-card-title">Across Cities</h4>
+            <div class="journey-stat">2L<span>+</span></div>
+            <div class="journey-stat-label">students</div>
+            <p class="journey-blurb">Became one of India's largest student career discovery platforms.</p>
+            <div class="journey-chips"><span class="journey-chip">Bangalore</span><span class="journey-chip">Hyderabad</span><span class="journey-chip">Kota</span></div>
+            <div class="journey-detail"><div class="journey-detail-inner"><p class="journey-detail-text">Career Uttsav expanded across multiple cities, drawing lakhs of students into one of the country's largest career discovery platforms with guidance, exhibitions and expert sessions.</p></div></div>
+            <div class="journey-expand-cue"><span>Read the full story</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+          </div>
+        </div>
+
+        <div class="journey-item" data-index="2">
+          <div class="journey-card" role="button" tabindex="0" aria-expanded="false">
+            <div class="journey-num">19</div>
+            <div class="journey-cardtop">
+              <div class="journey-icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></div>
+              <div class="journey-yeartag">2019</div>
+            </div>
+            <h4 class="journey-card-title">Going Global</h4>
+            <p class="journey-blurb">Crossed borders, with mentors and universities abroad.</p>
+            <div class="journey-chips"><span class="journey-chip">Dubai</span><span class="journey-chip">Sharjah</span></div>
+            <div class="journey-detail"><div class="journey-detail-inner"><p class="journey-detail-text">Career Uttsav expanded internationally, bringing together universities, mentors and industry experts from across the globe to inspire students beyond local horizons.</p></div></div>
+            <div class="journey-expand-cue"><span>Read the full story</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+          </div>
+        </div>
+
+        <div class="journey-item" data-index="3">
+          <div class="journey-card" role="button" tabindex="0" aria-expanded="false">
+            <div class="journey-num">23</div>
+            <div class="journey-cardtop">
+              <div class="journey-icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="10" width="18" height="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M12 14v2"/></svg></div>
+              <div class="journey-yeartag">2023</div>
+            </div>
+            <h4 class="journey-card-title">Big Stage</h4>
+            <div class="journey-stat">10L<span>+</span></div>
+            <div class="journey-stat-label">students</div>
+            <p class="journey-blurb">Major indoor events with workshops and expert talks.</p>
+            <div class="journey-chips"><span class="journey-chip">Bangalore</span><span class="journey-chip">Indore</span></div>
+            <div class="journey-detail"><div class="journey-detail-inner"><p class="journey-detail-text">Large-scale indoor events brought interactive career sessions, hands-on workshops and expert talks to students across major cities.</p></div></div>
+            <div class="journey-expand-cue"><span>Read the full story</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+          </div>
+        </div>
+
+        <div class="journey-item" data-index="4">
+          <div class="journey-card" role="button" tabindex="0" aria-expanded="false">
+            <div class="journey-num">24</div>
+            <div class="journey-cardtop">
+              <div class="journey-icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M6 20V9l6-4 6 4v11"/><path d="M10 20v-5h4v5"/></svg></div>
+              <div class="journey-yeartag">2024–25</div>
+            </div>
+            <h4 class="journey-card-title">Across Karnataka</h4>
+            <p class="journey-blurb">Deeper state reach with guidance, exhibitions and expert rooms.</p>
+            <div class="journey-chips"><span class="journey-chip">Mysore</span><span class="journey-chip">Hubli</span><span class="journey-chip">Tumkur</span></div>
+            <div class="journey-detail"><div class="journey-detail-inner"><p class="journey-detail-text">A deeper push across Karnataka — engaging students through guidance sessions, workshops, exhibitions and dedicated expert rooms in cities statewide.</p></div></div>
+            <div class="journey-expand-cue"><span>Read the full story</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+          </div>
+        </div>
+
+        <div class="journey-item" data-index="5">
+          <div class="journey-card" role="button" tabindex="0" aria-expanded="false">
+            <div class="journey-num">∞</div>
+            <div class="journey-cardtop">
+              <div class="journey-icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg></div>
+              <div class="journey-yeartag">Today</div>
+            </div>
+            <h4 class="journey-card-title">Still Guiding</h4>
+            <div class="journey-stat">15L<span>+</span></div>
+            <div class="journey-stat-label">students</div>
+            <p class="journey-blurb">Helping the next wave of students choose with clarity, not confusion.</p>
+            <div class="journey-chips"><span class="journey-chip">India &amp; beyond</span></div>
+            <div class="journey-detail"><div class="journey-detail-inner"><p class="journey-detail-text">Career Uttsav continues helping students, parents and educators discover opportunities, explore emerging careers and make confident decisions about the future.</p></div></div>
+            <div class="journey-expand-cue"><span>Read our mission</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <ol class="journey-milestones">
-        <!-- 2013  -  small, above -->
-        <li class="jm jm--up" data-progress="0">
-          <article class="jm-card">
-            <div class="jm-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 4h11l-2.5 4L16 12H5"/></svg>
-            </div>
-            <span class="jm-year">2013</span>
-            <h4 class="jm-title">The Beginning</h4>
-            <p class="jm-copy">Launched to open careers beyond the usual paths.</p>
-            <div class="jm-place">
-              <svg viewBox="0 0 24 24"><path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-              Bangalore • Mangalore
-            </div>
-          </article>
-          <span class="jm-node" aria-hidden="true"></span>
-        </li>
-
-        <!-- 2017  -  major, below -->
-        <li class="jm jm--down" data-progress="0.2">
-          <span class="jm-node" aria-hidden="true"></span>
-          <article class="jm-card">
-            <div class="jm-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>
-            </div>
-            <span class="jm-year">2017</span>
-            <h4 class="jm-title">Across Cities</h4>
-            <div class="jm-stat">2L<span>+</span></div>
-            <div class="jm-stat-label">students</div>
-            <p class="jm-copy">Became one of India’s largest student career discovery platforms.</p>
-            <div class="jm-place">
-              <svg viewBox="0 0 24 24"><path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-              Bangalore • Hyderabad • Kota
-            </div>
-          </article>
-        </li>
-
-        <!-- 2019  -  medium, above -->
-        <li class="jm jm--up" data-progress="0.4">
-          <article class="jm-card">
-            <div class="jm-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
-            </div>
-            <span class="jm-year">2019</span>
-            <h4 class="jm-title">Going Global</h4>
-            <p class="jm-copy">Crossed borders, with mentors and universities abroad.</p>
-            <div class="jm-place">
-              <svg viewBox="0 0 24 24"><path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-              Dubai • Sharjah
-            </div>
-          </article>
-          <span class="jm-node" aria-hidden="true"></span>
-        </li>
-
-        <!-- 2023  -  major, below -->
-        <li class="jm jm--down" data-progress="0.6">
-          <span class="jm-node" aria-hidden="true"></span>
-          <article class="jm-card">
-            <div class="jm-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><rect x="3" y="10" width="18" height="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M12 14v2"/></svg>
-            </div>
-            <span class="jm-year">2023</span>
-            <h4 class="jm-title">Big Stage</h4>
-            <div class="jm-stat">10L<span>+</span></div>
-            <div class="jm-stat-label">students</div>
-            <p class="jm-copy">Major indoor events with workshops and expert talks.</p>
-            <div class="jm-place">
-              <svg viewBox="0 0 24 24"><path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-              Bangalore • Indore
-            </div>
-          </article>
-        </li>
-
-        <!-- 2024–25  -  medium, above -->
-        <li class="jm jm--up" data-progress="0.8">
-          <article class="jm-card">
-            <div class="jm-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M6 20V9l6-4 6 4v11"/><path d="M10 20v-5h4v5"/></svg>
-            </div>
-            <span class="jm-year">2024–25</span>
-            <h4 class="jm-title">Across Karnataka</h4>
-            <p class="jm-copy">Deeper state reach with guidance, exhibitions and expert rooms.</p>
-            <div class="jm-place">
-              <svg viewBox="0 0 24 24"><path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-              Mysore • Hubli • Tumkur
-            </div>
-          </article>
-          <span class="jm-node" aria-hidden="true"></span>
-        </li>
-
-        <!-- Today  -  destination -->
-        <li class="jm jm--down jm--now" data-progress="1">
-          <span class="jm-node" aria-hidden="true"></span>
-          <article class="jm-card">
-            <div class="jm-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M2 12h2"/><path d="M20 12h2"/></svg>
-            </div>
-            <span class="jm-year">Today</span>
-            <h4 class="jm-title">Still Guiding</h4>
-            <div class="jm-stat">15L<span>+</span></div>
-            <div class="jm-stat-label">students</div>
-            <p class="jm-copy">Helping the next wave of students choose with clarity, not confusion.</p>
-            <div class="jm-place">
-              <svg viewBox="0 0 24 24"><path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-              India &amp; beyond
-            </div>
-          </article>
-        </li>
-      </ol>
+    <div class="journey-navrow">
+      <button type="button" class="journey-arrowbtn" id="journeyPrevBtn" aria-label="Previous milestone">
+        <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <div class="journey-dots" id="journeyDots"></div>
+      <button type="button" class="journey-arrowbtn" id="journeyNextBtn" aria-label="Next milestone">
+        <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
     </div>
   </div>
 </section>
@@ -3952,11 +4953,23 @@ footer{
 <section class="section" id="experience">
   <div class="wrap">
     <div class="section-head reveal">
-      <h2>Six reasons this <em>isn't a school assembly</em></h2>
+      <h2>Six reasons <span class="exp-h2-pre">this </span><br><em>isn't <span class="exp-h2-asm">a school assembly</span></em></h2>
       <p>Discover, connect, and grow through India's most trusted career event,<br>designed to inspire students, guide parents and empower every learner to shape a successful future.</p>
     </div>
 
+    <p class="exp-scrollhint" aria-hidden="true">
+      <span>Swipe to explore</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+    </p>
+
     <div class="exp-grid reveal-stagger">
+      <div class="exp-card">
+        <span class="exp-icon">🧩</span>
+        <h3>FREE Psychometric Test</h3>
+        <p>Take a detailed psychometric test and receive a customised report worth ₹3,000 to understand your aptitude, interests and true potential.</p>
+        <button type="button" class="btn btn-primary magnetic exp-card-cta open-psycho-info">Take the Test</button>
+        <span class="tag tag-yellow">Worth ₹3,000</span>
+      </div>
       <div class="exp-card">
         <span class="exp-icon">🎓</span>
         <h3>Meet Top Universities</h3>
@@ -3968,13 +4981,6 @@ footer{
         <h3>Get Career Guidance</h3>
         <p>Join expert seminars and live panel discussions offering real insight into top career fields, industry trends, and emerging professional opportunities.</p>
         <span class="tag tag-blue">Live Sessions</span>
-      </div>
-      <div class="exp-card">
-        <span class="exp-icon">🧩</span>
-        <h3>FREE Psychometric Test</h3>
-        <p>Take a detailed psychometric test and receive a customised report worth ₹3,000 to understand your aptitude, interests and true potential.</p>
-        <button type="button" class="btn btn-primary magnetic exp-card-cta open-psycho-info">Take the Test</button>
-        <span class="tag tag-yellow">Worth ₹3,000</span>
       </div>
       <div class="exp-card">
         <span class="exp-icon">📚</span>
@@ -4057,15 +5063,15 @@ footer{
     <div class="engage-list reveal">
       <div class="engage-item">
         <span class="num">01</span>
-        <div><h4>Face-to-Face Interaction</h4><p>Students and parents connect one-on-one with universities and mentors, building real trust in real time.</p></div>
+        <div><h4>Face-to-Face Interaction</h4><p>Students and parents connect one-on-one with universities and mentors, creating meaningful conversations and building trust in real time.</p></div>
       </div>
       <div class="engage-item">
         <span class="num">02</span>
-        <div><h4>Workshops & Seminars</h4><p>Live sessions, mock tests and skill-based activities that go far deeper than a stall conversation.</p></div>
+        <div><h4>Workshops & Seminars</h4><p>From live sessions to mock tests and skill-based activities, students get an experience that goes beyond a typical stall visit.</p></div>
       </div>
       <div class="engage-item">
         <span class="num">03</span>
-        <div><h4>Meaningful Conversations</h4><p>Guided, confident conversations that walk students through options, not just enrolment pitches.</p></div>
+        <div><h4>Meaningful Conversations</h4><p>Meaningful conversations that guide students through their choices, beyond just admissions discussions.</p></div>
       </div>
     </div>
   </div>
@@ -4168,10 +5174,12 @@ footer{
   <div class="wrap">
     <div class="trust-grid reveal">
       <div class="trust-photo-wrap">
-        <img class="trust-photo" src="img/SripalSir1.jpeg" alt="Sripal Jain, Founder of Career Uttsav">
+        <span class="trust-label">From the founder</span>
+        <div class="trust-photo-frame">
+          <img class="trust-photo" src="img/SripalSir1.jpeg" alt="Sripal Jain, Founder of Career Uttsav">
+        </div>
       </div>
       <div class="trust-quote">
-        <span class="trust-label">From the founder</span>
         <p>"Career planning has never been easy. Students today face more choices and more confusion than ever. Career Uttsav was built to bridge that gap between education and career, helping students walk away with real confidence and clarity."</p>
         <div class="trust-byline">
           <div>
@@ -4179,8 +5187,8 @@ footer{
             <div class="trust-role">Founder, Career Uttsav</div>
           </div>
           <div class="trust-social">
-            <a class="allow-external a--instagram" href="https://www.instagram.com/sripalljain/" target="_blank" rel="noopener" aria-label="Sripal Jain on Instagram"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
             <a class="allow-external a--linkedin" href="https://www.linkedin.com/in/sripalljain/" target="_blank" rel="noopener" aria-label="Sripal Jain on LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.24 8.25h4.52V24H.24V8.25zM8.34 8.25h4.33v2.14h.06c.6-1.14 2.08-2.34 4.28-2.34 4.58 0 5.42 3.01 5.42 6.93V24h-4.52v-7.75c0-1.85-.03-4.22-2.57-4.22-2.58 0-2.97 2.01-2.97 4.09V24H8.34V8.25z"/></svg></a>
+            <a class="allow-external a--instagram" href="https://www.instagram.com/sripalljain/" target="_blank" rel="noopener" aria-label="Sripal Jain on Instagram"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
           </div>
         </div>
       </div>
@@ -4338,9 +5346,6 @@ footer{
         <div class="partner-chip" aria-hidden="true"><img src="mit-vpu-logo.png" alt=""></div>
       </div>
     </div>
-    <div class="partners-more">
-      <button type="button" class="btn btn-primary open-partners-modal">See all partners →</button>
-    </div>
   </div>
 </section>
 <section class="school-band" id="exhibit-cta">
@@ -4395,31 +5400,31 @@ footer{
     <div class="faq-list reveal">
       <div class="faq-item open">
         <button class="faq-q"><span>What exactly is Career Uttsav?</span><span class="plus"></span></button>
-        <div class="faq-a"><p>A career discovery platform for students after 10th & 12th, bringing together students, parents, educators, universities and industry experts through expert sessions, workshops and real conversations that simplify career decision-making.</p></div>
+        <div class="faq-a"><p>Career Uttsav is a space where students discover possibilities, explore career paths, and get the right guidance after 10th and 12th. It brings together students, parents, educators, universities, and industry experts through inspiring sessions, interactive workshops, and meaningful conversations.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q"><span>Who should attend?</span><span class="plus"></span></button>
-        <div class="faq-a"><p>Students in Classes 9–12 deciding on streams or career paths after 10th or 12th, along with their parents. Career Uttsav is built as a platform for both.</p></div>
+        <button class="faq-q"><span>Who should attend Career Uttsav?</span><span class="plus"></span></button>
+        <div class="faq-a"><p>Career Uttsav is a platform for students in Classes 9–12 and their parents to explore career options, understand opportunities, and make confident decisions about the future.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q"><span>What do I actually get as a visitor?</span><span class="plus"></span></button>
-        <div class="faq-a"><p>Access to university stalls, expert seminars and panel discussions, a psychometric aptitude test worth ₹3,000, a free "Careers After +2" book worth ₹399, scholarship contests, and direct networking with mentors and counsellors.</p></div>
+        <button class="faq-q"><span>What can I experience at Career Uttsav?</span><span class="plus"></span></button>
+        <div class="faq-a"><p>You’ll get plenty of opportunities to explore, ask questions, and speak directly with the right people. Meet universities, attend expert sessions and panel discussions, get career guidance, and connect one-on-one with mentors and counsellors. You’ll also receive a complimentary psychometric aptitude test worth ₹3,000, a Careers After +2 book worth ₹399, and access to scholarship opportunities.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q"><span>Is Career Uttsav useful if I'm still unsure about my future?</span><span class="plus"></span></button>
-        <div class="faq-a"><p>Definitely. Whether you have a clear goal or are just beginning to explore your options, Career Uttsav is designed to help you discover the path that's right for you.</p></div>
+        <button class="faq-q"><span>Can I attend Career Uttsav even if I don’t know my career goal yet?</span><span class="plus"></span></button>
+        <div class="faq-a"><p>That’s exactly where Career Uttsav can help. Through expert guidance, university interactions, and career insights, students can explore their interests and make more confident decisions about their future.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q"><span>Why should I attend Career Uttsav?</span><span class="plus"></span></button>
-        <div class="faq-a"><p>The event brings together career experts, universities, and industry professionals under one roof, allowing you to discover opportunities, ask questions, and gain valuable guidance.</p></div>
+        <div class="faq-a"><p>Career Uttsav gives students and parents everything they need to make better career decisions, from university interactions and expert guidance to aptitude assessments, workshops, scholarship opportunities, and personalised conversations with mentors and counsellors.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q"><span>How can Career Uttsav help parents?</span><span class="plus"></span></button>
-        <div class="faq-a"><p>Parents gain insights into modern career options, admission pathways, and industry trends, enabling them to better support their child's educational and career journey.</p></div>
+        <div class="faq-a"><p>Parents get a clearer understanding of today’s career options, admission pathways, and changing industry trends. It helps them ask the right questions, understand what may suit their child, and support important education and career decisions with greater confidence.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q"><span>Why should our school participate in Career Uttsav?</span><span class="plus"></span></button>
-        <div class="faq-a"><p>Career Uttsav provides students with expert career guidance, exposure to universities, and valuable insights that complement classroom learning.</p></div>
+        <div class="faq-a"><p>Career Uttsav gives your students access to career experts, universities, and real-world insights that go beyond the classroom. It helps them explore options, ask better questions, and make more informed decisions about what comes next.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q"><span>How can my institution exhibit or partner?</span><span class="plus"></span></button>
@@ -4427,7 +5432,7 @@ footer{
       </div>
       <div class="faq-item">
         <button class="faq-q"><span>How do I register?</span><span class="plus"></span></button>
-        <div class="faq-a"><p>Head to the student registration page to get your pass, or contact the team directly at info@careeruttsav.in or +91 9900795000.</p></div>
+        <div class="faq-a"><p>Simply click the WhatsApp icon at the bottom-right of your screen to start the registration chat. If you have any questions, reach us at info@careeruttsav.in or +91 9900795000.</p></div>
       </div>
     </div>
   </div>
@@ -4520,6 +5525,19 @@ footer{
       <button class="reg-close" id="regClose" aria-label="Close registration">✕</button>
     </div>
 
+    <div class="reg-choice" id="regChoice">
+      <h4>How would you like to register?</h4>
+      <p class="reg-sub">Pick the option that works best for you. Our team is ready to help either way.</p>
+      <div class="reg-choice-actions">
+        <button type="button" class="reg-choice-btn reg-choice-btn--form" id="regChoiceForm">Continue registration here</button>
+        <a class="reg-choice-btn reg-choice-btn--wa allow-external" id="regChoiceWhatsApp" href="https://api.whatsapp.com/send?phone=919035150139&amp;text=Hi%21%20There%20" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Register on WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <div class="reg-flow" id="regFlow" hidden>
     <div class="reg-stepper" id="regStepsLabel">
       <div class="step-item" data-step="1">
         <span class="step-dot"><span class="num">1</span><span class="check">✓</span></span>
@@ -4698,7 +5716,7 @@ footer{
             <div class="reg-pass-name" id="regPassName">-</div>
             <div class="reg-pass-sub" id="regPassSchool">-</div>
             <div class="reg-pass-grid">
-              <div><div class="k">City</div><div class="v" id="regPassCity">-</div></div>
+              <div><div class="k">Date</div><div class="v" id="regPassDate">-</div></div>
               <div><div class="k">Class</div><div class="v" id="regPassClass">-</div></div>
               <div><div class="k">Seminars Booked</div><div class="v" id="regPassSeminars">-</div></div>
               <div><div class="k">Pass ID</div><div class="v" id="regPassId">-</div></div>
@@ -4720,12 +5738,26 @@ footer{
         <span class="spin"></span><span class="label">Continue</span>
       </button>
     </div>
+    </div><!-- /.reg-flow -->
     </div><!-- /.reg-main -->
 
-    <aside class="reg-partners" aria-labelledby="regPartnersTitle">
+    <div class="reg-partners-col" id="regPartnersCol">
+    <aside class="reg-partners" aria-label="Event details and partners">
       <div class="reg-partners-head">
-        <h3 id="regPartnersTitle">Our Esteemed Partners</h3>
-        <p>Partners who made it possible in 2025</p>
+        <div class="reg-event-chip">
+          <div class="reg-event-chip-row">
+            <div class="reg-event-chip-text">
+              <span class="reg-event-chip-label">Event date</span>
+              <strong>19–20 December 2026</strong>
+            </div>
+          </div>
+          <div class="reg-event-chip-row reg-event-chip-row--venue">
+            <div class="reg-event-chip-text">
+              <span class="reg-event-chip-label">Venue</span>
+              <strong>Gate No.9, Princess Golf, Palace Grounds, Bangalore</strong>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="reg-partners-body" id="regPartnersBody">
         <!-- 1. Presenting -->
@@ -4746,92 +5778,159 @@ footer{
             <div class="partners-logo-tile"><img src="rv-university-logo.png" alt="RV University"></div>
           </div>
         </div>
+      </div>
+    </aside>
 
-        <!-- Supporting titled partners (between co-presenting and university) -->
-        <div class="reg-partners-grid reg-partners-grid--support">
-          <div class="partners-tier partners-tier--t2 partners-card partners-card--support" id="tier-skill">
-            <span class="partners-tier-label">NextGen Skill Partner</span>
-            <div class="partners-logo-grid partners-logo-grid--solo">
-              <div class="partners-logo-tile"><img src="upgrad-logo.png" alt="UpGrad"></div>
-            </div>
-          </div>
-          <div class="partners-tier partners-tier--t2 partners-card partners-card--support" id="tier-medical">
-            <span class="partners-tier-label">Overseas Medical Education Partner</span>
-            <div class="partners-logo-grid partners-logo-grid--duo">
-              <div class="partners-logo-tile"><img src="img/partners/American-university.png" alt="American University of Antigua"></div>
-              <div class="partners-logo-tile"><img src="manipal-malaysia-logo.png" alt="Manipal University College Malaysia"></div>
-            </div>
-          </div>
-          <div class="partners-tier partners-tier--t2 partners-card partners-card--support" id="tier-mock">
-            <span class="partners-tier-label">Mock Test Partner</span>
-            <div class="partners-logo-grid partners-logo-grid--solo">
-              <div class="partners-logo-tile"><img src="allen-logo.png" alt="Allen"></div>
-            </div>
-          </div>
-          <div class="partners-tier partners-tier--t2 partners-card partners-card--support" id="tier-assessment">
-            <span class="partners-tier-label">Career Assessment Partner</span>
-            <div class="partners-logo-grid partners-logo-grid--solo">
-              <div class="partners-logo-tile"><img src="img/partners/careerkaffe.jpg" alt="Career Kaffe"></div>
-            </div>
+    <div class="reg-partners-marquee reg-partners-marquee--inline" aria-label="More event partners">
+      <p class="reg-partners-marquee-label">Our other partners</p>
+      <div class="reg-partner-marquee-dual">
+        <div class="partner-marquee reg-partner-marquee">
+          <div class="partner-marquee-track">
+            <div class="partner-chip"><img src="upgrad-logo.png" alt="UpGrad"></div>
+            <div class="partner-chip"><img src="img/partners/American-university.png" alt="American University of Antigua"></div>
+            <div class="partner-chip"><img src="manipal-malaysia-logo.png" alt="Manipal University College Malaysia"></div>
+            <div class="partner-chip"><img src="allen-logo.png" alt="Allen"></div>
+            <div class="partner-chip"><img src="img/partners/careerkaffe.jpg" alt="Career Kaffe"></div>
+            <div class="partner-chip"><img src="alliance-logo.png" alt="Alliance University"></div>
+            <div class="partner-chip"><img src="dsu-logo.png" alt="Dayananda Sagar University"></div>
+            <div class="partner-chip"><img src="ramaiah-logo.png" alt="Ramaiah University of Applied Sciences"></div>
+            <div class="partner-chip"><img src="reva-logo.png" alt="REVA University"></div>
+            <div class="partner-chip"><img src="shiv-nadar-logo.svg" alt="Shiv Nadar University"></div>
+            <div class="partner-chip"><img src="vit-logo.png" alt="Vellore Institute of Technology"></div>
+            <div class="partner-chip"><img src="bits-dubai-logo.png" alt="BITS Dubai"></div>
+            <div class="partner-chip"><img src="bits-law-logo.png" alt="BITS Pilani Law School"></div>
+            <div class="partner-chip"><img src="east-point-logo.png" alt="East Point"></div>
+            <div class="partner-chip"><img src="eimr-logo.png" alt="EIMR"></div>
+            <div class="partner-chip"><img src="manipal-academy-logo.png" alt="Manipal Academy of Higher Education"></div>
+            <div class="partner-chip" aria-hidden="true"><img src="upgrad-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="img/partners/American-university.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="manipal-malaysia-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="allen-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="img/partners/careerkaffe.jpg" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="alliance-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="dsu-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="ramaiah-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="reva-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="shiv-nadar-logo.svg" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="vit-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="bits-dubai-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="bits-law-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="east-point-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="eimr-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="manipal-academy-logo.png" alt=""></div>
           </div>
         </div>
-
-        <!-- 3. University Partners -->
-        <div class="partners-tier partners-tier--t3 partners-card partners-card--university" id="tier-university">
-          <span class="partners-tier-label">University Partners</span>
-          <div class="partners-logo-grid">
-            <div class="partners-logo-tile"><img src="alliance-logo.png" alt="Alliance"></div>
-            <div class="partners-logo-tile"><img src="dsu-logo.png" alt="DSU"></div>
-            <div class="partners-logo-tile"><img src="ramaiah-logo.png" alt="Ramaiah University of Applied Sciences"></div>
-            <div class="partners-logo-tile"><img src="reva-logo.png" alt="REVA University"></div>
-            <div class="partners-logo-tile"><img src="shiv-nadar-logo.svg" alt="Shiv Nadar University"></div>
-            <div class="partners-logo-tile"><img src="vit-logo.png" alt="Vellore Institute of Technology"></div>
-          </div>
-        </div>
-
-        <!-- 4. Knowledge Partners (+ Education as adjacent supporting set) -->
-        <div class="reg-partners-grid reg-partners-grid--mid">
-          <div class="partners-tier partners-tier--t3 partners-card partners-card--knowledge" id="tier-knowledge">
-            <span class="partners-tier-label">Knowledge Partners</span>
-            <div class="partners-logo-grid">
-              <div class="partners-logo-tile"><img src="bits-dubai-logo.png" alt="BITS Dubai"></div>
-              <div class="partners-logo-tile"><img src="bits-law-logo.png" alt="BITS Pilani Law School"></div>
-              <div class="partners-logo-tile"><img src="east-point-logo.png" alt="East Point"></div>
-              <div class="partners-logo-tile"><img src="eimr-logo.png" alt="EIMR"></div>
-              <div class="partners-logo-tile"><img src="manipal-academy-logo.png" alt="Manipal Academy of Higher Education"></div>
-              <div class="partners-logo-tile"><img src="op-jindal-logo.png" alt="OP Jindal Global University"></div>
-              <div class="partners-logo-tile"><img src="trisha-logo.png" alt="Trisha Classes"></div>
-              <div class="partners-logo-tile"><img src="vidyashilp-logo.png" alt="Vidhyashilp"></div>
-            </div>
-          </div>
-          <div class="partners-tier partners-tier--t3 partners-card partners-card--knowledge" id="tier-education">
-            <span class="partners-tier-label">Education Partners</span>
-            <div class="partners-logo-grid">
-              <div class="partners-logo-tile"><img src="amrita-logo.png" alt="Amrita University"></div>
-              <div class="partners-logo-tile"><img src="buddy4study-logo.png" alt="Buddy4Study"></div>
-              <div class="partners-logo-tile"><img src="don-bosco-logo.png" alt="Don Bosco"></div>
-              <div class="partners-logo-tile"><img src="pes-logo.png" alt="PES"></div>
-              <div class="partners-logo-tile"><img src="surana-logo.png" alt="Surana College Autonomous"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5. Stall Partners -->
-        <div class="partners-tier partners-tier--t3 partners-card partners-card--stall" id="tier-stall">
-          <span class="partners-tier-label">Stall Partners</span>
-          <div class="partners-logo-grid">
-            <div class="partners-logo-tile"><img src="amc-logo.png" alt="AMC"></div>
-            <div class="partners-logo-tile"><img src="amity-logo.png" alt="Amity Bangalore"></div>
-            <div class="partners-logo-tile"><img src="bkc-logo.png" alt="BKC Yeswant Rao"></div>
-            <div class="partners-logo-tile"><img src="cmr-logo.png" alt="CMR"></div>
-            <div class="partners-logo-tile"><img src="ibmr-logo.png" alt="IBMR"></div>
-            <div class="partners-logo-tile"><img src="krupanidhi-logo.png" alt="Krupanidhi"></div>
-            <div class="partners-logo-tile"><img src="mit-vpu-logo.png" alt="MIT VPU"></div>
-            <div class="partners-logo-tile"><img src="nitte-logo.png" alt="Nitte"></div>
+        <div class="partner-marquee reg-partner-marquee reg-partner-marquee--reverse">
+          <div class="partner-marquee-track">
+            <div class="partner-chip"><img src="op-jindal-logo.png" alt="OP Jindal Global University"></div>
+            <div class="partner-chip"><img src="trisha-logo.png" alt="Trisha Classes"></div>
+            <div class="partner-chip"><img src="vidyashilp-logo.png" alt="Vidhyashilp"></div>
+            <div class="partner-chip"><img src="amrita-logo.png" alt="Amrita University"></div>
+            <div class="partner-chip"><img src="buddy4study-logo.png" alt="Buddy4Study"></div>
+            <div class="partner-chip"><img src="don-bosco-logo.png" alt="Don Bosco"></div>
+            <div class="partner-chip"><img src="pes-logo.png" alt="PES"></div>
+            <div class="partner-chip"><img src="surana-logo.png" alt="Surana College Autonomous"></div>
+            <div class="partner-chip"><img src="amc-logo.png" alt="AMC"></div>
+            <div class="partner-chip"><img src="amity-logo.png" alt="Amity Bangalore"></div>
+            <div class="partner-chip"><img src="bkc-logo.png" alt="BKC Yeswant Rao"></div>
+            <div class="partner-chip"><img src="cmr-logo.png" alt="CMR"></div>
+            <div class="partner-chip"><img src="ibmr-logo.png" alt="IBMR"></div>
+            <div class="partner-chip"><img src="krupanidhi-logo.png" alt="Krupanidhi"></div>
+            <div class="partner-chip"><img src="mit-vpu-logo.png" alt="MIT VPU"></div>
+            <div class="partner-chip"><img src="nitte-logo.png" alt="Nitte"></div>
+            <div class="partner-chip" aria-hidden="true"><img src="op-jindal-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="trisha-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="vidyashilp-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="amrita-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="buddy4study-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="don-bosco-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="pes-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="surana-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="amc-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="amity-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="bkc-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="cmr-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="ibmr-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="krupanidhi-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="mit-vpu-logo.png" alt=""></div>
+            <div class="partner-chip" aria-hidden="true"><img src="nitte-logo.png" alt=""></div>
           </div>
         </div>
       </div>
-    </aside>
+    </div>
+    </div><!-- /.reg-partners-col -->
+
+    <div class="reg-partners-marquee reg-partners-marquee--strip" aria-label="More event partners">
+      <p class="reg-partners-marquee-label">Our other partners</p>
+      <div class="partner-marquee reg-partner-marquee">
+        <div class="partner-marquee-track">
+          <div class="partner-chip"><img src="upgrad-logo.png" alt="UpGrad"></div>
+          <div class="partner-chip"><img src="img/partners/American-university.png" alt="American University of Antigua"></div>
+          <div class="partner-chip"><img src="manipal-malaysia-logo.png" alt="Manipal University College Malaysia"></div>
+          <div class="partner-chip"><img src="allen-logo.png" alt="Allen"></div>
+          <div class="partner-chip"><img src="img/partners/careerkaffe.jpg" alt="Career Kaffe"></div>
+          <div class="partner-chip"><img src="alliance-logo.png" alt="Alliance University"></div>
+          <div class="partner-chip"><img src="dsu-logo.png" alt="Dayananda Sagar University"></div>
+          <div class="partner-chip"><img src="ramaiah-logo.png" alt="Ramaiah University of Applied Sciences"></div>
+          <div class="partner-chip"><img src="reva-logo.png" alt="REVA University"></div>
+          <div class="partner-chip"><img src="shiv-nadar-logo.svg" alt="Shiv Nadar University"></div>
+          <div class="partner-chip"><img src="vit-logo.png" alt="Vellore Institute of Technology"></div>
+          <div class="partner-chip"><img src="bits-dubai-logo.png" alt="BITS Dubai"></div>
+          <div class="partner-chip"><img src="bits-law-logo.png" alt="BITS Pilani Law School"></div>
+          <div class="partner-chip"><img src="east-point-logo.png" alt="East Point"></div>
+          <div class="partner-chip"><img src="eimr-logo.png" alt="EIMR"></div>
+          <div class="partner-chip"><img src="manipal-academy-logo.png" alt="Manipal Academy of Higher Education"></div>
+          <div class="partner-chip"><img src="op-jindal-logo.png" alt="OP Jindal Global University"></div>
+          <div class="partner-chip"><img src="trisha-logo.png" alt="Trisha Classes"></div>
+          <div class="partner-chip"><img src="vidyashilp-logo.png" alt="Vidhyashilp"></div>
+          <div class="partner-chip"><img src="amrita-logo.png" alt="Amrita University"></div>
+          <div class="partner-chip"><img src="buddy4study-logo.png" alt="Buddy4Study"></div>
+          <div class="partner-chip"><img src="don-bosco-logo.png" alt="Don Bosco"></div>
+          <div class="partner-chip"><img src="pes-logo.png" alt="PES"></div>
+          <div class="partner-chip"><img src="surana-logo.png" alt="Surana College Autonomous"></div>
+          <div class="partner-chip"><img src="amc-logo.png" alt="AMC"></div>
+          <div class="partner-chip"><img src="amity-logo.png" alt="Amity Bangalore"></div>
+          <div class="partner-chip"><img src="bkc-logo.png" alt="BKC Yeswant Rao"></div>
+          <div class="partner-chip"><img src="cmr-logo.png" alt="CMR"></div>
+          <div class="partner-chip"><img src="ibmr-logo.png" alt="IBMR"></div>
+          <div class="partner-chip"><img src="krupanidhi-logo.png" alt="Krupanidhi"></div>
+          <div class="partner-chip"><img src="mit-vpu-logo.png" alt="MIT VPU"></div>
+          <div class="partner-chip"><img src="nitte-logo.png" alt="Nitte"></div>
+          <div class="partner-chip" aria-hidden="true"><img src="upgrad-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="img/partners/American-university.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="manipal-malaysia-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="allen-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="img/partners/careerkaffe.jpg" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="alliance-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="dsu-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="ramaiah-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="reva-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="shiv-nadar-logo.svg" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="vit-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="bits-dubai-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="bits-law-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="east-point-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="eimr-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="manipal-academy-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="op-jindal-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="trisha-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="vidyashilp-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="amrita-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="buddy4study-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="don-bosco-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="pes-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="surana-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="amc-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="amity-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="bkc-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="cmr-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="ibmr-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="krupanidhi-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="mit-vpu-logo.png" alt=""></div>
+          <div class="partner-chip" aria-hidden="true"><img src="nitte-logo.png" alt=""></div>
+        </div>
+      </div>
+    </div>
 
   </div>
 </div>
@@ -5093,6 +6192,14 @@ footer{
   <img src="whatsapp-icon.png" alt="WhatsApp">
 </a>
 
+<nav class="mobile-action-bar" aria-label="Quick actions">
+  <a href="https://api.whatsapp.com/send?phone=919035150139&text=Hi%21%20There%20" class="mobile-action-btn mobile-action-wa allow-external" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+    WhatsApp
+  </a>
+  <a href="https://careeruttsav.in/student-registration" class="mobile-action-btn mobile-action-reg open-register allow-external">Register Now</a>
+</nav>
+
 <!-- ============================================================
      JS
      ============================================================ -->
@@ -5115,9 +6222,6 @@ footer{
   }
   window.addEventListener('scroll', onScroll, {passive:true});
   onScroll();
-
-  /* ---- See all partners opens the split register modal ---- */
-  /* (partners directory now lives in #regOverlay .reg-partners) */
 
   /* ---- Mobile menu ---- */
   var burger = document.getElementById('navBurger');
@@ -5199,7 +6303,7 @@ footer{
   })();
 
   /* ---- Scroll reveal ---- */
-  var revealEls = document.querySelectorAll('.reveal, .reveal-stagger, .journey-track');
+  var revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
       if(entry.isIntersecting){
@@ -5336,36 +6440,129 @@ footer{
     }
   })();
 
-  /* ---- Journey timeline: full by default, hover fills to milestone ---- */
+  /* ---- Journey timeline: horizontal scroll cards ---- */
   (function(){
     var track = document.getElementById('journeyTrack');
     if(!track) return;
-    var milestones = Array.prototype.slice.call(track.querySelectorAll('.jm'));
+    var items = Array.prototype.slice.call(track.querySelectorAll('.journey-item'));
+    var dotsEl = document.getElementById('journeyDots');
+    var prevBtn = document.getElementById('journeyPrevBtn');
+    var nextBtn = document.getElementById('journeyNextBtn');
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function setProgress(p){
-      p = Math.max(0, Math.min(1, p));
-      track.style.setProperty('--journey-progress', String(p));
-      milestones.forEach(function(m){
-        var mp = parseFloat(m.getAttribute('data-progress') || '0');
-        m.classList.toggle('is-reached', p >= mp - 0.001);
+    items.forEach(function(item, i){
+      var card = item.querySelector('.journey-card');
+      if(!card) return;
+
+      function toggle(){
+        var wasExpanded = item.classList.contains('expanded');
+        items.forEach(function(el){
+          el.classList.remove('expanded');
+          var c = el.querySelector('.journey-card');
+          if(c) c.setAttribute('aria-expanded', 'false');
+        });
+        if(!wasExpanded){
+          item.classList.add('expanded');
+          card.setAttribute('aria-expanded', 'true');
+          item.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+        }
+      }
+
+      card.addEventListener('click', toggle);
+      card.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+      });
+
+      if(dotsEl){
+        var dotbtn = document.createElement('button');
+        dotbtn.type = 'button';
+        dotbtn.className = 'journey-dotbtn';
+        var year = item.querySelector('.journey-yeartag');
+        var title = item.querySelector('.journey-card-title');
+        dotbtn.setAttribute('aria-label', 'Go to ' + (year ? year.textContent : '') + ': ' + (title ? title.textContent : ''));
+        dotbtn.addEventListener('click', function(){
+          item.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+        });
+        dotsEl.appendChild(dotbtn);
+      }
+    });
+
+    var dotBtns = dotsEl ? Array.prototype.slice.call(dotsEl.querySelectorAll('.journey-dotbtn')) : [];
+
+    function updateNav(){
+      if(!items.length) return;
+      var trackRect = track.getBoundingClientRect();
+      var centerX = trackRect.left + trackRect.width / 2;
+      var closestIdx = 0;
+      var closestDist = Infinity;
+      items.forEach(function(item, i){
+        var r = item.getBoundingClientRect();
+        var cardCenter = r.left + r.width / 2;
+        var dist = Math.abs(cardCenter - centerX);
+        if(dist < closestDist){ closestDist = dist; closestIdx = i; }
+      });
+      dotBtns.forEach(function(d, i){ d.classList.toggle('active', i === closestIdx); });
+      if(prevBtn) prevBtn.disabled = track.scrollLeft <= 2;
+      if(nextBtn){
+        var max = track.scrollWidth - track.clientWidth - 2;
+        nextBtn.disabled = track.scrollLeft >= max;
+      }
+    }
+
+    track.addEventListener('scroll', function(){ requestAnimationFrame(updateNav); });
+    window.addEventListener('resize', function(){ requestAnimationFrame(updateNav); });
+    updateNav();
+
+    if(prevBtn){
+      prevBtn.addEventListener('click', function(){
+        if(!items[0]) return;
+        track.scrollBy({ left: -(items[0].getBoundingClientRect().width + 24), behavior:'smooth' });
+      });
+    }
+    if(nextBtn){
+      nextBtn.addEventListener('click', function(){
+        if(!items[0]) return;
+        track.scrollBy({ left: items[0].getBoundingClientRect().width + 24, behavior:'smooth' });
       });
     }
 
-    setProgress(1);
+    var entranceIO = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var idx = Number(entry.target.getAttribute('data-index') || 0);
+          entry.target.style.transitionDelay = reduceMotion ? '0ms' : (Math.min(idx, 4) * 70) + 'ms';
+          entry.target.classList.add('in-view');
+          entranceIO.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, root: track });
+    items.forEach(function(item){ entranceIO.observe(item); });
 
-    milestones.forEach(function(m){
-      m.addEventListener('mouseenter', function(){
-        track.classList.add('is-hovering');
-        milestones.forEach(function(x){ x.classList.remove('is-active'); });
-        m.classList.add('is-active');
-        setProgress(parseFloat(m.getAttribute('data-progress') || '0'));
-      });
-      m.addEventListener('mouseleave', function(){
-        track.classList.remove('is-hovering');
-        m.classList.remove('is-active');
-        setProgress(1);
-      });
-    });
+    var outer = track.closest('.journey-track-outer');
+    if(outer && !reduceMotion){
+      var peekIO = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting && track.scrollWidth > track.clientWidth){
+            peekIO.disconnect();
+            setTimeout(function(){
+              var dist = Math.min(150, track.scrollWidth - track.clientWidth);
+              var start = performance.now();
+              var dur = 1400;
+              function anim(now){
+                var p = Math.min((now - start) / dur, 1);
+                var eased = Math.sin(p * Math.PI);
+                track.scrollLeft = eased * dist;
+                if(p < 1) requestAnimationFrame(anim);
+              }
+              requestAnimationFrame(anim);
+            }, 700);
+          } else if(entry.isIntersecting){
+            peekIO.disconnect();
+          }
+        });
+      }, { threshold: 0.4 });
+      peekIO.observe(outer);
+    }
   })();
 
   /* ---- Animated counters ---- */
@@ -5460,6 +6657,7 @@ var CU_ADMIN_API = (
 
   const CURRENT_EVENT_ID = 'evt-001';
   const CURRENT_EVENT_CITY = 'Bangalore';
+  const CURRENT_EVENT_DATE = "19-20 Dec '26";
 
   function showFormApiError(formEl, message){
     var existing = formEl.querySelector('.form-api-error');
@@ -5478,8 +6676,15 @@ var CU_ADMIN_API = (
     if(existing) existing.remove();
   }
 
+  var WHATSAPP_CHAT_URL = 'https://api.whatsapp.com/send?phone=919035150139&text=Hi%21%20There%20';
+
   var regOverlay = document.getElementById('regOverlay');
   var regCard = regOverlay.querySelector('.reg-card');
+  var regMain = regOverlay.querySelector('.reg-main');
+  var regChoice = document.getElementById('regChoice');
+  var regFlow = document.getElementById('regFlow');
+  var regChoiceForm = document.getElementById('regChoiceForm');
+  var regChoiceWhatsApp = document.getElementById('regChoiceWhatsApp');
   var regForm = document.getElementById('regForm');
   var regSteps = regForm.querySelectorAll('.reg-step');
   var regStepItems = document.querySelectorAll('#regStepsLabel .step-item');
@@ -5536,6 +6741,33 @@ var CU_ADMIN_API = (
     });
   }
 
+  function showRegChoice(){
+    if(regChoice) regChoice.hidden = false;
+    if(regFlow) regFlow.hidden = true;
+    if(regMain) regMain.classList.remove('reg-main--form-active');
+    if(regCard) regCard.classList.remove('reg-card--form-active');
+  }
+
+  function showRegForm(){
+    if(regChoice) regChoice.hidden = true;
+    if(regFlow) regFlow.hidden = false;
+    if(regMain) regMain.classList.add('reg-main--form-active');
+    if(regCard) regCard.classList.add('reg-card--form-active');
+  }
+
+  if(regChoiceWhatsApp){
+    regChoiceWhatsApp.href = WHATSAPP_CHAT_URL;
+  }
+  if(regChoiceForm){
+    regChoiceForm.addEventListener('click', function(){
+      showRegForm();
+      setTimeout(function(){
+        var f = regForm.querySelector('.reg-step.active input');
+        if(f) f.focus();
+      }, 100);
+    });
+  }
+
   function openRegModal(){
     lastFocused = document.activeElement;
     regOverlay.classList.add('open');
@@ -5546,10 +6778,10 @@ var CU_ADMIN_API = (
     clearFormApiError(regForm);
     clearRegSubmitError();
     resetMobileOtpState();
+    showRegChoice();
     renderStep();
     var partnersBody = document.getElementById('regPartnersBody');
     if(partnersBody) partnersBody.scrollTop = 0;
-    setTimeout(function(){ var f = regForm.querySelector('.reg-step.active input'); if(f) f.focus(); }, 350);
   }
   function closeRegModal(){
     regOverlay.classList.remove('open');
@@ -5558,7 +6790,7 @@ var CU_ADMIN_API = (
     if(lastFocused) lastFocused.focus();
   }
 
-  document.querySelectorAll('.open-register, .open-partners-modal').forEach(function(el){
+  document.querySelectorAll('.open-register').forEach(function(el){
     el.addEventListener('click', function(e){ e.preventDefault(); openRegModal(); });
   });
   regClose.addEventListener('click', closeRegModal);
@@ -6003,7 +7235,7 @@ var CU_ADMIN_API = (
     var classLabel = document.getElementById('regClass').value || '-';
     document.getElementById('regPassName').textContent = getVal('regName') || 'Guest Student';
     document.getElementById('regPassSchool').textContent = getVal('regSchool') || '-';
-    document.getElementById('regPassCity').textContent = CURRENT_EVENT_CITY;
+    document.getElementById('regPassDate').textContent = CURRENT_EVENT_DATE;
     document.getElementById('regPassClass').textContent = classLabel;
     document.getElementById('regPassSeminars').textContent = seminars.length + ' selected';
     document.getElementById('regPassId').textContent = registrationNumber || ('CU-' + Math.random().toString(36).slice(2,8).toUpperCase());
