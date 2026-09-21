@@ -20,6 +20,7 @@
   --ink:#14121A;
   --ink-soft:#3A3742;
   --paper:#FBFAF3;
+  --cream:#FFF8E7;
   --paper-dim:#F2EFE4;
   --red:#E5372B;
   --red-dark:#B82A20;
@@ -246,9 +247,10 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 .hero{
   position:relative;
   min-height:100vh;
-  display:flex; flex-direction:column; justify-content:center;
-  padding:172px 0 60px;
-  background-color:var(--paper);
+  display:flex; flex-direction:column; justify-content:flex-start;
+  gap:20px;
+  padding:168px 0 0;
+  background-color:var(--cream);
   background-image:var(--doodle);
   background-repeat:repeat;
   background-size:560px 560px;
@@ -258,17 +260,21 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 .hero::after{
   content:"";
   position:absolute; inset:0; pointer-events:none;
-  background:linear-gradient(180deg, rgba(251,250,243,0.5) 0%, rgba(251,250,243,0) 24%, rgba(251,250,243,0) 76%, var(--paper) 100%);
+  background:linear-gradient(180deg, rgba(255,248,231,0.55) 0%, rgba(255,248,231,0) 24%, rgba(255,248,231,0) 76%, var(--cream) 100%);
 }
 
 .hero-grid{
   display:grid; grid-template-columns:1.15fr 0.85fr; gap:40px; align-items:center;
   position:relative; z-index:2;
+  flex:1;
+  align-content:center;
+  min-height:0;
 }
 .hero-copy h1{
   font-size:clamp(44px, 6.4vw, 92px);
-  margin:30px 0 22px;
+  margin:12px 0 22px;
   letter-spacing:-0.02em;
+  line-height:0.92;
 }
 .hero-copy .eyebrow{
   font-size:16px;
@@ -276,20 +282,64 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 }
 .hero-copy .eyebrow::before{ display:none; }
 .hero-copy h1 em{
-  font-style:normal; color:var(--red);
+  font-style:normal;
+  color:var(--red);
   position:relative;
+}
+.hero-copy .hero-deck{
+  font-size:clamp(16px,1.6vw,19px);
+  font-weight:500;
+  color:var(--ink-soft);
+  line-height:1.45;
+  margin:0 0 22px;
+  max-width:36em;
 }
 .hero-copy p.lead{
   font-size:clamp(16px,1.6vw,19px);
   color:var(--ink-soft);
-  max-width:none; margin-bottom:36px;
+  max-width:none; margin-bottom:22px;
   font-weight:500;
-  white-space:nowrap;
+  line-height:1.45;
+}
+.hero-meta{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:12px 28px;
+  margin-bottom:32px;
+}
+.hero-meta-item{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-size:clamp(17px,1.7vw,19px);
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.3;
+}
+.hero-meta-ico{
+  width:24px;
+  height:24px;
+  flex-shrink:0;
+  color:var(--red);
 }
 @media (max-width:900px){
   .hero-copy p.lead{ white-space:normal; max-width:520px; }
 }
-.hero-actions{ display:flex; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
+.hero-actions{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:10px;
+  margin-bottom:20px;
+}
+.hero-cta-note{
+  margin:0;
+  font-size:12.5px;
+  font-weight:500;
+  color:var(--ink-soft);
+  line-height:1.35;
+}
 
 /* ticket / boarding-pass signature element  -  dark card pops against the light hero */
 .pass-card{
@@ -306,8 +356,14 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   margin-right:6%;
 }
 .pass-card:hover{ transform:rotate(0deg) translateY(-6px); }
-.pass-top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:22px; }
-.pass-top img{ height:24px; background:#fff; padding:4px 8px; border-radius:6px; }
+.pass-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; min-height:44px; overflow:visible; }
+.pass-top img{
+  display:block;
+  height:44px;
+  width:auto;
+  transform:scale(1.55);
+  transform-origin:left center;
+}
 .pass-tag{
   background:var(--red); color:#fff; font-size:11.5px; font-weight:800; letter-spacing:.08em;
   padding:6px 11px; border-radius:100px; text-transform:uppercase;
@@ -334,22 +390,29 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 }
 
 .hero-marquee{
-  margin-top:70px;
+  margin-top:auto;
+  margin-bottom:0;
+  flex-shrink:0;
   position:relative; z-index:2;
   border-top:1px solid var(--line);
   border-bottom:1px solid var(--line);
   padding:16px 0;
   overflow:hidden;
-  background:rgba(20,18,26,0.025);
+  background:#fff;
 }
 .marquee-track{
-  display:flex; gap:48px; white-space:nowrap;
+  display:flex; gap:0; white-space:nowrap;
   animation:marquee 34s linear infinite;
   width:max-content;
+  will-change:transform;
+}
+.marquee-chunk{
+  display:flex; flex-shrink:0; align-items:center;
 }
 .marquee-track span{
   font-family:var(--font-display); font-size:20px; font-weight:600;
   color:var(--ink-soft); display:flex; align-items:center; gap:16px;
+  flex-shrink:0; padding-right:48px;
 }
 .marquee-track span::after{ content:'★'; color:var(--red); font-size:14px; }
 @keyframes marquee{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
@@ -381,14 +444,18 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 }
 .stats-grid{
   display:grid;
-  grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) minmax(0,1.1fr) minmax(0,0.95fr);
-  column-gap:40px;
+  grid-template-columns:repeat(4,max-content);
+  justify-content:space-between;
+  column-gap:16px;
   row-gap:20px;
   align-items:start;
 }
 .stat{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
   text-align:left;
-  padding:0 0 0 24px;
+  padding:0 0 0 12px;
   border-left:2px solid rgba(255,255,255,0.3);
   min-width:0;
 }
@@ -396,18 +463,29 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   border-left:none;
   padding-left:0;
 }
+.stat-ico{
+  width:56px;
+  height:56px;
+  flex-shrink:0;
+  color:#fff;
+}
+.stat-body{
+  min-width:0;
+  flex:1;
+}
 .stat .num{
   font-family:var(--font-display);
-  font-size:clamp(44px, 5vw, 68px);
+  font-size:clamp(28px, 3.1vw, 40px);
   font-weight:800;
-  line-height:1;
-  letter-spacing:-0.04em;
+  line-height:1.05;
+  letter-spacing:-0.03em;
   display:block;
   white-space:nowrap;
+  color:#fff;
 }
 .stat .label{
-  margin-top:8px;
-  font-size:15px;
+  margin-top:6px;
+  font-size:13px;
   font-weight:600;
   line-height:1.35;
   color:rgba(255,255,255,0.85);
@@ -423,8 +501,9 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   }
   .stats-grid{
     grid-template-columns:repeat(2,minmax(0,1fr));
-    column-gap:28px;
-    row-gap:36px;
+    justify-content:stretch;
+    column-gap:14px;
+    row-gap:28px;
   }
   .stat{
     border-left:none;
@@ -433,7 +512,9 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
     padding-top:16px;
   }
   .stat:first-child{ border-top:none; padding-top:0; }
-  .stat .num{ font-size:clamp(36px, 6vw, 48px); letter-spacing:-0.03em; }
+  .stat .num{ font-size:clamp(24px, 5.2vw, 32px); letter-spacing:-0.03em; }
+  .stat .label{ font-size:12px; }
+  .stat-ico{ width:44px; height:44px; }
 }
 
 /* ============================================================
@@ -464,7 +545,12 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 /* ============================================================
    4b. CAREER FRAMEWORK
    ============================================================ */
-#framework{ background:var(--paper-dim); }
+#framework{
+  background-color:var(--paper-dim);
+  background-image:var(--doodle);
+  background-repeat:repeat;
+  background-size:560px 560px;
+}
 #framework .section-head{ max-width:none; }
 #framework .section-head p{
   max-width:none;
@@ -473,46 +559,267 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 @media (max-width:900px){
   #framework .section-head p{ white-space:normal; }
 }
-.framework-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:18px; }
-.framework-card{
-  background:#fff; border:1px solid var(--line); border-top:4px solid var(--red);
-  border-radius:16px; padding:34px 16px 26px; text-align:center;
+.framework-layout{
+  display:grid;
+  grid-template-columns:minmax(0,2fr) minmax(0,1fr);
+  gap:clamp(24px,3.5vw,48px);
+  align-items:stretch;
+}
+.framework-col{
+  min-width:0;
+}
+.framework-media{
+  position:relative;
+  border-radius:var(--radius-lg);
+  overflow:hidden;
   box-shadow:var(--shadow-card);
-  transition:transform .45s var(--ease), box-shadow .45s var(--ease), border-color .45s var(--ease);
-  position:relative; overflow:hidden;
+  align-self:stretch;
+  min-height:320px;
 }
-.framework-card:hover{
-  transform:translateY(-10px) scale(1.03);
-  box-shadow:0 22px 44px -16px rgba(20,18,26,0.28);
+.framework-media img{
+  width:100%;
+  height:100%;
+  min-height:320px;
+  object-fit:cover;
+  display:block;
 }
-.framework-card .letter,
-.framework-card .label{ position:relative; z-index:1; transition:transform .45s var(--ease), color .45s var(--ease); }
-.framework-card .letter{ font-family:var(--font-display); font-size:clamp(52px, 5.5vw, 72px); font-weight:800; margin-bottom:14px; line-height:1; }
-.framework-card .label{ font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); }
-.framework-card:hover .letter{ transform:scale(1.08); }
-.framework-card:hover .label{ color:var(--ink); }
-.framework-card.c-blue{ border-top-color:var(--blue); }
-.framework-card.c-blue .letter{ color:var(--blue); }
-.framework-card.c-red{ border-top-color:var(--red); }
-.framework-card.c-red .letter{ color:var(--red); }
-.framework-card.c-green{ border-top-color:var(--green); }
-.framework-card.c-green .letter{ color:var(--green); }
-.framework-card.c-yellow{ border-top-color:var(--yellow); }
-.framework-card.c-yellow .letter{ color:#C9930A; }
-.framework-card.has-bg::before{
-  content:""; position:absolute; inset:-6%;
-  background-image:var(--card-bg);
-  background-size:cover; background-position:center;
-  opacity:0.12; pointer-events:none;
-  transform:scale(1.02);
-  transition:opacity .45s var(--ease), transform .55s var(--ease);
+@media (max-width:900px){
+  .framework-layout{ grid-template-columns:1fr; }
+  .framework-media{
+    order:-1;
+    min-height:0;
+    max-height:min(52vw,320px);
+  }
+  .framework-media img{
+    min-height:min(52vw,320px);
+    max-height:min(52vw,320px);
+  }
 }
-.framework-card.has-bg:hover::before{
-  opacity:0.2;
-  transform:scale(1.12);
+.framework-explorer{
+  background:#fff;
+  border:1px solid rgba(20,18,26,0.08);
+  border-radius:var(--radius-md);
+  overflow:hidden;
+  box-shadow:var(--shadow-card);
 }
-@media (max-width:900px){ .framework-grid{ grid-template-columns:repeat(3,1fr); gap:14px; } }
-@media (max-width:520px){ .framework-grid{ grid-template-columns:repeat(2,1fr); } }
+.framework-tabs-wrap{
+  display:flex;
+  align-items:stretch;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(to right, var(--paper) 0%, var(--paper) 68%, #fff 100%);
+  position:relative;
+  overflow:visible;
+  padding-right:18px;
+  box-sizing:border-box;
+}
+.framework-tabs-continuum::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:10px;
+  bottom:10px;
+  width:1px;
+  background:linear-gradient(to bottom, transparent, rgba(20,18,26,0.1) 25%, rgba(20,18,26,0.1) 75%, transparent);
+  pointer-events:none;
+  z-index:2;
+}
+.framework-tabs{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:0;
+  flex:1 1 auto;
+  min-width:0;
+  position:relative;
+  z-index:1;
+}
+.framework-tabs-continuum{
+  flex:0 0 min(36%, 248px);
+  display:flex;
+  align-items:stretch;
+  pointer-events:none;
+  user-select:none;
+  -webkit-user-select:none;
+  position:relative;
+  z-index:1;
+  overflow:visible;
+  background:linear-gradient(to right,
+    rgba(255,255,255,0.92) 0%,
+    rgba(255,255,255,0.5) 55%,
+    rgba(255,255,255,0.92) 100%);
+}
+.framework-tabs-continuum::after{
+  content:'';
+  position:absolute;
+  left:0;
+  right:48px;
+  top:0;
+  bottom:0;
+  background:linear-gradient(110deg,
+    transparent 0%,
+    rgba(255,255,255,0.45) 42%,
+    transparent 58%);
+  background-size:220% 100%;
+  background-position:120% 0;
+  animation:framework-continuum-shimmer 5.5s ease-in-out infinite;
+  pointer-events:none;
+  z-index:0;
+}
+.framework-tab-ghost{
+  flex:1;
+  max-width:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-display);
+  font-size:clamp(20px,2.1vw,30px);
+  font-weight:800;
+  line-height:1;
+  padding:16px 6px;
+  background:rgba(255,255,255,0.65);
+  border-left:1px solid rgba(20,18,26,0.06);
+  transform-origin:center bottom;
+  animation:framework-ghost-breathe 3.2s var(--ease) infinite;
+  animation-delay:calc(var(--ghost-i, 0) * 0.22s);
+}
+.framework-tab-ghost:nth-child(1){
+  color:var(--blue);
+  opacity:0.72;
+}
+.framework-tab-ghost:nth-child(2){
+  color:var(--red);
+  opacity:0.52;
+  transform:scale(0.96);
+}
+.framework-tab-ghost:nth-child(3){
+  color:var(--green);
+  opacity:0.38;
+  transform:scale(0.92);
+}
+.framework-continuum-fade{
+  flex:0 0 auto;
+  min-width:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 10px 0 8px;
+  position:relative;
+  z-index:4;
+}
+.framework-continuum-ellipsis{
+  font-family:var(--font-display);
+  font-size:clamp(22px,2.2vw,30px);
+  font-weight:800;
+  line-height:1;
+  letter-spacing:0.12em;
+  color:var(--ink-soft);
+  opacity:0.45;
+  animation:framework-ellipsis-pulse 2.4s ease-in-out infinite;
+}
+@keyframes framework-continuum-shimmer{
+  0%, 100%{ background-position:120% 0; opacity:0; }
+  35%{ opacity:0.85; }
+  55%{ background-position:-20% 0; opacity:0; }
+}
+@keyframes framework-ghost-breathe{
+  0%, 100%{ filter:brightness(1); }
+  50%{ filter:brightness(1.08); }
+}
+@keyframes framework-ellipsis-pulse{
+  0%, 100%{ opacity:0.32; }
+  50%{ opacity:0.58; }
+}
+@media (prefers-reduced-motion:reduce){
+  .framework-tabs-continuum::after,
+  .framework-tab-ghost,
+  .framework-continuum-ellipsis{
+    animation:none;
+  }
+  .framework-tab-ghost:nth-child(1){ opacity:0.55; }
+  .framework-tab-ghost:nth-child(2){ opacity:0.42; transform:scale(0.96); }
+  .framework-tab-ghost:nth-child(3){ opacity:0.32; transform:scale(0.92); }
+  .framework-continuum-ellipsis{ opacity:0.45; }
+}
+.framework-tab{
+  appearance:none;
+  border:0;
+  border-right:1px solid var(--line);
+  background:#fff;
+  color:var(--ink-soft);
+  font-family:var(--font-display);
+  font-size:clamp(22px,2.4vw,32px);
+  font-weight:800;
+  line-height:1;
+  padding:16px 8px;
+  cursor:pointer;
+  transition:background .25s var(--ease), color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.framework-tabs .framework-tab:last-child{ border-right:1px solid var(--line); }
+.framework-tab:nth-child(1){ color:var(--blue); }
+.framework-tab:nth-child(2){ color:var(--red); }
+.framework-tab:nth-child(3){ color:var(--green); }
+.framework-tab:nth-child(4){ color:var(--red); }
+.framework-tab:nth-child(5){ color:#C9930A; }
+.framework-tab:nth-child(6){ color:var(--blue); }
+.framework-tab:hover{
+  background:var(--paper-dim);
+}
+.framework-tab.is-active{
+  background:var(--red);
+  color:#fff;
+}
+.framework-tab:focus-visible{
+  outline:3px solid var(--blue);
+  outline-offset:-3px;
+  z-index:1;
+}
+.framework-pane{
+  display:none;
+  padding:22px 24px 26px;
+  min-height:168px;
+  background:#fff;
+}
+.framework-pane.is-active{ display:block; }
+.framework-pane[hidden]{ display:none !important; }
+.framework-career-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px 12px;
+}
+.framework-career-list li{
+  font-size:14px;
+  font-weight:600;
+  line-height:1.3;
+  padding:9px 16px;
+  border-radius:100px;
+  border:1px solid transparent;
+}
+.framework-career-list li:nth-child(6n+1){
+  background:var(--blue-soft);
+  color:var(--blue-dark);
+}
+.framework-career-list li:nth-child(6n+2){
+  background:var(--red-soft);
+  color:var(--red-dark);
+}
+.framework-career-list li:nth-child(6n+3){
+  background:rgba(31,158,99,0.12);
+  color:#157a4c;
+}
+.framework-career-list li:nth-child(6n+4){
+  background:var(--yellow-soft);
+  color:#8a6a10;
+}
+.framework-career-list li:nth-child(6n+5){
+  background:var(--blue-soft);
+  color:var(--blue-dark);
+}
+.framework-career-list li:nth-child(6n+6){
+  background:var(--red-soft);
+  color:var(--red-dark);
+}
 .framework-more{
   margin-top:28px;
   text-align:right;
@@ -523,6 +830,11 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 .framework-more em{
   font-style:normal;
   color:var(--red);
+}
+
+/* Landing: hide whole sections without removing markup (toggle .is-off-page on the section) */
+.section.is-off-page{
+  display:none !important;
 }
 
 /* ============================================================
@@ -1060,8 +1372,12 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   overflow:hidden;
   padding:64px 0;
 }
-#experience .section-head{ margin-bottom:32px; max-width:920px; }
-#experience .section-head h2{ margin-top:0; }
+#experience .section-head{ margin-bottom:32px; max-width:none; }
+#experience .section-head h2{
+  margin-top:0;
+  white-space:nowrap;
+  text-wrap:nowrap;
+}
 #experience .section-head .eyebrow{ color:var(--red); }
 #experience .section-head .eyebrow::before{ background:var(--red); }
 #experience .section-head p{
@@ -1073,23 +1389,45 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 @media (max-width:960px){
   #experience .section-head p{ white-space:normal; }
 }
+.exp-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,2fr);
+  gap:clamp(28px,4vw,52px);
+  align-items:start;
+  position:relative;
+  z-index:2;
+}
+.exp-media{
+  position:relative;
+  overflow:visible;
+  z-index:2;
+  align-self:stretch;
+}
+.exp-media .about-carousel{
+  width:100%;
+  height:100%;
+  min-height:420px;
+}
 .exp-grid{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:18px; align-items:stretch; position:relative; z-index:2;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  align-items:stretch;
 }
 .exp-card{
   background:#fff;
   border:1px solid rgba(20,18,26,0.08);
   border-radius:var(--radius-md);
-  padding:26px 22px;
+  padding:18px 16px 16px;
   display:flex; flex-direction:column; align-items:flex-start;
   transition:transform .45s var(--ease), background .45s var(--ease), border-color .45s var(--ease), box-shadow .45s var(--ease);
   position:relative;
   box-shadow:0 6px 20px -16px rgba(20,18,26,0.18);
 }
 .exp-card:hover{ transform:translateY(-6px); background:#fff; border-color:rgba(229,55,43,0.2); box-shadow:0 14px 28px -16px rgba(184,42,32,0.2); }
-.exp-icon{ font-size:30px; margin-bottom:14px; display:block; }
-.exp-card h3{ font-size:21px; margin-bottom:8px; font-family:var(--font-display); color:var(--ink); }
-.exp-card p{ font-size:14.5px; color:var(--ink-soft); line-height:1.55; flex:1; }
+.exp-icon{ font-size:26px; margin-bottom:10px; display:block; line-height:1; }
+.exp-card h3{ font-size:17px; margin-bottom:6px; font-family:var(--font-display); color:var(--ink); line-height:1.2; }
+.exp-card p{ font-size:13px; color:var(--ink-soft); line-height:1.45; flex:1; }
 .exp-card .exp-card-cta{
   margin-top:12px;
   margin-left:auto;
@@ -1115,10 +1453,8 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 .tag-blue{ background:rgba(30,63,224,0.12); color:#1a36c4; }
 
 @media (max-width:900px){
-  .exp-grid{ grid-template-columns:1fr; }
-}
-@media (min-width:901px) and (max-width:1180px){
-  .exp-grid{ grid-template-columns:repeat(2,1fr); }
+  .exp-layout{ grid-template-columns:1fr; gap:28px; }
+  .exp-media .about-carousel{ min-height:min(52vw,340px); height:340px; }
 }
 
 /* School CTA  -  full-bleed section divider */
@@ -1237,7 +1573,6 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   color:var(--red) !important;
   border-color:#fff !important;
 }
-#exhibit-cta p{ white-space:normal; max-width:640px; }
 @media (max-width:1100px){
   .school-band p{ white-space:normal; }
 }
@@ -1256,73 +1591,178 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
 }
 
 /* ============================================================
-   7. MAGAZINE SECTION  -  Exhibit engagement
+   7. FIND YOUR PATH  (student goals)
    ============================================================ */
 #engage{
-  background-color:var(--yellow-soft);
+  background-color:var(--cream);
   background-image:var(--doodle);
   background-repeat:repeat;
   background-size:560px 560px;
-  padding:48px 0;
+  padding:56px 0 64px;
 }
-.engage-layout{ display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center; }
-.engage-copy h2{ font-size:clamp(30px,3.6vw,46px); margin-top:0; margin-bottom:20px; }
-.engage-copy p{ color:var(--ink-soft); font-size:16.5px; margin-bottom:30px; max-width:480px; }
-.engage-venue{
-  margin-top:10px;
-  max-width:480px;
-  display:flex;
-  justify-content:flex-start;
+.path-head{
+  margin-bottom:clamp(28px,4vw,40px);
+  max-width:none;
 }
-.engage-venue-chip{
-  display:inline-flex;
-  flex-direction:column;
-  align-items:flex-start;
-  gap:6px;
-  background:#fff;
-  border:2px solid var(--ink);
-  border-radius:18px;
-  padding:12px 18px;
-  font-size:13.5px;
-  font-weight:500;
-  color:var(--ink);
-  line-height:1.35;
-  text-decoration:none;
-  text-align:left;
-  transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+.path-head-copy h2{
+  font-size:clamp(26px,3.4vw,48px);
+  margin:0 0 14px;
+  line-height:1.06;
+  max-width:none;
+  white-space:nowrap;
+  text-wrap:nowrap;
 }
-.engage-venue-chip:hover{
-  transform:translateY(-2px);
-  box-shadow:0 8px 20px -12px rgba(20,18,26,0.35);
+.path-head-copy h2 em{
+  color:var(--red);
+  font-style:normal;
 }
-.engage-venue-line{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-.engage-venue-ico{
-  font-size:12px;
-  line-height:1;
-  flex-shrink:0;
-}
-.engage-venue-chip strong{
-  font-weight:700;
-  font-size:13.5px;
-  color:var(--ink);
-}
-.engage-venue-addr{
+.path-head-copy > p{
   color:var(--ink-soft);
+  font-size:16.5px;
+  max-width:none;
+  margin:0;
+  line-height:1.5;
+  white-space:nowrap;
+  text-wrap:nowrap;
+}
+.path-cards{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:14px;
+  align-items:start;
+}
+.path-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  height:auto;
+  padding:0;
+  border-radius:var(--radius-md);
+  border:1px solid rgba(20,18,26,0.06);
+  text-decoration:none;
+  color:var(--ink);
+  background:#fff;
+  transition:transform .4s var(--ease), box-shadow .4s var(--ease);
+  box-shadow:0 10px 28px -18px rgba(20,18,26,0.22);
+  overflow:hidden;
+}
+@media (hover:hover){
+  .path-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 18px 36px -16px rgba(20,18,26,0.28);
+  }
+}
+.path-card-media{
+  position:relative;
+  flex:0 0 118px;
+  width:100%;
+  overflow:hidden;
+  background:var(--paper-dim);
+}
+.path-card-media::after{
+  content:'';
+  position:absolute;
+  inset:auto 0 0;
+  height:40%;
+  background:linear-gradient(to top, rgba(20,18,26,0.18), transparent);
+  pointer-events:none;
+}
+.path-card-media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform .55s var(--ease);
+}
+@media (hover:hover){
+  .path-card:hover .path-card-media img{
+    transform:scale(1.05);
+  }
+}
+.path-card-body{
+  flex:0 0 auto;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  text-align:center;
+  padding:10px 12px 12px;
+}
+.path-card h3{
+  font-family:var(--font-display);
+  font-size:15px;
+  line-height:1.25;
+  margin:0 0 0;
+  flex-shrink:0;
+  font-weight:700;
+  width:100%;
+  text-align:center;
+  text-wrap:balance;
+}
+.path-card-more{
+  display:grid;
+  grid-template-rows:0fr;
+  opacity:0;
+  flex-shrink:0;
+  transition:grid-template-rows .4s var(--ease), opacity .35s var(--ease), margin .35s var(--ease);
+  margin:0;
+  width:100%;
+  text-align:center;
+}
+.path-card-more-inner{
+  overflow:hidden;
+}
+.path-card-sub{
+  font-size:11.5px;
+  font-weight:700;
+  line-height:1.3;
+  color:var(--ink);
+  margin:0 0 4px;
+}
+.path-card-desc{
+  font-size:11px;
   font-weight:500;
+  line-height:1.4;
+  color:var(--ink-soft);
+  margin:0;
 }
-.engage-list{ display:flex; flex-direction:column; gap:0; }
-.engage-item{
-  display:flex; gap:22px; padding:26px 0; border-top:1px solid var(--line);
+@media (hover:hover){
+  .path-card:hover .path-card-more,
+  .path-card:focus-visible .path-card-more{
+    grid-template-rows:1fr;
+    opacity:1;
+    margin-top:8px;
+  }
 }
-.engage-item:last-child{ border-bottom:1px solid var(--line); }
-.engage-item .num{ font-family:var(--font-display); font-size:22px; color:var(--red); flex-shrink:0; width:44px; }
-.engage-item h4{ font-family:var(--font-display); font-size:20px; margin-bottom:6px; }
-.engage-item p{ color:var(--ink-soft); font-size:14.5px; }
-@media (max-width:900px){ .engage-layout{ grid-template-columns:1fr; gap:40px; } }
+.path-card--rose .path-card-body{ background:#fdeef1; }
+.path-card--blue .path-card-body{ background:#e8eeff; }
+.path-card--orange .path-card-body{ background:#fff1e8; }
+.path-card--purple .path-card-body{ background:#efe9ff; }
+.path-card--green .path-card-body{ background:#e6f6ee; }
+.path-card--teal .path-card-body{ background:#e3f6f3; }
+@media (max-width:1180px){
+  .path-cards{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+@media (max-width:900px){
+  .path-head{
+    max-width:none;
+    text-align:center;
+  }
+  .path-head-copy h2{
+    max-width:none;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .path-head-copy > p{
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .path-cards{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width:560px){
+  .path-cards{ grid-template-columns:1fr; }
+}
 
 /* ============================================================
    8. MENTORS / SPEAKERS
@@ -1732,203 +2172,7 @@ body.partners-modal-open{ overflow:hidden; }
 }
 
 /* ============================================================
-   11. FOUNDER / PRESS
-   ============================================================ */
-#trust{
-  position:relative; overflow:hidden; color:var(--ink);
-  background:var(--yellow-soft);
-}
-#trust::before{
-  content:'"'; position:absolute; top:-90px; left:10px; font-family:var(--font-display); font-size:420px;
-  color:rgba(20,18,26,0.04); line-height:1; pointer-events:none;
-}
-.trust-grid{ display:grid; grid-template-columns:240px 1fr; gap:60px; align-items:center; position:relative; z-index:2; }
-.trust-photo-wrap{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-}
-.trust-photo-frame{
-  position:relative;
-  width:100%;
-}
-.trust-photo-frame::before{
-  content:''; position:absolute; inset:16px -16px -16px 16px; border:2px solid var(--yellow);
-  border-radius:16px; z-index:0; pointer-events:none;
-}
-.trust-photo{
-  position:relative; z-index:1; width:100%; height:300px; border-radius:16px; object-fit:cover;
-  box-shadow:var(--shadow-soft); display:block;
-}
-.trust-label{
-  display:block;
-  position:relative;
-  z-index:2;
-  font-size:14px;
-  font-weight:700;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--red);
-  margin-bottom:20px;
-}
-.trust-photo-wrap .trust-label{
-  margin-bottom:18px;
-}
-.trust-label::before{
-  content:'';
-  display:inline-block;
-  width:28px;
-  height:2px;
-  background:var(--red);
-  vertical-align:middle;
-  margin-right:12px;
-  margin-top:-2px;
-}
-.trust-quote p{
-  font-family:var(--font-display); font-size:clamp(19px,2.3vw,27px); line-height:1.38; margin-bottom:26px;
-  max-width:760px;
-  color:var(--ink);
-}
-.trust-name{ font-weight:800; font-size:22px; color:var(--ink); line-height:1.15; }
-.trust-role{ font-size:16.5px; color:var(--ink-soft); font-weight:600; line-height:1.3; margin-top:2px; }
-.trust-byline{
-  display:flex;
-  align-items:center;
-  gap:40px;
-  flex-wrap:wrap;
-  justify-content:space-between;
-}
-.trust-social{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-shrink:0;
-  margin-left:auto;
-  align-self:center;
-}
-.trust-social a{
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  border:none;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  flex:0 0 38px;
-  box-sizing:border-box;
-  line-height:0;
-  font-size:0;
-  padding:0;
-  overflow:hidden;
-  transition:transform .3s var(--ease), opacity .3s var(--ease), box-shadow .3s var(--ease);
-}
-.trust-social a svg{
-  width:18px;
-  height:18px;
-  display:block;
-  flex-shrink:0;
-}
-.trust-social .a--instagram svg{
-  width:20px;
-  height:20px;
-}
-.trust-social a:hover{
-  transform:translateY(-2px);
-  opacity:0.9;
-  box-shadow:0 8px 16px -10px rgba(20,18,26,0.35);
-}
-.trust-social .a--instagram{
-  background:radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
-  color:#fff;
-}
-.trust-social .a--linkedin{
-  background:#0A66C2;
-  color:#fff;
-}
-@media (max-width:700px){
-  .trust-grid{ grid-template-columns:1fr; text-align:center; }
-  .trust-photo-wrap{ max-width:220px; margin:0 auto 20px; }
-  .trust-byline{ justify-content:center; flex-direction:column; gap:14px; }
-  .trust-label::before{ display:none; }
-}
-
-/* ============================================================
-   12. PARTNER WITH US
-   ============================================================ */
-#partner{ background:#fff; position:relative; overflow:hidden; padding-bottom:28px; }
-.partner-top{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:60px; align-items:center; margin-bottom:0; }
-.partner-copy .eyebrow{
-  font-size:12px;
-  letter-spacing:0.12em;
-}
-.partner-copy h2{ font-size:clamp(32px,4vw,52px); margin-top:22px; margin-bottom:20px; }
-.partner-copy p{ font-size:17px; color:var(--ink-soft); margin-bottom:30px; max-width:520px; }
-.profiles-head{ margin-bottom:0; }
-.profiles-head h3{ font-family:var(--font-display); font-size:clamp(22px,2.4vw,28px); margin:0; }
-.profiles-card{
-  background:var(--paper);
-  border:1px solid rgba(20,18,26,0.08);
-  border-radius:var(--radius-md);
-  padding:28px 26px;
-  box-shadow:var(--shadow-card);
-}
-.profiles-card .profiles-head{ margin-bottom:20px; }
-.profile-list{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px 18px;
-  width:100%;
-  margin:0;
-  padding:0;
-  list-style:none;
-}
-.profile-item{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  min-width:0;
-}
-.profile-icon{
-  flex:0 0 auto;
-  width:36px;
-  height:36px;
-  border-radius:10px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-}
-.profile-icon svg{
-  width:18px;
-  height:18px;
-  display:block;
-}
-.profile-item span{
-  font-weight:700;
-  font-size:13.5px;
-  color:var(--ink);
-  line-height:1.25;
-}
-.profile-icon--eng{ background:#E8F1FF; color:#2F6FED; }
-.profile-icon--med{ background:var(--red-soft); color:var(--red); }
-.profile-icon--edtech{ background:#EAF8EF; color:#1F9D57; }
-.profile-icon--abroad{ background:var(--yellow-soft); color:#C48A00; }
-.profile-icon--univ{ background:#EEF2F7; color:#3D5A80; }
-.profile-icon--degree{ background:#E8FBFF; color:#0F8FA8; }
-.profile-icon--bank{ background:#FFF0E8; color:#D65A1F; }
-.profile-icon--coach{ background:#FDEAF4; color:#C2185B; }
-
-@media (max-width:900px){
-  .partner-top{ grid-template-columns:1fr; gap:40px; }
-}
-@media (max-width:520px){
-  .profiles-card{ padding:22px 18px; }
-  .profile-list{ gap:12px 10px; }
-  .profile-item span{ font-size:12.5px; }
-  .profile-icon{ width:32px; height:32px; border-radius:8px; }
-  .profile-icon svg{ width:16px; height:16px; }
-}
-/* ============================================================
-   13. FAQ
+   11. FAQ
    ============================================================ */
 #faq{
   background-color:var(--paper-dim);
@@ -2544,13 +2788,30 @@ select.reg-input{
   padding:28px 24px 32px;
   overflow:auto;
 }
+.reg-choice-copy[hidden]{ display:none !important; }
 .reg-choice h4{
   font-family:var(--font-display);
   font-size:clamp(22px,2.4vw,28px);
-  margin:0 0 8px;
+  font-weight:700;
   letter-spacing:-0.02em;
+  line-height:1.15;
+  margin:0 0 8px;
 }
-.reg-choice .reg-sub{ margin:0 0 24px; }
+.reg-choice-copy--default .reg-sub{
+  color:var(--ink-soft);
+  font-size:14.5px;
+  margin:0 0 24px;
+}
+.reg-choice-copy--engage .reg-choice-cta{
+  font-family:var(--font-display);
+  font-size:clamp(22px,2.4vw,28px);
+  font-weight:700;
+  letter-spacing:-0.02em;
+  line-height:1.15;
+  color:var(--ink);
+  margin:0 0 24px;
+}
+.reg-choice-copy--engage .reg-choice-cta-accent{ color:var(--red); }
 .reg-choice-actions{
   display:flex;
   flex-direction:column;
@@ -3132,8 +3393,6 @@ body,
 #engage,
 #mentors,
 #gallery,
-#trust,
-#partner,
 #universities,
 #ambassadors,
 #faq,
@@ -3237,7 +3496,7 @@ footer{
   :root{
     --mobile-util-h: 40px;
     --mobile-nav-block-h: 64px; /* nav padding + row (8 + 48 + 8) */
-    --mobile-hero-nav-gap: 28px; /* breathing room below nav before hero copy */
+    --mobile-hero-nav-gap: 22px; /* breathing room below nav before hero copy */
   }
   .util-bar{
     padding-left: env(safe-area-inset-left, 0px);
@@ -3454,32 +3713,25 @@ footer{
   .hero-copy h1{
     font-size: clamp(48px, 14.8vw, 68px);
     font-weight: 800;
-    line-height: 1;
+    line-height: 0.9;
     letter-spacing: -0.04em;
-    margin: 14px 0 18px;
+    margin: 6px 0 18px;
     max-width: 100%;
     overflow-wrap: break-word;
     text-wrap: balance;
   }
-  /* Mobile heading: "about career" stays together; break after "career after" */
+  /* Hero H1: three lines on mobile too */
   .hero-copy h1 br{
-    display: none;
-  }
-  .hero-copy h1 em br{
     display: block;
-  }
-  .hero-copy p.lead br{
-    display: none;
   }
   .hero-copy h1 em{
     color: var(--red);
   }
-  .hero-copy p.lead{
-    white-space: normal;
+  .hero-copy .hero-deck{
     font-size: 18px;
     line-height: 1.5;
+    margin: 0 0 22px;
     max-width: 100%;
-    margin-bottom: 22px;
     font-weight: 500;
     color: var(--ink-soft);
   }
@@ -3488,7 +3740,7 @@ footer{
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
-    margin-bottom: 0;
+    margin-bottom: 8px;
     width: 100%;
     max-width: 100%;
   }
@@ -3502,6 +3754,11 @@ footer{
     padding-left: 20px;
     padding-right: 20px;
     font-size: 16px;
+  }
+  .hero-cta-note{
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
   }
 
   /* Boarding pass - desktop proportions, scaled down uniformly on mobile */
@@ -3548,7 +3805,7 @@ footer{
 
   /* Marquee - slim accent strip */
   .hero-marquee{
-    margin-top: 20px;
+    margin-top: 0;
     margin-bottom: 0;
     padding: 10px 0 12px;
     width: 100%;
@@ -3556,13 +3813,12 @@ footer{
     overflow: hidden;
     position: relative;
     z-index: 1;
-  }
-  .marquee-track{
-    gap: 20px;
+    background: #fff;
   }
   .marquee-track span{
     font-size: 13px;
     gap: 10px;
+    padding-right: 20px;
   }
   .marquee-track span::after{
     font-size: 10px;
@@ -3591,9 +3847,9 @@ footer{
   }
   .stat{
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    flex-direction: row;
     align-items: flex-start;
+    gap: 8px;
     text-align: left;
     /* Reset desktop / 860px border-padding patterns */
     border: none;
@@ -3626,7 +3882,7 @@ footer{
     padding-top: 8px;
   }
   .stat .num{
-    font-size: clamp(20px, 6vw, 26px);
+    font-size: clamp(17px, 5vw, 22px);
     font-weight: 800;
     line-height: 1;
     letter-spacing: -0.04em;
@@ -3636,11 +3892,16 @@ footer{
   }
   .stat .label{
     margin-top: 4px;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     line-height: 1.25;
     color: rgba(255, 255, 255, 0.9);
     max-width: 18ch;
+  }
+  .stat-ico{
+    width: 40px;
+    height: 40px;
+    color: #fff;
   }
 
   /* ============================================================
@@ -3743,8 +4004,6 @@ footer{
   #engage,
   #mentors,
   #gallery,
-  #trust,
-  #partner,
   #universities,
   #ambassadors,
   #faq,
@@ -3777,15 +4036,15 @@ footer{
     margin-top: 8px;
     text-wrap: balance;
   }
+  #experience .section-head h2{
+    font-size: clamp(15px, 4.15vw, 30px);
+    letter-spacing: -0.03em;
+    text-wrap: nowrap;
+    white-space: nowrap;
+  }
   .section-head h2 br,
   .section-head p br{
     display: none;
-  }
-  #experience .section-head h2{
-    text-wrap: wrap;
-  }
-  #experience .section-head h2 .exp-h2-asm{
-    display: block;
   }
   .section-head p{
     font-size: 14px;
@@ -3927,6 +4186,17 @@ footer{
   #experience .section-head{
     padding-right: var(--mobile-gutter);
   }
+  .exp-layout{
+    gap: 20px;
+  }
+  .exp-media{
+    margin: 0 var(--mobile-gutter);
+  }
+  .exp-media .about-carousel{
+    min-height: min(56vw, 280px);
+    height: min(56vw, 280px);
+    border-radius: var(--mobile-card-radius);
+  }
   .exp-grid{
     display: flex;
     flex-wrap: nowrap;
@@ -4025,47 +4295,50 @@ footer{
     justify-content: center;
   }
 
-  /* Framework — horizontal career path strip */
+  /* Framework — letter tabs + careers */
   #framework{
     overflow: hidden;
   }
-  #framework .wrap > .section-head{
+  #framework .framework-col .section-head{
     padding-right: var(--mobile-gutter);
   }
-  .framework-grid{
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 8px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    margin-left: calc(var(--mobile-gutter) * -1);
-    margin-right: 0;
-    padding: 2px var(--mobile-gutter) 4px var(--mobile-gutter);
-    scroll-padding-inline: var(--mobile-gutter);
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    -webkit-mask-image: none;
-    mask-image: none;
+  .framework-tab{
+    padding: 12px 4px;
+    font-size: clamp(18px, 5vw, 24px);
   }
-  .framework-grid::-webkit-scrollbar{
+  .framework-tabs-wrap{
+    padding-right: 12px;
+  }
+  .framework-tabs-continuum{
+    flex: 0 0 min(36%, 120px);
+  }
+  .framework-tabs-continuum::after{
+    right: 40px;
+  }
+  .framework-tab-ghost{
+    max-width: 36px;
+    font-size: 16px;
+    padding: 12px 2px;
+  }
+  .framework-tab-ghost:nth-child(3){
     display: none;
   }
-  .framework-card{
-    flex: 0 0 min(30vw, 100px);
-    scroll-snap-align: start;
-    padding: 18px 10px 14px;
-    border-radius: 12px;
+  .framework-continuum-fade{
+    padding-right: 6px;
   }
-  .framework-card:hover{
-    transform: none;
-    box-shadow: var(--shadow-card);
+  .framework-continuum-ellipsis{
+    font-size: 18px;
   }
-  .framework-card .letter{
-    font-size: 36px;
-    margin-bottom: 6px;
+  .framework-pane{
+    padding: 16px 14px 18px;
+    min-height: 0;
   }
-  .framework-card .label{
-    font-size: 9.5px;
+  .framework-career-list li{
+    font-size: 12.5px;
+    padding: 7px 12px;
+  }
+  .framework-career-list .framework-career-desktop{
+    display: none;
   }
   .framework-more{
     margin-top: 12px;
@@ -4074,53 +4347,61 @@ footer{
     line-height: 1.4;
   }
 
-  /* Engage */
+  /* Find your path */
   #engage{
     padding: var(--mobile-section-y) 0;
+    overflow: hidden;
   }
-  .engage-layout{
-    gap: 20px;
+  .path-head{
+    margin-bottom: 18px;
   }
-  .engage-copy h2{
-    font-size: clamp(22px, 6.2vw, 28px);
-    line-height: 1.14;
-    margin-bottom: 8px;
-    text-align: center;
+  .path-head-copy h2{
+    font-size: clamp(15px, 4.1vw, 28px);
+    letter-spacing: -0.03em;
+    text-wrap: nowrap;
+    white-space: nowrap;
   }
-  .engage-copy p{
+  .path-head-copy > p{
+    font-size: clamp(12px, 3.4vw, 14px);
+    max-width: none;
+    white-space: nowrap;
+    text-wrap: nowrap;
+  }
+  .path-cards{
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 2px 0 8px;
+    margin: 0 calc(var(--mobile-gutter) * -1);
+    padding-left: var(--mobile-gutter);
+    padding-right: var(--mobile-gutter);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .path-cards::-webkit-scrollbar{
+    display: none;
+  }
+  .path-card{
+    flex: 0 0 min(72vw, 272px);
+    scroll-snap-align: start;
+    height: auto;
+  }
+  .path-card-media{
+    flex-basis: 104px;
+  }
+  .path-card-body{
+    padding: 10px 12px 12px;
+  }
+  .path-card h3{
     font-size: 14px;
-    max-width: 100%;
-    margin-bottom: 12px;
-    text-align: center;
   }
-  .engage-venue,
-  .engage-venue-chip{
-    max-width: 100%;
-    width: 100%;
+  .path-card-sub{
+    font-size: 10.5px;
   }
-  .engage-venue{
-    justify-content: center;
-  }
-  .engage-venue-chip{
-    padding: 10px 12px;
-    border-radius: 12px;
-    font-size: 12.5px;
-  }
-  .engage-item{
-    gap: 12px;
-    padding: 14px 0;
-  }
-  .engage-item .num{
-    width: 28px;
-    font-size: 17px;
-  }
-  .engage-item h4{
-    font-size: 15px;
-    margin-bottom: 4px;
-  }
-  .engage-item p{
-    font-size: 12.5px;
-    line-height: 1.45;
+  .path-card-desc{
+    font-size: 10px;
   }
 
   /* Mentors — compact horizontal strip */
@@ -4202,121 +4483,6 @@ footer{
     max-width: 100%;
     aspect-ratio: 16 / 9;
     max-height: 200px;
-  }
-
-  /* Trust */
-  .trust-grid{
-    gap: 16px;
-  }
-  #trust::before{
-    font-size: 220px;
-    top: -40px;
-  }
-  .trust-photo-wrap{
-    max-width: 168px;
-    margin: 0 auto 16px;
-    align-items: center;
-  }
-  .trust-photo-wrap .trust-label{
-    margin-bottom: 16px;
-    padding-bottom: 10px;
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-align: center;
-    width: 100%;
-    line-height: 1.2;
-  }
-  .trust-photo-wrap .trust-label::before{
-    display: none;
-  }
-  .trust-photo-wrap .trust-label::after{
-    content: '';
-    display: block;
-    width: 32px;
-    height: 2px;
-    margin: 8px auto 0;
-    background: var(--red);
-    border-radius: 1px;
-  }
-  .trust-photo-frame::before{
-    inset: 8px -8px -8px 8px;
-    border-radius: 12px;
-  }
-  .trust-photo{
-    height: 176px;
-    border-radius: 12px;
-  }
-  .trust-quote p{
-    font-size: clamp(15px, 4.2vw, 18px);
-    line-height: 1.4;
-    max-width: 100%;
-    margin-bottom: 14px;
-  }
-  .trust-name{
-    font-size: 16px;
-  }
-  .trust-role{
-    font-size: 13px;
-  }
-  .trust-social a{
-    width: 34px;
-    height: 34px;
-    flex: 0 0 34px;
-  }
-
-  /* Partner */
-  .partner-top{
-    gap: 18px;
-  }
-  .partner-copy{
-    text-align: center;
-  }
-  .partner-copy .eyebrow{
-    display: inline-flex;
-    justify-content: center;
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    margin-bottom: 0;
-  }
-  .partner-copy .eyebrow::before{
-    width: 16px;
-  }
-  .partner-copy h2{
-    font-size: clamp(22px, 6.2vw, 28px);
-    margin-top: 12px;
-    text-align: center;
-  }
-  .partner-copy p{
-    font-size: 14px;
-    max-width: 100%;
-    text-align: center;
-    margin-bottom: 16px;
-  }
-  .profiles-card{
-    padding: 16px 14px;
-    border-radius: var(--mobile-card-radius);
-  }
-  .profiles-head h3{
-    font-size: 17px;
-  }
-  .profile-list{
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 10px;
-  }
-  .profile-item{
-    gap: 8px;
-  }
-  .profile-item span{
-    font-size: 11.5px;
-  }
-  .profile-icon{
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-  }
-  .profile-icon svg{
-    width: 14px;
-    height: 14px;
   }
 
   /* Universities */
@@ -4573,9 +4739,6 @@ footer{
     flex-basis: min(72vw, 220px);
     min-height: 200px;
   }
-  .framework-card{
-    flex-basis: min(29vw, 96px);
-  }
   .mentor-card{
     flex-basis: min(36vw, 128px);
   }
@@ -4648,12 +4811,16 @@ footer{
     padding-left: 10px;
   }
   .stat .num{
-    font-size: 22px;
+    font-size: 18px;
     letter-spacing: -0.05em;
   }
   .stat .label{
-    font-size: 11.5px;
-    margin-top: 6px;
+    font-size: 10px;
+    margin-top: 5px;
+  }
+  .stat-ico{
+    width: 36px;
+    height: 36px;
   }
 }
 </style>
@@ -4687,11 +4854,10 @@ footer{
     <div class="nav-inner">
       <ul class="nav-links" id="navLinks">
         <li><a href="#top" class="nav-close-link">Home</a></li>
-        <li><a href="#about" class="nav-close-link">About Us</a></li>
         <li><a href="#experience" class="nav-close-link">Why Attend?</a></li>
         <li><a href="#mentors" class="nav-close-link">Speakers</a></li>
         <li><a href="#gallery" class="nav-close-link">Highlights</a></li>
-        <li><a href="#partner" class="nav-close-link">Why Exhibit?</a></li>
+        <li><a href="#universities" class="nav-close-link">Why Exhibit?</a></li>
       </ul>
       <div class="nav-cta">
         <a href="https://partners.careeruttsav.in" class="btn btn-ghost magnetic allow-external" style="padding:11px 20px;">Partner Login</a>
@@ -4711,11 +4877,21 @@ footer{
 
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <span class="eyebrow">India's Leading Career Discovery Platform</span>
-      <h1>Confused about <br><em>career after<br>10th</em> or <em>12th</em>?</h1>
-      <p class="lead">Don't wait till the last minute to figure out your career. <br>Career Uttsav gives you early, real-world exposure to careers, <br>so you explore, understand and choose with confidence.</p>
+      <h1>Confused about<br>what to do<br><em>after 12th</em>?</h1>
+      <p class="hero-deck">Come explore your options. All in one place.<br>Discover courses you didn't even know existed.</p>
+      <div class="hero-meta" aria-label="Event date and venue">
+        <span class="hero-meta-item">
+          <svg class="hero-meta-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 13h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z" fill="currentColor"/></svg>
+          19 – 20 December 2026
+        </span>
+        <span class="hero-meta-item">
+          <svg class="hero-meta-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s7-4.35 7-10a7 7 0 1 0-14 0c0 5.65 7 10 7 10z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="11" r="2.5" fill="currentColor"/></svg>
+          Princess Golf, Bengaluru
+        </span>
+      </div>
       <div class="hero-actions">
-        <a href="https://careeruttsav.in/student-registration" class="btn btn-primary magnetic open-register">Get Your Pass for FREE →</a>
+        <a href="https://careeruttsav.in/student-registration" class="btn btn-primary magnetic open-register">Get Your FREE Pass →</a>
+        <p class="hero-cta-note">Free Entry for Students &amp; Parents.</p>
       </div>
     </div>
 
@@ -4730,33 +4906,36 @@ footer{
       <div class="pass-divider"></div>
       <div class="pass-fields">
         <div class="pass-row">
-          <div class="pass-field"><div class="k">Passenger</div><div class="v">Confused Student</div></div>
-          <div class="pass-field"><div class="k">Gate</div><div class="v">Career Uttsav</div></div>
+          <div class="pass-field"><div class="k">Passenger</div><div class="v">You</div></div>
+          <div class="pass-field"><div class="k">Boarding</div><div class="v">Career Uttsav</div></div>
         </div>
         <div class="pass-row">
-          <div class="pass-field"><div class="k">Date</div><div class="v">19-20 Dec '26</div></div>
-          <div class="pass-field"><div class="k">Venue</div><div class="v">Palace Grounds</div></div>
+          <div class="pass-field"><div class="k">Destination</div><div class="v">Your Future</div></div>
+          <div class="pass-field"><div class="k">Gate</div><div class="v">Palace Grounds</div></div>
         </div>
       </div>
       <div class="pass-barcode"></div>
     </div>
   </div>
 
-  <div class="hero-marquee">
+  <div class="hero-marquee" aria-label="India's Leading Career Discovery Platform">
     <div class="marquee-track">
-      <span>Unlock your potential</span>
-      <span>Meet universities</span>
-      <span>Create awareness</span>
-      <span>Spread knowledge</span>
-      <span>Discover endless possibilities</span>
-      <span>Shape your future</span>
-      <!-- duplicate for seamless loop -->
-      <span>Unlock your potential</span>
-      <span>Meet universities</span>
-      <span>Create awareness</span>
-      <span>Spread knowledge</span>
-      <span>Discover endless possibilities</span>
-      <span>Shape your future</span>
+      <div class="marquee-chunk">
+        <span>India's Leading Career Discovery Platform</span>
+        <span>India's Leading Career Discovery Platform</span>
+        <span>India's Leading Career Discovery Platform</span>
+        <span>India's Leading Career Discovery Platform</span>
+        <span>India's Leading Career Discovery Platform</span>
+        <span>India's Leading Career Discovery Platform</span>
+      </div>
+      <div class="marquee-chunk" aria-hidden="true">
+        <span>India's Leading Career Discovery Platform</span>
+        <span>India's Leading Career Discovery Platform</span>
+        <span>India's Leading Career Discovery Platform</span>
+        <span>India's Leading Career Discovery Platform</span>
+        <span>India's Leading Career Discovery Platform</span>
+        <span>India's Leading Career Discovery Platform</span>
+      </div>
     </div>
   </div>
 </header>
@@ -4766,17 +4945,29 @@ footer{
      ============================================================ -->
 <section class="stats">
   <div class="wrap stats-grid">
-    <div class="stat"><div class="num" data-count="1500000" data-suffix="+">0</div><div class="label">Students Empowered Since 2013</div></div>
-    <div class="stat"><div class="num" data-count="600" data-suffix="+">0</div><div class="label">Partner Institutions</div></div>
-    <div class="stat"><div class="num" data-count="100" data-suffix="+">0</div><div class="label">Empanelled Career Experts</div></div>
-    <div class="stat"><div class="num" data-count="13" data-suffix="+">0</div><div class="label">Years of building careers.</div></div>
+    <div class="stat">
+      <svg class="stat-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 11c1.66 0 3-1.34 3-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="currentColor"/></svg>
+      <div class="stat-body"><div class="num" data-count="1500000" data-suffix="+">0</div><div class="label">Students Guided Since 2013</div></div>
+    </div>
+    <div class="stat">
+      <svg class="stat-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3L2 9v2h20V9L12 3zm8 10H4v8h16v-8zM8 13h2v4H8v-4zm4 0h2v4h-2v-4z" fill="currentColor"/></svg>
+      <div class="stat-body"><div class="num" data-count="600" data-suffix="+">0</div><div class="label">Partner Institutions</div></div>
+    </div>
+    <div class="stat">
+      <svg class="stat-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4zm5.2 1.2l1.4 1.4 2.8-2.8-1.4-1.4-2.8 2.8z" fill="currentColor"/></svg>
+      <div class="stat-body"><div class="num" data-count="100" data-suffix="+">0</div><div class="label">Career Experts</div></div>
+    </div>
+    <div class="stat">
+      <svg class="stat-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 13h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z" fill="currentColor"/></svg>
+      <div class="stat-body"><div class="num">Since 2013</div><div class="label">13 years of impact</div></div>
+    </div>
   </div>
 </section>
 
 <!-- ============================================================
      ABOUT
      ============================================================ -->
-<section class="section" id="about">
+<section class="section is-off-page" id="about" aria-hidden="true">
   <div class="wrap about-grid reveal">
     <div class="about-media">
       <div class="about-carousel" id="aboutCarousel" aria-roledescription="carousel" aria-label="Career Uttsav moments">
@@ -4795,12 +4986,12 @@ footer{
       </div>
       <div class="float-chip" id="aboutFloatChip" aria-live="polite">
         <div class="float-chip-slide is-active">
-          <span class="n">15,00,000+</span>
+          <span class="n">15L+</span>
           <span class="t">Students guided to confident career choices</span>
         </div>
         <div class="float-chip-slide">
           <span class="n">100+</span>
-          <span class="t">Empanelled career experts guiding students across cities</span>
+          <span class="t">Career experts guiding students across cities</span>
         </div>
         <div class="float-chip-slide">
           <span class="n">12+</span>
@@ -4953,8 +5144,8 @@ footer{
 <section class="section" id="experience">
   <div class="wrap">
     <div class="section-head reveal">
-      <h2>Six reasons <span class="exp-h2-pre">this </span><br><em>isn't <span class="exp-h2-asm">a school assembly</span></em></h2>
-      <p>Discover, connect, and grow through India's most trusted career event,<br>designed to inspire students, guide parents and empower every learner to shape a successful future.</p>
+      <h2>What's happening at <em>Career Uttsav 2026?</em></h2>
+      <p>More than a career fair. More than a seminar. It's a day built around you.</p>
     </div>
 
     <p class="exp-scrollhint" aria-hidden="true">
@@ -4962,43 +5153,61 @@ footer{
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
     </p>
 
-    <div class="exp-grid reveal-stagger">
+    <div class="exp-layout">
+      <div class="exp-media reveal">
+        <div class="about-carousel" id="experienceCarousel" aria-roledescription="carousel" aria-label="Career Uttsav moments">
+          <div class="about-carousel-slide is-active">
+            <img src="about-gallery/01-career-clarity.png" alt="Students raising hands at Career Uttsav for career clarity" loading="eager">
+          </div>
+          <div class="about-carousel-slide">
+            <img src="about-gallery/05-student-question.png" alt="A student asking a question during a Career Uttsav seminar" loading="lazy">
+          </div>
+          <div class="about-carousel-slide">
+            <img src="about-gallery/06-auditorium.png" alt="Packed auditorium during a Career Uttsav panel discussion" loading="lazy">
+          </div>
+          <div class="about-carousel-slide">
+            <img src="about-gallery/07-university-booth.png" alt="Students exploring university booths at Career Uttsav" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="exp-grid reveal-stagger">
       <div class="exp-card">
         <span class="exp-icon">🧩</span>
         <h3>FREE Psychometric Test</h3>
-        <p>Take a detailed psychometric test and receive a customised report worth ₹3,000 to understand your aptitude, interests and true potential.</p>
+        <p>Discover your interests, aptitude, strengths, and possible career paths.</p>
         <button type="button" class="btn btn-primary magnetic exp-card-cta open-psycho-info">Take the Test</button>
         <span class="tag tag-yellow">Worth ₹3,000</span>
       </div>
       <div class="exp-card">
         <span class="exp-icon">🎓</span>
         <h3>Meet Top Universities</h3>
-        <p>Connect with India's leading universities and explore new-age academic programmes, global courses and admission opportunities designed for future-ready students.</p>
+        <p>Ask about courses, admissions, scholarships, placements and campus life</p>
         <span class="tag tag-red">Direct Access</span>
       </div>
       <div class="exp-card">
         <span class="exp-icon">🎙️</span>
-        <h3>Get Career Guidance</h3>
-        <p>Join expert seminars and live panel discussions offering real insight into top career fields, industry trends, and emerging professional opportunities.</p>
+        <h3>Talk to Experts</h3>
+        <p>Clear your doubts. Understand your options. Get the clarity you need</p>
         <span class="tag tag-blue">Live Sessions</span>
       </div>
       <div class="exp-card">
         <span class="exp-icon">📚</span>
-        <h3>Free Resources</h3>
-        <p>Grab your complimentary "Careers After +2" book worth ₹399 and get access to valuable career-planning tools and material.</p>
+        <h3>Take Home Free Resources</h3>
+        <p>Get your complementary copy of the "Career after+2" guide and more.</p>
         <span class="tag tag-red">Worth ₹399</span>
       </div>
       <div class="exp-card">
-        <span class="exp-icon">🏆</span>
-        <h3>Win Rewards</h3>
-        <p>Participate in exciting scholarship tests, contests and challenges to win cash prizes, certificates and exclusive recognition for your talent.</p>
-        <span class="tag tag-blue">Prizes & Certificates</span>
+        <span class="exp-icon">🧭</span>
+        <h3>Explore Careers</h3>
+        <p>Discover options across every field - From AI and medicine to law, design, finance and more</p>
+        <span class="tag tag-blue">50+ Fields</span>
       </div>
       <div class="exp-card">
         <span class="exp-icon">🤝</span>
-        <h3>Network & Interact</h3>
-        <p>Engage with mentors, counsellors and achievers to gain real insight into courses, college life and future careers, and build valuable connections.</p>
+        <h3>Attend Live Sessions</h3>
+        <p>Learn from industry professionals and inspiring achievers.</p>
         <span class="tag tag-yellow">Real Conversations</span>
+      </div>
       </div>
     </div>
   </div>
@@ -5027,52 +5236,209 @@ footer{
      ============================================================ -->
 <section class="section section-tight" id="framework">
   <div class="wrap">
+    <div class="framework-layout">
+    <div class="framework-col">
     <div class="section-head reveal">
-      <h2>Your Future, From <span style="color:var(--red)">A to Z</span></h2>
-      <p>A glimpse of the many career paths students can explore, question and discover for themselves on the floor.</p>
+      <h2>Think you know all your career options?<em> Think again.</em></h2>
+      <p>Your Future. From A-Z. Explore a world of possibilities beyond the usual choices!</p>
     </div>
-    <div class="framework-grid reveal-stagger">
-      <div class="framework-card c-blue has-bg" style="--card-bg:url('architecture-bg.png')"><div class="letter">A</div><div class="label">Architecture</div></div>
-      <div class="framework-card c-red has-bg" style="--card-bg:url('barrister-bg.png')"><div class="letter">B</div><div class="label">Barrister</div></div>
-      <div class="framework-card c-green has-bg" style="--card-bg:url('ca-cs-bg.png')"><div class="letter">C</div><div class="label">CA / CS</div></div>
-      <div class="framework-card c-red has-bg" style="--card-bg:url('doctor-bg.png')"><div class="letter">D</div><div class="label">Doctor</div></div>
-      <div class="framework-card c-yellow has-bg" style="--card-bg:url('engineer-bg.png')"><div class="letter">E</div><div class="label">Engineer</div></div>
-      <div class="framework-card c-blue has-bg" style="--card-bg:url('foreign-univ-bg.png')"><div class="letter">F</div><div class="label">Fashion Designer</div></div>
+    <div class="framework-explorer reveal" id="frameworkExplorer">
+      <div class="framework-tabs-wrap">
+        <div class="framework-tabs" role="tablist" aria-label="Browse careers by starting letter">
+          <button type="button" class="framework-tab is-active" role="tab" id="frameworkTabA" aria-selected="true" aria-controls="frameworkPaneA" data-letter="A">A</button>
+          <button type="button" class="framework-tab" role="tab" id="frameworkTabB" aria-selected="false" aria-controls="frameworkPaneB" data-letter="B" tabindex="-1">B</button>
+          <button type="button" class="framework-tab" role="tab" id="frameworkTabC" aria-selected="false" aria-controls="frameworkPaneC" data-letter="C" tabindex="-1">C</button>
+          <button type="button" class="framework-tab" role="tab" id="frameworkTabD" aria-selected="false" aria-controls="frameworkPaneD" data-letter="D" tabindex="-1">D</button>
+          <button type="button" class="framework-tab" role="tab" id="frameworkTabE" aria-selected="false" aria-controls="frameworkPaneE" data-letter="E" tabindex="-1">E</button>
+          <button type="button" class="framework-tab" role="tab" id="frameworkTabF" aria-selected="false" aria-controls="frameworkPaneF" data-letter="F" tabindex="-1">F</button>
+        </div>
+        <div class="framework-tabs-continuum" aria-hidden="true">
+          <span class="framework-tab-ghost" style="--ghost-i:0">G</span>
+          <span class="framework-tab-ghost" style="--ghost-i:1">H</span>
+          <span class="framework-tab-ghost" style="--ghost-i:2">I</span>
+          <span class="framework-continuum-fade">
+            <span class="framework-continuum-ellipsis" aria-hidden="true">...</span>
+          </span>
+        </div>
+      </div>
+      <div class="framework-pane is-active" id="frameworkPaneA" role="tabpanel" aria-labelledby="frameworkTabA" tabindex="0">
+        <ul class="framework-career-list">
+          <li>Architect</li>
+          <li>AI Engineer</li>
+          <li>Actuary</li>
+          <li>Animator</li>
+          <li>Aviation Pilot</li>
+          <li>Agricultural Scientist</li>
+        </ul>
+      </div>
+      <div class="framework-pane" id="frameworkPaneB" role="tabpanel" aria-labelledby="frameworkTabB" hidden tabindex="0">
+        <ul class="framework-career-list">
+          <li>Barrister</li>
+          <li>Biotechnologist</li>
+          <li>Business Analyst</li>
+          <li>Blockchain Developer</li>
+          <li>Brand Manager</li>
+          <li>Budget Analyst</li>
+        </ul>
+      </div>
+      <div class="framework-pane" id="frameworkPaneC" role="tabpanel" aria-labelledby="frameworkTabC" hidden tabindex="0">
+        <ul class="framework-career-list">
+          <li>Chartered Accountant (CA)</li>
+          <li>Company Secretary (CS)</li>
+          <li>Civil Engineer</li>
+          <li>Cybersecurity Specialist</li>
+          <li>Clinical Psychologist</li>
+          <li>Content Creator</li>
+        </ul>
+      </div>
+      <div class="framework-pane" id="frameworkPaneD" role="tabpanel" aria-labelledby="frameworkTabD" hidden tabindex="0">
+        <ul class="framework-career-list">
+          <li>Doctor (MBBS)</li>
+          <li>Dentist</li>
+          <li>Data Scientist</li>
+          <li>UX Designer</li>
+          <li>Defence Services</li>
+          <li>DevOps Engineer</li>
+        </ul>
+      </div>
+      <div class="framework-pane" id="frameworkPaneE" role="tabpanel" aria-labelledby="frameworkTabE" hidden tabindex="0">
+        <ul class="framework-career-list">
+          <li>Engineer</li>
+          <li>Entrepreneur</li>
+          <li>Economist</li>
+          <li>Environmental Scientist</li>
+          <li>Ethical Hacker</li>
+          <li>Event Manager</li>
+          <li class="framework-career-desktop">Editor</li>
+          <li class="framework-career-desktop">Electrical Engineer</li>
+          <li class="framework-career-desktop">Embedded Systems Engineer</li>
+          <li class="framework-career-desktop">Energy Auditor</li>
+          <li class="framework-career-desktop">English Teacher</li>
+          <li class="framework-career-desktop">E-commerce Specialist</li>
+        </ul>
+      </div>
+      <div class="framework-pane" id="frameworkPaneF" role="tabpanel" aria-labelledby="frameworkTabF" hidden tabindex="0">
+        <ul class="framework-career-list">
+          <li>Fashion Designer</li>
+          <li>Film Maker</li>
+          <li>Financial Analyst</li>
+          <li>Forensic Scientist</li>
+          <li>Fitness &amp; Sports Coach</li>
+          <li>Foreign Language Specialist</li>
+          <li class="framework-career-desktop">Fine Artist</li>
+          <li class="framework-career-desktop">Food Technologist</li>
+          <li class="framework-career-desktop">Fund Manager</li>
+          <li class="framework-career-desktop">Furniture Designer</li>
+          <li class="framework-career-desktop">Full-stack Developer</li>
+          <li class="framework-career-desktop">Flight Attendant</li>
+        </ul>
+      </div>
     </div>
     <p class="framework-more">…and so much more at <em>Career Uttsav</em>, where possibilities don’t end at Z!</p>
+    </div>
+    <div class="framework-media reveal">
+      <img src="about-gallery/07-university-booth.png" alt="Students exploring university booths and career options at Career Uttsav" width="800" height="1000" loading="lazy" decoding="async">
+    </div>
+    </div>
   </div>
 </section>
 
 <!-- ============================================================
-     ENGAGE  -  magazine layout (exhibitor engagement + venues)
+     FIND YOUR PATH
      ============================================================ -->
 <section class="section section-tight" id="engage">
-  <div class="wrap engage-layout">
-    <div class="engage-copy reveal">
-      <h2>Every session is built for <em>real interaction</em></h2>
-      <p>No passive lecture halls. Career Uttsav is built around face-to-face conversations, live workshops and hands-on activities that help students actually decide, not just listen.</p>
-      <div class="engage-venue">
-        <a class="engage-venue-chip allow-external" href="https://maps.app.goo.gl/G3ZYrvhZYHCGsFJh6" target="_blank" rel="noopener" aria-label="Open Bangalore venue in Google Maps">
-          <span class="engage-venue-line"><span class="engage-venue-ico" aria-hidden="true">📍</span><strong>Bangalore</strong></span>
-          <span class="engage-venue-line"><span class="engage-venue-ico" aria-hidden="true">📅</span>19–20 December 2026</span>
-          <span class="engage-venue-line engage-venue-addr"><span class="engage-venue-ico" aria-hidden="true">🏠</span>Gate No.9, Princess Golf, Palace Grounds</span>
-        </a>
+  <div class="wrap">
+    <div class="path-head reveal">
+      <div class="path-head-copy">
+        <h2>What are you trying to <em>figure out?</em></h2>
+        <p>Choose what matters to you and see how Career Uttsav can help.</p>
       </div>
     </div>
-
-    <div class="engage-list reveal">
-      <div class="engage-item">
-        <span class="num">01</span>
-        <div><h4>Face-to-Face Interaction</h4><p>Students and parents connect one-on-one with universities and mentors, creating meaningful conversations and building trust in real time.</p></div>
-      </div>
-      <div class="engage-item">
-        <span class="num">02</span>
-        <div><h4>Workshops & Seminars</h4><p>From live sessions to mock tests and skill-based activities, students get an experience that goes beyond a typical stall visit.</p></div>
-      </div>
-      <div class="engage-item">
-        <span class="num">03</span>
-        <div><h4>Meaningful Conversations</h4><p>Meaningful conversations that guide students through their choices, beyond just admissions discussions.</p></div>
-      </div>
+    <div class="path-cards reveal-stagger">
+      <a class="path-card path-card--rose open-register allow-external" href="https://careeruttsav.in/student-registration">
+        <div class="path-card-media">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=640&amp;h=420&amp;fit=crop&amp;q=80" alt="Students discussing career options together" width="640" height="420" loading="lazy" decoding="async">
+        </div>
+        <div class="path-card-body">
+          <h3>I don't know what career suits me</h3>
+          <div class="path-card-more">
+            <div class="path-card-more-inner">
+              <p class="path-card-sub">Career Test + Counselling</p>
+              <p class="path-card-desc">Take a free psychometric test and get clarity through counsellor conversations at the event.</p>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a class="path-card path-card--blue open-register allow-external" href="https://careeruttsav.in/student-registration">
+        <div class="path-card-media">
+          <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=640&amp;h=420&amp;fit=crop&amp;q=80" alt="University campus buildings" width="640" height="420" loading="lazy" decoding="async">
+        </div>
+        <div class="path-card-body">
+          <h3>I know my career, but not my college</h3>
+          <div class="path-card-more">
+            <div class="path-card-more-inner">
+              <p class="path-card-sub">Meet Universities</p>
+              <p class="path-card-desc">Compare courses, admissions, and campus life with university teams in one place.</p>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a class="path-card path-card--orange open-register allow-external" href="https://careeruttsav.in/student-registration">
+        <div class="path-card-media">
+          <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=640&amp;h=420&amp;fit=crop&amp;q=80" alt="Student studying and choosing a course" width="640" height="420" loading="lazy" decoding="async">
+        </div>
+        <div class="path-card-body">
+          <h3>I don't know which course to choose</h3>
+          <div class="path-card-more">
+            <div class="path-card-more-inner">
+              <p class="path-card-sub">Expert Guidance</p>
+              <p class="path-card-desc">Join expert sessions and get answers tailored to your interests and goals.</p>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a class="path-card path-card--purple open-register allow-external" href="https://careeruttsav.in/student-registration">
+        <div class="path-card-media">
+          <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=640&amp;h=420&amp;fit=crop&amp;q=80" alt="Open road — planning to study abroad" width="640" height="420" loading="lazy" decoding="async">
+        </div>
+        <div class="path-card-body">
+          <h3>I want to study abroad</h3>
+          <div class="path-card-more">
+            <div class="path-card-more-inner">
+              <p class="path-card-sub">Overseas Universities + Study Abroad Sessions</p>
+              <p class="path-card-desc">Meet global universities and attend sessions on applications, visas, and scholarships.</p>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a class="path-card path-card--green open-register allow-external" href="https://careeruttsav.in/student-registration">
+        <div class="path-card-media">
+          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=640&amp;h=420&amp;fit=crop&amp;q=80" alt="Students in a classroom" width="640" height="420" loading="lazy" decoding="async">
+        </div>
+        <div class="path-card-body">
+          <h3>I want scholarships</h3>
+          <div class="path-card-more">
+            <div class="path-card-more-inner">
+              <p class="path-card-sub">Scholarship Opportunities</p>
+              <p class="path-card-desc">Discover scholarship tests, contests, and funding options you can explore on the day.</p>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a class="path-card path-card--teal open-register allow-external" href="https://careeruttsav.in/student-registration">
+        <div class="path-card-media">
+          <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=640&amp;h=420&amp;fit=crop&amp;q=80" alt="Person working on a laptop" width="640" height="420" loading="lazy" decoding="async">
+        </div>
+        <div class="path-card-body">
+          <h3>I want to explore new-age careers</h3>
+          <div class="path-card-more">
+            <div class="path-card-more-inner">
+              <p class="path-card-sub">AI, Design, Gaming, Data &amp; more</p>
+              <p class="path-card-desc">See emerging careers in tech, creativity, and entrepreneurship—with people who work in them.</p>
+            </div>
+          </div>
+        </div>
+      </a>
     </div>
   </div>
 </section>
@@ -5083,8 +5449,8 @@ footer{
 <section class="section section-tight" id="mentors">
   <div class="wrap">
     <div class="section-head reveal">
-      <h2>Meet the <em>experts & speakers</em></h2>
-      <p>Learn from India's top educators, career coaches and industry leaders who've taken the Career Uttsav stage to inspire students.</p>
+      <h2>Voices that have taken the <em>Career Uttsav Stage</em></h2>
+      <p>India’s leading educators, career coaches, and industry experts who have inspired students at Career Uttsav.</p>
     </div>
     <div class="mentor-grid reveal-stagger">
       <article class="mentor-card">
@@ -5151,7 +5517,7 @@ footer{
 <section class="section" id="gallery">
   <div class="wrap">
     <div class="section-head center reveal">
-      <h2>Glimpses from the <em>last edition</em></h2>
+      <h2>You have got to experience it <em>to understand it.</em></h2>
       <p>Stalls, seminars, and the moments that spark a career choice, captured live.</p>
     </div>
     <div class="gallery-video-wrap reveal">
@@ -5168,114 +5534,13 @@ footer{
 </section>
 
 <!-- ============================================================
-     FOUNDER / PRESS
-     ============================================================ -->
-<section class="section section-tight" id="trust">
-  <div class="wrap">
-    <div class="trust-grid reveal">
-      <div class="trust-photo-wrap">
-        <span class="trust-label">From the founder</span>
-        <div class="trust-photo-frame">
-          <img class="trust-photo" src="img/SripalSir1.jpeg" alt="Sripal Jain, Founder of Career Uttsav">
-        </div>
-      </div>
-      <div class="trust-quote">
-        <p>"Career planning has never been easy. Students today face more choices and more confusion than ever. Career Uttsav was built to bridge that gap between education and career, helping students walk away with real confidence and clarity."</p>
-        <div class="trust-byline">
-          <div>
-            <div class="trust-name">Sripal Jain</div>
-            <div class="trust-role">Founder, Career Uttsav</div>
-          </div>
-          <div class="trust-social">
-            <a class="allow-external a--linkedin" href="https://www.linkedin.com/in/sripalljain/" target="_blank" rel="noopener" aria-label="Sripal Jain on LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.24 8.25h4.52V24H.24V8.25zM8.34 8.25h4.33v2.14h.06c.6-1.14 2.08-2.34 4.28-2.34 4.58 0 5.42 3.01 5.42 6.93V24h-4.52v-7.75c0-1.85-.03-4.22-2.57-4.22-2.58 0-2.97 2.01-2.97 4.09V24H8.34V8.25z"/></svg></a>
-            <a class="allow-external a--instagram" href="https://www.instagram.com/sripalljain/" target="_blank" rel="noopener" aria-label="Sripal Jain on Instagram"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     PARTNER WITH US
-     ============================================================ -->
-<section class="section" id="partner">
-  <div class="wrap">
-    <div class="partner-top">
-      <div class="partner-copy reveal">
-        <span class="eyebrow">For Universities & Institutions</span>
-        <h2>India's next generation of achievers, <em>in one room.</em></h2>
-        <p>Join hundreds of prestigious institutions already exhibiting, and meet 6,00,000+ students nationwide, face to face.</p>
-      </div>
-      <div class="partner-profiles reveal">
-        <div class="profiles-card">
-          <div class="profiles-head">
-            <h3>Built for every kind of institution</h3>
-          </div>
-          <ul class="profile-list">
-            <li class="profile-item">
-              <span class="profile-icon profile-icon--eng" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-4 7 4v13"/><path d="M9 21v-6h6v6"/></svg>
-              </span>
-              <span>Engineering Colleges</span>
-            </li>
-            <li class="profile-item">
-              <span class="profile-icon profile-icon--med" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 10h14"/><rect x="8" y="6" width="8" height="14" rx="2"/></svg>
-              </span>
-              <span>Medical Colleges</span>
-            </li>
-            <li class="profile-item">
-              <span class="profile-icon profile-icon--edtech" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 18v3"/></svg>
-              </span>
-              <span>EdTech Platforms</span>
-            </li>
-            <li class="profile-item">
-              <span class="profile-icon profile-icon--abroad" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>
-              </span>
-              <span>Study Abroad</span>
-            </li>
-            <li class="profile-item">
-              <span class="profile-icon profile-icon--univ" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 12 4l9 6"/><path d="M5 10v8h14v-8"/><path d="M9 18v-4h6v4"/></svg>
-              </span>
-              <span>Universities</span>
-            </li>
-            <li class="profile-item">
-              <span class="profile-icon profile-icon--degree" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-5 9 5-9 5-9-5z"/><path d="M21 9v6"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg>
-              </span>
-              <span>Degree Colleges</span>
-            </li>
-            <li class="profile-item">
-              <span class="profile-icon profile-icon--bank" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 12 4l9 6"/><path d="M4 10v8h16v-8"/><path d="M2 18h20"/><path d="M8 14h.01M12 14h.01M16 14h.01"/></svg>
-              </span>
-              <span>NBFCs & Banks</span>
-            </li>
-            <li class="profile-item">
-              <span class="profile-icon profile-icon--coach" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-              </span>
-              <span>Coaching Institutes</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
      UNIVERSITIES LOGO WALL
      ============================================================ -->
 <section class="section" id="universities">
   <div class="wrap">
     <div class="section-head reveal">
-      <h2>Institutions that <em>trust</em> Career Uttsav</h2>
-      <p>From engineering to law, design to study abroad: these institutions already show up face-to-face with thousands of students. Yours could be next.</p>
+      <h2>Meet Universities. <em>Ask Everything.</em></h2>
+      <p>Get clear answers on courses, fees, scholarships, admissions, placements and campus life.</p>
     </div>
     <div class="partner-marquee reveal" aria-label="Partner universities">
 <div class="partner-marquee-track">
@@ -5345,17 +5610,6 @@ footer{
         <div class="partner-chip" aria-hidden="true"><img src="ibmr-logo.png" alt=""></div>
         <div class="partner-chip" aria-hidden="true"><img src="mit-vpu-logo.png" alt=""></div>
       </div>
-    </div>
-  </div>
-</section>
-<section class="school-band" id="exhibit-cta">
-  <div class="wrap school-band-inner reveal">
-    <div>
-      <h3>Ready to exhibit at Career Uttsav 2026?</h3>
-      <p>Dedicated stall zones, on-ground support and high footfall from schools across Bangalore and nearby regions.</p>
-    </div>
-    <div class="school-band-actions">
-      <button type="button" class="btn btn-light magnetic open-exhibitor-form">Register as Exhibitor</button>
     </div>
   </div>
 </section>
@@ -5449,7 +5703,7 @@ footer{
     </h2>
     <p>Join thousands of students, parents and educators preparing early for Career Uttsav 2026. Be first to receive updates, resources and event notifications.</p>
     <div class="cta-actions">
-      <a href="https://careeruttsav.in/student-registration" class="btn btn-primary magnetic open-register">Join Now!</a>
+      <a href="https://careeruttsav.in/student-registration" class="btn btn-primary magnetic open-register">Get Your FREE Pass</a>
     </div>
   </div>
 </section>
@@ -5482,11 +5736,10 @@ footer{
         <h5>Explore</h5>
         <ul>
           <li><a href="#top">Home</a></li>
-          <li><a href="#about">About</a></li>
           <li><a href="#experience">Why Attend?</a></li>
           <li><a href="#mentors">Speakers</a></li>
           <li><a href="#gallery">Highlights</a></li>
-          <li><a href="#partner">Why Exhibit?</a></li>
+          <li><a href="#universities">Why Exhibit?</a></li>
         </ul>
       </div>
       <div class="footer-aside">
@@ -5526,8 +5779,14 @@ footer{
     </div>
 
     <div class="reg-choice" id="regChoice">
-      <h4>How would you like to register?</h4>
-      <p class="reg-sub">Pick the option that works best for you. Our team is ready to help either way.</p>
+      <div class="reg-choice-copy reg-choice-copy--default" id="regChoiceCopyDefault">
+        <h4>How would you like to register?</h4>
+        <p class="reg-sub">Pick the option that works best for you. Our team is ready to help either way.</p>
+      </div>
+      <div class="reg-choice-copy reg-choice-copy--engage" id="regChoiceCopyEngage" hidden>
+        <h4>Want a solution to your query?</h4>
+        <p class="reg-choice-cta">Come to Career Uttsav. <span class="reg-choice-cta-accent">Register Now!</span></p>
+      </div>
       <div class="reg-choice-actions">
         <button type="button" class="reg-choice-btn reg-choice-btn--form" id="regChoiceForm">Continue registration here</button>
         <a class="reg-choice-btn reg-choice-btn--wa allow-external" id="regChoiceWhatsApp" href="https://api.whatsapp.com/send?phone=919035150139&amp;text=Hi%21%20There%20" target="_blank" rel="noopener">
@@ -6253,16 +6512,13 @@ footer{
 
     var sectionToNav = {
       top: '#top',
-      about: '#about',
       experience: '#experience',
       'school-cta': '#experience',
       framework: '#experience',
       engage: '#experience',
       mentors: '#mentors',
       gallery: '#gallery',
-      partner: '#partner',
-      universities: '#partner',
-      'exhibit-cta': '#partner'
+      universities: '#universities'
     };
 
     var watched = Object.keys(sectionToNav)
@@ -6314,9 +6570,8 @@ footer{
   }, {threshold:0.15});
   revealEls.forEach(function(el){ io.observe(el); });
 
-  /* ---- About image carousel ---- */
-  (function(){
-    var root = document.getElementById('aboutCarousel');
+  /* ---- About / experience image carousels ---- */
+  function initSectionImageCarousel(root, sectionEl){
     if(!root) return;
     var slides = Array.prototype.slice.call(root.querySelectorAll('.about-carousel-slide'));
     if(slides.length < 2) return;
@@ -6341,8 +6596,7 @@ footer{
       timer = setInterval(next, INTERVAL);
     }
 
-    var aboutSection = document.getElementById('about');
-    var aboutIO = new IntersectionObserver(function(entries){
+    var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if(entry.isIntersecting){
           restart();
@@ -6352,12 +6606,55 @@ footer{
         }
       });
     }, { threshold: 0.1, rootMargin: '40px 0px' });
-    if(aboutSection){
-      aboutIO.observe(aboutSection);
+    if(sectionEl){
+      io.observe(sectionEl);
       restart();
     } else {
       restart();
     }
+  }
+  initSectionImageCarousel(document.getElementById('aboutCarousel'), document.getElementById('about'));
+  initSectionImageCarousel(document.getElementById('experienceCarousel'), document.getElementById('experience'));
+
+  /* ---- Framework A–F career tabs ---- */
+  (function(){
+    var root = document.getElementById('frameworkExplorer');
+    if(!root) return;
+    var tabs = Array.prototype.slice.call(root.querySelectorAll('.framework-tab'));
+    var panes = Array.prototype.slice.call(root.querySelectorAll('.framework-pane'));
+    if(!tabs.length || tabs.length !== panes.length) return;
+
+    function activate(index){
+      tabs.forEach(function(tab, i){
+        var on = i === index;
+        tab.classList.toggle('is-active', on);
+        tab.setAttribute('aria-selected', on ? 'true' : 'false');
+        tab.tabIndex = on ? 0 : -1;
+      });
+      panes.forEach(function(pane, i){
+        var on = i === index;
+        pane.classList.toggle('is-active', on);
+        if(on){
+          pane.removeAttribute('hidden');
+        } else {
+          pane.setAttribute('hidden', '');
+        }
+      });
+    }
+
+    tabs.forEach(function(tab, i){
+      tab.addEventListener('click', function(){ activate(i); });
+      tab.addEventListener('keydown', function(e){
+        var next = i;
+        if(e.key === 'ArrowRight'){ next = (i + 1) % tabs.length; e.preventDefault(); }
+        else if(e.key === 'ArrowLeft'){ next = (i - 1 + tabs.length) % tabs.length; e.preventDefault(); }
+        else if(e.key === 'Home'){ next = 0; e.preventDefault(); }
+        else if(e.key === 'End'){ next = tabs.length - 1; e.preventDefault(); }
+        else return;
+        activate(next);
+        tabs[next].focus();
+      });
+    });
   })();
 
   /* ---- About float chip sticker peel ---- */
@@ -6566,13 +6863,14 @@ footer{
   })();
 
   /* ---- Animated counters ---- */
-  var counters = document.querySelectorAll('.stat .num');
+  var counters = document.querySelectorAll('.stat .num[data-count]');
   var counted = false;
   function animateCounters(){
     if(counted) return;
     counted = true;
     counters.forEach(function(el){
       var target = parseInt(el.getAttribute('data-count'), 10);
+      if(!Number.isFinite(target)) return;
       var suffix = el.getAttribute('data-suffix') || '';
       var duration = 1600;
       var start = null;
@@ -6682,6 +6980,8 @@ var CU_ADMIN_API = (
   var regCard = regOverlay.querySelector('.reg-card');
   var regMain = regOverlay.querySelector('.reg-main');
   var regChoice = document.getElementById('regChoice');
+  var regChoiceCopyDefault = document.getElementById('regChoiceCopyDefault');
+  var regChoiceCopyEngage = document.getElementById('regChoiceCopyEngage');
   var regFlow = document.getElementById('regFlow');
   var regChoiceForm = document.getElementById('regChoiceForm');
   var regChoiceWhatsApp = document.getElementById('regChoiceWhatsApp');
@@ -6768,8 +7068,14 @@ var CU_ADMIN_API = (
     });
   }
 
-  function openRegModal(){
+  function setRegChoiceCopy(fromEngage){
+    if(regChoiceCopyDefault) regChoiceCopyDefault.hidden = !!fromEngage;
+    if(regChoiceCopyEngage) regChoiceCopyEngage.hidden = !fromEngage;
+  }
+
+  function openRegModal(fromEngage){
     lastFocused = document.activeElement;
+    setRegChoiceCopy(!!fromEngage);
     regOverlay.classList.add('open');
     regOverlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
@@ -6791,7 +7097,10 @@ var CU_ADMIN_API = (
   }
 
   document.querySelectorAll('.open-register').forEach(function(el){
-    el.addEventListener('click', function(e){ e.preventDefault(); openRegModal(); });
+    el.addEventListener('click', function(e){
+      e.preventDefault();
+      openRegModal(!!el.closest('#engage'));
+    });
   });
   regClose.addEventListener('click', closeRegModal);
   regDone.addEventListener('click', closeRegModal);
