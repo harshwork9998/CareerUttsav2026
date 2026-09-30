@@ -693,16 +693,16 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   animation-delay:calc(var(--ghost-i, 0) * 0.22s);
 }
 .framework-tab-ghost:nth-child(1){
-  color:var(--blue);
+  color:var(--ink-soft);
   opacity:0.72;
 }
 .framework-tab-ghost:nth-child(2){
-  color:var(--red);
+  color:var(--ink-soft);
   opacity:0.52;
   transform:scale(0.96);
 }
 .framework-tab-ghost:nth-child(3){
-  color:var(--green);
+  color:var(--ink-soft);
   opacity:0.38;
   transform:scale(0.92);
 }
@@ -765,21 +765,19 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   transition:background .25s var(--ease), color .25s var(--ease), box-shadow .25s var(--ease);
 }
 .framework-tabs .framework-tab:last-child{ border-right:1px solid var(--line); }
-.framework-tab:nth-child(1){ color:var(--blue); }
-.framework-tab:nth-child(2){ color:var(--red); }
-.framework-tab:nth-child(3){ color:var(--green); }
-.framework-tab:nth-child(4){ color:var(--red); }
-.framework-tab:nth-child(5){ color:#C9930A; }
-.framework-tab:nth-child(6){ color:var(--blue); }
 .framework-tab:hover{
   background:var(--paper-dim);
+  color:var(--ink);
 }
 .framework-tab.is-active{
   background:var(--red);
   color:#fff;
 }
+.framework-tab.is-active:hover{
+  color:#fff;
+}
 .framework-tab:focus-visible{
-  outline:3px solid var(--blue);
+  outline:3px solid var(--red);
   outline-offset:-3px;
   z-index:1;
 }
@@ -805,31 +803,9 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   line-height:1.3;
   padding:9px 16px;
   border-radius:100px;
-  border:1px solid transparent;
-}
-.framework-career-list li:nth-child(6n+1){
-  background:var(--blue-soft);
-  color:var(--blue-dark);
-}
-.framework-career-list li:nth-child(6n+2){
   background:var(--red-soft);
-  color:var(--red-dark);
-}
-.framework-career-list li:nth-child(6n+3){
-  background:rgba(31,158,99,0.12);
-  color:#157a4c;
-}
-.framework-career-list li:nth-child(6n+4){
-  background:var(--yellow-soft);
-  color:#8a6a10;
-}
-.framework-career-list li:nth-child(6n+5){
-  background:var(--blue-soft);
-  color:var(--blue-dark);
-}
-.framework-career-list li:nth-child(6n+6){
-  background:var(--red-soft);
-  color:var(--red-dark);
+  color:var(--ink);
+  border:1px solid rgba(229,55,43,0.12);
 }
 .framework-more{
   margin-top:28px;
@@ -1653,7 +1629,7 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   border:1px solid rgba(20,18,26,0.06);
   text-decoration:none;
   color:var(--ink);
-  background:#fff;
+  background:var(--red-soft);
   transition:transform .4s var(--ease), box-shadow .4s var(--ease);
   box-shadow:0 10px 28px -18px rgba(20,18,26,0.22);
   overflow:hidden;
@@ -1664,32 +1640,26 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
     box-shadow:0 18px 36px -16px rgba(20,18,26,0.28);
   }
 }
-.path-card-media{
-  position:relative;
-  flex:0 0 118px;
+.path-card-head{
+  flex:0 0 auto;
+  min-height:118px;
   width:100%;
-  overflow:hidden;
-  background:var(--paper-dim);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px 14px;
+  text-align:center;
+  background:var(--red-soft);
 }
-.path-card-media::after{
-  content:'';
-  position:absolute;
-  inset:auto 0 0;
-  height:40%;
-  background:linear-gradient(to top, rgba(20,18,26,0.18), transparent);
-  pointer-events:none;
-}
-.path-card-media img{
+.path-card-head h3{
+  font-family:var(--font-display);
+  font-size:clamp(14px,1.05vw,16px);
+  line-height:1.28;
+  margin:0;
+  font-weight:700;
   width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-  transition:transform .55s var(--ease);
-}
-@media (hover:hover){
-  .path-card:hover .path-card-media img{
-    transform:scale(1.05);
-  }
+  text-align:center;
+  text-wrap:balance;
 }
 .path-card-body{
   flex:0 0 auto;
@@ -1698,60 +1668,61 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   justify-content:flex-start;
   align-items:center;
   text-align:center;
-  padding:10px 12px 12px;
+  padding:0;
+  background:#fff;
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .4s var(--ease), padding .35s var(--ease);
 }
-.path-card h3{
-  font-family:var(--font-display);
-  font-size:15px;
-  line-height:1.25;
-  margin:0 0 0;
-  flex-shrink:0;
-  font-weight:700;
-  width:100%;
-  text-align:center;
-  text-wrap:balance;
+@media (hover:hover){
+  .path-card:hover,
+  .path-card:focus-visible{
+    background:#fff;
+  }
+  .path-card:hover .path-card-body,
+  .path-card:focus-visible .path-card-body{
+    max-height:320px;
+    padding:10px 12px 14px;
+  }
 }
 .path-card-more{
   display:grid;
   grid-template-rows:0fr;
   opacity:0;
   flex-shrink:0;
-  transition:grid-template-rows .4s var(--ease), opacity .35s var(--ease), margin .35s var(--ease);
-  margin:0;
   width:100%;
   text-align:center;
+  margin:0 0 0;
+  transition:grid-template-rows .4s var(--ease), opacity .35s var(--ease), margin .35s var(--ease);
 }
 .path-card-more-inner{
   overflow:hidden;
 }
-.path-card-sub{
-  font-size:11.5px;
-  font-weight:700;
-  line-height:1.3;
-  color:var(--ink);
-  margin:0 0 4px;
-}
 .path-card-desc{
   font-size:11px;
   font-weight:500;
-  line-height:1.4;
+  line-height:1.45;
   color:var(--ink-soft);
   margin:0;
+  text-wrap:pretty;
+}
+.path-card-cta{
+  display:block;
+  margin:10px 0 0;
+  font-size:10.5px;
+  font-weight:700;
+  line-height:1.35;
+  letter-spacing:0.01em;
+  color:var(--red);
 }
 @media (hover:hover){
   .path-card:hover .path-card-more,
   .path-card:focus-visible .path-card-more{
     grid-template-rows:1fr;
     opacity:1;
-    margin-top:8px;
+    margin-bottom:6px;
   }
 }
-.path-card--rose .path-card-body{ background:#fdeef1; }
-.path-card--blue .path-card-body{ background:#e8eeff; }
-.path-card--orange .path-card-body{ background:#fff1e8; }
-.path-card--purple .path-card-body{ background:#efe9ff; }
-.path-card--green .path-card-body{ background:#e6f6ee; }
-.path-card--teal .path-card-body{ background:#e3f6f3; }
 @media (max-width:1180px){
   .path-cards{ grid-template-columns:repeat(3,minmax(0,1fr)); }
 }
@@ -1929,6 +1900,116 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   display:block;
   mix-blend-mode:multiply;
 }
+
+/* ============================================================
+   9b. ONE PLATFORM  -  audience cards
+   ============================================================ */
+#together{
+  background-color:var(--paper-dim);
+  color:var(--ink);
+  padding:72px 0 88px;
+}
+#together .section-head{
+  max-width:none;
+  margin-bottom:40px;
+}
+#together .section-head h2{
+  margin-top:0;
+  font-size:clamp(28px,3.4vw,44px);
+  line-height:1.08;
+  max-width:720px;
+}
+#together .section-head p{
+  margin-top:14px;
+  font-size:17px;
+  color:var(--ink-soft);
+  max-width:480px;
+}
+.audience-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+  align-items:stretch;
+}
+.audience-card{
+  background:#fff;
+  border:1px solid rgba(20,18,26,0.08);
+  border-radius:var(--radius-lg);
+  padding:26px 22px 24px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  min-height:100%;
+  box-shadow:var(--shadow-card);
+  transition:transform .45s var(--ease), border-color .45s var(--ease), box-shadow .45s var(--ease);
+}
+.audience-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(229,55,43,0.18);
+  box-shadow:0 16px 36px -18px rgba(184,42,32,0.22);
+}
+.audience-card-icon{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:var(--red-soft);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:18px;
+  flex-shrink:0;
+}
+.audience-card-icon svg{
+  width:24px;
+  height:24px;
+  stroke:var(--red-dark);
+  fill:none;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.audience-card h3{
+  font-family:var(--font-display);
+  font-size:18px;
+  line-height:1.2;
+  margin-bottom:8px;
+  color:var(--ink);
+}
+.audience-card > p{
+  font-size:14px;
+  line-height:1.5;
+  color:var(--ink-soft);
+  flex:1;
+  margin:0;
+}
+.audience-card-link{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  margin-top:18px;
+  padding:0;
+  border:none;
+  background:none;
+  font-family:var(--font-body);
+  font-size:14px;
+  font-weight:700;
+  color:var(--red);
+  text-decoration:none;
+  cursor:pointer;
+  transition:color .25s var(--ease), gap .25s var(--ease);
+}
+.audience-card-link:hover{
+  color:var(--red-dark);
+  gap:8px;
+}
+@media (max-width:1100px){
+  .audience-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+}
+@media (max-width:560px){
+  .audience-grid{ gap:8px; }
+  .audience-card{ padding:12px 13px 11px; }
+}
+
 /* Partners directory modal */
 .partners-overlay{
   position:fixed; inset:0; z-index:3200;
@@ -2320,6 +2401,9 @@ body.partners-modal-open{ overflow:hidden; }
 }
 .visit-map{
   position:relative;
+  width:92%;
+  max-width:100%;
+  margin-inline:auto;
   min-height:220px;
   height:100%;
   border-radius:var(--radius-md);
@@ -3772,6 +3856,7 @@ body,
 #mentors,
 #gallery,
 #universities,
+#together,
 #ambassadors,
 #visit,
 footer{
@@ -4149,16 +4234,16 @@ footer{
     font-size: 12px;
   }
 
-  /* Boarding pass - desktop proportions, scaled down uniformly on mobile */
+  /* Boarding pass — smaller card; hero gaps unchanged (no zoom/scale) */
   .pass-card{
-    --pass-mobile-scale: 0.84;
     width: 100%;
-    max-width: 490px;
+    max-width: min(100%, 400px);
     justify-self: center;
     margin-top: 8px;
     margin-right: auto;
     margin-left: auto;
-    zoom: var(--pass-mobile-scale);
+    padding: 24px 22px 20px;
+    border-radius: 22px;
     transform: rotate(2deg);
   }
   .pass-card:hover{
@@ -4169,21 +4254,52 @@ footer{
       transform: rotate(2deg);
     }
   }
-  @supports not (zoom: 1){
-    .pass-card{
-      zoom: unset;
-      transform: rotate(2deg) scale(var(--pass-mobile-scale));
-      transform-origin: top center;
-      margin-bottom: calc((1 - var(--pass-mobile-scale)) * -17rem);
-    }
-    .pass-card:hover{
-      transform: rotate(0deg) translateY(-6px) scale(var(--pass-mobile-scale));
-    }
-    @media (hover: none){
-      .pass-card:hover{
-        transform: rotate(2deg) scale(var(--pass-mobile-scale));
-      }
-    }
+  .pass-top{
+    margin-bottom: 16px;
+    min-height: 38px;
+  }
+  .pass-top img{
+    height: 38px;
+    transform: scale(1.35);
+  }
+  .pass-tag{
+    font-size: 10px;
+    padding: 5px 10px;
+  }
+  .pass-title{
+    font-size: clamp(22px, 5.8vw, 26px);
+    white-space: normal;
+  }
+  .pass-sub{
+    font-size: 13px;
+    margin-bottom: 18px;
+    white-space: normal;
+  }
+  .pass-divider{
+    margin: 0 -22px 16px;
+  }
+  .pass-divider::before,
+  .pass-divider::after{
+    width: 18px;
+    height: 18px;
+    top: -9px;
+  }
+  .pass-divider::before{ left: -9px; }
+  .pass-divider::after{ right: -9px; }
+  .pass-fields{
+    column-gap: 20px;
+    row-gap: 14px;
+  }
+  .pass-field .k{
+    font-size: 9.5px;
+    margin-bottom: 3px;
+  }
+  .pass-field .v{
+    font-size: 15px;
+  }
+  .pass-barcode{
+    margin-top: 20px;
+    height: 28px;
   }
 
   /* Side rail crowds the first screen on phones - keep desktop only */
@@ -4393,6 +4509,7 @@ footer{
   #mentors,
   #gallery,
   #universities,
+  #together,
   #ambassadors,
   #visit,
   footer{
@@ -4779,30 +4896,43 @@ footer{
     scroll-snap-align: start;
     height: auto;
   }
-  .path-card-media{
-    flex-basis: 104px;
+  .path-card-head{
+    min-height: 112px;
+    padding: 16px 14px;
+    align-items: center;
+  }
+  .path-card-head h3{
+    font-size: clamp(17px, 4.65vw, 20px);
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    max-width: 14em;
+    margin-inline: auto;
+  }
+  .path-card{
+    background: #fff;
   }
   .path-card-body{
+    flex: 1 1 auto;
+    max-height: none;
     padding: 10px 12px 14px;
     align-items: stretch;
-  }
-  .path-card h3{
-    font-size: 14px;
   }
   .path-card-more{
     grid-template-rows: 1fr;
     opacity: 1;
-    margin-top: 8px;
+    margin-bottom: 0;
   }
   .path-card-more-inner{
     overflow: visible;
   }
-  .path-card-sub{
-    font-size: 11px;
-  }
   .path-card-desc{
     font-size: 11px;
     line-height: 1.45;
+  }
+  .path-card-cta{
+    font-size: 10px;
+    padding-top: 8px;
   }
 
   /* Mentors — compact horizontal strip */
@@ -4909,6 +5039,60 @@ footer{
     max-height: 34px;
     max-width: 110px;
     object-fit: contain;
+  }
+
+  /* One platform — compact audience cards */
+  #together{
+    padding: var(--mobile-section-y) 0;
+  }
+  #together.section-tight{
+    padding-top: var(--mobile-section-y);
+    padding-bottom: var(--mobile-section-y);
+  }
+  #together .section-head{
+    margin-bottom: 18px;
+  }
+  #together .section-head h2{
+    font-size: clamp(22px, 6vw, 28px);
+    line-height: 1.1;
+  }
+  #together .section-head p{
+    font-size: clamp(13px, 3.5vw, 15px);
+    margin-top: 10px;
+  }
+  .audience-grid{
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .audience-card{
+    padding: 14px 14px 13px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 22px -14px rgba(20,18,26,0.14);
+  }
+  .audience-card:hover{
+    transform: none;
+  }
+  .audience-card-icon{
+    width: 36px;
+    height: 36px;
+    margin-bottom: 10px;
+  }
+  .audience-card-icon svg{
+    width: 18px;
+    height: 18px;
+  }
+  .audience-card h3{
+    font-size: 15px;
+    line-height: 1.22;
+    margin-bottom: 4px;
+  }
+  .audience-card > p{
+    font-size: 12.5px;
+    line-height: 1.42;
+  }
+  .audience-card-link{
+    margin-top: 10px;
+    font-size: 12.5px;
   }
 
   /* Ambassadors — compact: swipeable quotes + side-by-side CTA */
@@ -5094,6 +5278,7 @@ footer{
   }
   .visit-map{
     min-height: 0;
+    width: 92%;
     height: clamp(132px, 36vw, 168px);
   }
   .visit-map iframe{
@@ -5238,7 +5423,11 @@ footer{
     font-size: 17px;
   }
   .pass-card{
-    --pass-mobile-scale: 0.78;
+    max-width: min(100%, 368px);
+    padding: 22px 20px 18px;
+  }
+  .pass-title{
+    font-size: clamp(20px, 5.4vw, 24px);
   }
   .about-carousel{
     max-height: 180px;
@@ -5300,7 +5489,12 @@ footer{
     font-size: 16.5px;
   }
   .pass-card{
-    --pass-mobile-scale: 0.72;
+    max-width: min(100%, 340px);
+    padding: 20px 18px 16px;
+  }
+  .pass-divider{
+    margin-left: -18px;
+    margin-right: -18px;
   }
   /* Stats - keep 15,00,000+ on one line at 320 */
   .stats{
@@ -5867,85 +6061,79 @@ footer{
     </div>
     <div class="path-cards reveal-stagger">
       <a class="path-card path-card--rose open-register allow-external" href="https://careeruttsav.in/student-registration">
-        <div class="path-card-media">
-          <img src="img/idontknowwhatcareersuitsme.jpeg" alt="Student exploring which career suits them" width="640" height="420" loading="lazy" decoding="async">
+        <div class="path-card-head">
+          <h3>I don't know what career suits me</h3>
         </div>
         <div class="path-card-body">
-          <h3>I don't know what career suits me</h3>
           <div class="path-card-more">
             <div class="path-card-more-inner">
-              <p class="path-card-sub">Career Test + Counselling</p>
-              <p class="path-card-desc">Take a free psychometric test and get clarity through counsellor conversations at the event.</p>
+              <p class="path-card-desc">Discover your interests and strengths through a psychometric test, then speak with counsellors to explore careers that suit you.</p>
+              <span class="path-card-cta">Explore this at Career Uttsav →</span>
             </div>
           </div>
         </div>
       </a>
       <a class="path-card path-card--blue open-register allow-external" href="https://careeruttsav.in/student-registration">
-        <div class="path-card-media">
-          <img src="img/iknowmycareerbutnotcollege.jpeg" alt="Student choosing a college for their career" width="640" height="420" loading="lazy" decoding="async">
+        <div class="path-card-head">
+          <h3>I know my career, but not my college</h3>
         </div>
         <div class="path-card-body">
-          <h3>I know my career, but not my college</h3>
           <div class="path-card-more">
             <div class="path-card-more-inner">
-              <p class="path-card-sub">Meet Universities</p>
-              <p class="path-card-desc">Compare courses, admissions, and campus life with university teams in one place.</p>
+              <p class="path-card-desc">Meet universities, compare courses, fees, scholarships and opportunities, and find colleges that match what you're looking for.</p>
+              <span class="path-card-cta">Explore this at Career Uttsav →</span>
             </div>
           </div>
         </div>
       </a>
       <a class="path-card path-card--orange open-register allow-external" href="https://careeruttsav.in/student-registration">
-        <div class="path-card-media">
-          <img src="img/idontknowwhichcoursetochoose.jpeg" alt="Student deciding which course to choose" width="640" height="420" loading="lazy" decoding="async">
+        <div class="path-card-head">
+          <h3>I don't know which course to choose</h3>
         </div>
         <div class="path-card-body">
-          <h3>I don't know which course to choose</h3>
           <div class="path-card-more">
             <div class="path-card-more-inner">
-              <p class="path-card-sub">Expert Guidance</p>
-              <p class="path-card-desc">Join expert sessions and get answers tailored to your interests and goals.</p>
+              <p class="path-card-desc">Understand different courses, what they offer and the careers they lead to through experts and university interactions.</p>
+              <span class="path-card-cta">Explore this at Career Uttsav →</span>
             </div>
           </div>
         </div>
       </a>
       <a class="path-card path-card--purple open-register allow-external" href="https://careeruttsav.in/student-registration">
-        <div class="path-card-media">
-          <img src="img/studyabroad.jpeg" alt="Student planning to study abroad" width="640" height="420" loading="lazy" decoding="async">
+        <div class="path-card-head">
+          <h3>I want to study abroad</h3>
         </div>
         <div class="path-card-body">
-          <h3>I want to study abroad</h3>
           <div class="path-card-more">
             <div class="path-card-more-inner">
-              <p class="path-card-sub">Overseas Universities + Study Abroad Sessions</p>
-              <p class="path-card-desc">Meet global universities and attend sessions on applications, visas, and scholarships.</p>
+              <p class="path-card-desc">Meet international universities and experts to understand courses, admissions, eligibility, scholarships and opportunities to study abroad.</p>
+              <span class="path-card-cta">Explore this at Career Uttsav →</span>
             </div>
           </div>
         </div>
       </a>
       <a class="path-card path-card--green open-register allow-external" href="https://careeruttsav.in/student-registration">
-        <div class="path-card-media">
-          <img src="img/scholarship.jpeg" alt="Student exploring scholarship opportunities" width="640" height="420" loading="lazy" decoding="async">
+        <div class="path-card-head">
+          <h3>I want scholarships</h3>
         </div>
         <div class="path-card-body">
-          <h3>I want scholarships</h3>
           <div class="path-card-more">
             <div class="path-card-more-inner">
-              <p class="path-card-sub">Scholarship Opportunities</p>
-              <p class="path-card-desc">Discover scholarship tests, contests, and funding options you can explore on the day.</p>
+              <p class="path-card-desc">Discover scholarship opportunities, understand eligibility and speak directly with institutions about financial support available to students.</p>
+              <span class="path-card-cta">Explore this at Career Uttsav →</span>
             </div>
           </div>
         </div>
       </a>
       <a class="path-card path-card--teal open-register allow-external" href="https://careeruttsav.in/student-registration">
-        <div class="path-card-media">
-          <img src="img/newagecareers.jpeg" alt="Student exploring new-age careers in tech and design" width="640" height="420" loading="lazy" decoding="async">
+        <div class="path-card-head">
+          <h3>I want to explore new-age careers</h3>
         </div>
         <div class="path-card-body">
-          <h3>I want to explore new-age careers</h3>
           <div class="path-card-more">
             <div class="path-card-more-inner">
-              <p class="path-card-sub">AI, Design, Gaming, Data &amp; more</p>
-              <p class="path-card-desc">See emerging careers in tech, creativity, and entrepreneurship—with people who work in them.</p>
+              <p class="path-card-desc">Explore emerging careers in AI, data, design, gaming and more, and understand the opportunities they can offer.</p>
+              <span class="path-card-cta">Explore this at Career Uttsav →</span>
             </div>
           </div>
         </div>
@@ -6121,6 +6309,52 @@ footer{
         <div class="partner-chip" aria-hidden="true"><img src="ibmr-logo.png" alt=""></div>
         <div class="partner-chip" aria-hidden="true"><img src="mit-vpu-logo.png" alt=""></div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ONE PLATFORM  -  audience paths
+     ============================================================ -->
+<section class="section section-tight" id="together">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Career Uttsav brings <em>everyone</em> together.</h2>
+      <p>Different goals. One platform.</p>
+    </div>
+    <div class="audience-grid reveal-stagger">
+      <article class="audience-card">
+        <div class="audience-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>For Students &amp; Parents</h3>
+        <p>Explore careers, universities and opportunities.</p>
+        <a href="https://careeruttsav.in/student-registration" class="audience-card-link open-register allow-external">Get Your Free Pass →</a>
+      </article>
+      <article class="audience-card">
+        <div class="audience-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-3"/><path d="M9 9v.01"/><path d="M9 12v.01"/><path d="M9 15v.01"/><path d="M9 18v.01"/></svg>
+        </div>
+        <h3>For Schools</h3>
+        <p>Bring your students to Career Uttsav.</p>
+        <button type="button" class="audience-card-link open-school-form">Register Your School →</button>
+      </article>
+      <article class="audience-card">
+        <div class="audience-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/></svg>
+        </div>
+        <h3>For Universities &amp; Institutions</h3>
+        <p>Meet thousands of students face-to-face.</p>
+        <button type="button" class="audience-card-link open-exhibitor-form">Why Exhibit →</button>
+      </article>
+      <article class="audience-card">
+        <div class="audience-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+        </div>
+        <h3>For Student Ambassadors</h3>
+        <p>Represent Career Uttsav on your campus.</p>
+        <button type="button" class="audience-card-link open-ambassador-form">Become an Ambassador →</button>
+      </article>
     </div>
   </div>
 </section>
