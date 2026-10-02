@@ -1626,18 +1626,19 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   height:auto;
   padding:0;
   border-radius:var(--radius-md);
-  border:1px solid rgba(20,18,26,0.06);
+  border:2px solid var(--red);
   text-decoration:none;
   color:var(--ink);
-  background:var(--red-soft);
-  transition:transform .4s var(--ease), box-shadow .4s var(--ease);
-  box-shadow:0 10px 28px -18px rgba(20,18,26,0.22);
+  background:#fff;
+  transition:transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease);
+  box-shadow:0 10px 28px -18px rgba(20,18,26,0.14);
   overflow:hidden;
 }
 @media (hover:hover){
   .path-card:hover{
     transform:translateY(-6px);
-    box-shadow:0 18px 36px -16px rgba(20,18,26,0.28);
+    border-color:var(--red-dark);
+    box-shadow:0 18px 36px -16px rgba(184,42,32,0.2);
   }
 }
 .path-card-head{
@@ -1649,7 +1650,8 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
   justify-content:center;
   padding:18px 14px;
   text-align:center;
-  background:var(--red-soft);
+  background:#fff;
+  border-bottom:1px solid rgba(229,55,43,0.2);
 }
 .path-card-head h3{
   font-family:var(--font-display);
@@ -1741,9 +1743,6 @@ h1 em, h2 em, h3 em, .cta-line em{ font-style:normal; color:var(--red); }
     margin-right:auto;
   }
   .path-cards{ grid-template-columns:repeat(2,minmax(0,1fr)); }
-}
-@media (max-width:560px){
-  .path-cards{ grid-template-columns:1fr; }
 }
 
 /* ============================================================
@@ -4876,63 +4875,84 @@ footer{
     text-wrap: pretty;
     line-height: 1.45;
   }
-  .path-cards{
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 10px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding: 2px 0 12px;
+  #engage .path-cards{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 8px;
+    overflow: visible;
+    padding: 0;
     margin: 0;
-    scroll-padding-inline: 0;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-  .path-cards::-webkit-scrollbar{
-    display: none;
-  }
-  .path-card{
-    flex: 0 0 min(68vw, 272px);
-    scroll-snap-align: start;
-    height: auto;
-  }
-  .path-card-head{
-    min-height: 112px;
-    padding: 16px 14px;
-    align-items: center;
-  }
-  .path-card-head h3{
-    font-size: clamp(17px, 4.65vw, 20px);
-    line-height: 1.22;
-    letter-spacing: -0.02em;
-    text-wrap: balance;
-    max-width: 14em;
-    margin-inline: auto;
-  }
-  .path-card{
-    background: #fff;
-  }
-  .path-card-body{
-    flex: 1 1 auto;
-    max-height: none;
-    padding: 10px 12px 14px;
     align-items: stretch;
   }
-  .path-card-more{
+  #engage .path-card{
+    width: auto;
+    min-height: 178px;
+    height: 100%;
+    scroll-snap-align: none;
+    background: #fff;
+    box-sizing: border-box;
+    border-width: 1.5px;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 6px 18px -14px rgba(20,18,26,0.16);
+  }
+  #engage .path-card-head{
+    flex: 0 0 72px;
+    min-height: 72px;
+    max-height: 72px;
+    padding: 8px 7px;
+    align-items: center;
+    background: #fff;
+    box-sizing: border-box;
+  }
+  #engage .path-card-head h3{
+    font-size: 12.5px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    max-width: none;
+    margin-inline: auto;
+  }
+  #engage .path-card-body{
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+    padding: 7px 8px 8px;
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+  }
+  #engage .path-card-more{
     grid-template-rows: 1fr;
     opacity: 1;
     margin-bottom: 0;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
-  .path-card-more-inner{
-    overflow: visible;
+  #engage .path-card-more-inner{
+    overflow: hidden;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
-  .path-card-desc{
-    font-size: 11px;
-    line-height: 1.45;
+  #engage .path-card-desc{
+    font-size: 9.5px;
+    line-height: 1.38;
+    flex: 1 1 auto;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
   }
-  .path-card-cta{
-    font-size: 10px;
-    padding-top: 8px;
+  #engage .path-card-cta{
+    font-size: 9px;
+    line-height: 1.3;
+    padding-top: 6px;
+    margin-top: auto;
+    flex-shrink: 0;
   }
 
   /* Mentors — compact horizontal strip */
@@ -5562,7 +5582,7 @@ footer{
         <li><a href="#experience" class="nav-close-link">Why Attend?</a></li>
         <li><a href="#framework" class="nav-close-link">Explore Careers</a></li>
         <li><a href="#gallery" class="nav-close-link">Highlights</a></li>
-        <li><a href="#universities" class="nav-close-link">Why Exhibit?</a></li>
+        <li><a href="#together" class="nav-close-link">Talk to Us</a></li>
       </ul>
       <div class="nav-cta">
         <a href="https://partners.careeruttsav.in" class="btn btn-ghost magnetic allow-external" style="padding:11px 20px;">Partner Login</a>
@@ -6345,7 +6365,7 @@ footer{
         </div>
         <h3>For Universities &amp; Institutions</h3>
         <p>Meet thousands of students face-to-face.</p>
-        <button type="button" class="audience-card-link open-exhibitor-form">Why Exhibit →</button>
+        <button type="button" class="audience-card-link open-exhibitor-form">Talk to Us →</button>
       </article>
       <article class="audience-card">
         <div class="audience-card-icon" aria-hidden="true">
@@ -6475,7 +6495,7 @@ footer{
                 <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
               </div>
               <div class="visit-fact-body">
-                <strong>10:00 AM – 6:00 PM</strong>
+                <strong>9:00 AM – 6:00 PM</strong>
                 <span>Timings to be confirmed</span>
               </div>
             </div>
@@ -6555,7 +6575,7 @@ footer{
           <li><a href="#experience">Why Attend?</a></li>
           <li><a href="#framework">Explore Careers</a></li>
           <li><a href="#gallery">Highlights</a></li>
-          <li><a href="#universities">Why Exhibit?</a></li>
+          <li><a href="#together">Talk to Us</a></li>
         </ul>
       </div>
       <div class="footer-aside">
@@ -7334,7 +7354,7 @@ footer{
       engage: '#experience',
       mentors: '#framework',
       gallery: '#gallery',
-      universities: '#universities'
+      together: '#together'
     };
 
     var watched = Object.keys(sectionToNav)
