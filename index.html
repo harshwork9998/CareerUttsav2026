@@ -6580,7 +6580,7 @@ footer{
       </div>
       <div class="footer-aside">
         <div class="footer-partners">
-          <img src="footer-partners.png" alt="An initiative by K2 Learning, in association with IES, India's Education Specialist">
+          <img src="footer-partners.png?v=6" alt="An initiative by K2 Learning, in association with IES, India's Education Specialist">
         </div>
         <div class="footer-contact-inline">
           <a href="tel:+919900795000">
@@ -8156,6 +8156,8 @@ var CU_ADMIN_API = (
       }).catch(function(){
         return { ok: res.ok, status: res.status, data: null };
       });
+    }).catch(function(){
+      return { ok: false, status: 0, data: null };
     });
   }
 
@@ -8219,6 +8221,10 @@ var CU_ADMIN_API = (
       currentStep = Math.min(currentStep + 1, TOTAL_STEPS);
       renderStep();
       regForm.closest('.reg-card').querySelector('.reg-body').scrollTop = 0;
+    }).catch(function(){
+      regSubmitInFlight = false;
+      regNext.classList.remove('loading');
+      showFormApiError(regForm, 'Could not save your registration progress. Please try again.');
     });
   }
 
@@ -8671,6 +8677,10 @@ var CU_ADMIN_API = (
         currentStep = Math.min(currentStep + 1, TOTAL_STEPS);
         renderStep();
         regForm.closest('.reg-card').querySelector('.reg-body').scrollTop = 0;
+      }).catch(function(){
+        regSubmitInFlight = false;
+        regNext.classList.remove('loading');
+        showFormApiError(regForm, 'Could not save your academic details. Please try again.');
       });
       return;
     }
