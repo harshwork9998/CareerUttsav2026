@@ -6766,26 +6766,20 @@ footer{
         <div class="reg-field">
           <div class="reg-seminar-count"><span>Seminars You're Curious About</span><span><b id="regSeminarCounter">0</b>/3 selected</span></div>
           <div class="reg-seminar-grid" id="regSeminarGrid" data-group="seminars">
-            <button type="button" class="reg-seminar-chip" data-value="How to select a stream – Art – Science – Commerce?"><span class="dot"></span>How to select a stream – Art – Science – Commerce?</button>
-            <button type="button" class="reg-seminar-chip" data-value="All about Overseas Education"><span class="dot"></span>All about Overseas Education</button>
-            <button type="button" class="reg-seminar-chip" data-value="How to Choose the right Boarding School?"><span class="dot"></span>How to Choose the right Boarding School?</button>
-            <button type="button" class="reg-seminar-chip" data-value="Cracking the codes to ace competitive exams"><span class="dot"></span>Cracking the codes to ace competitive exams</button>
-            <button type="button" class="reg-seminar-chip" data-value="How sustainable are sustainable careers?"><span class="dot"></span>How sustainable are sustainable careers?</button>
-            <button type="button" class="reg-seminar-chip" data-value="Architecture - A Promising Creative Career"><span class="dot"></span>Architecture - A Promising Creative Career</button>
-            <button type="button" class="reg-seminar-chip" data-value="Careers in Management & Entrepreneurship"><span class="dot"></span>Careers in Management & Entrepreneurship</button>
-            <button type="button" class="reg-seminar-chip" data-value="Careers in Multimedia & Animation"><span class="dot"></span>Careers in Multimedia & Animation</button>
-            <button type="button" class="reg-seminar-chip" data-value="Design in the Digital World"><span class="dot"></span>Design in the Digital World</button>
-            <button type="button" class="reg-seminar-chip" data-value="Designing a Career in world of fashion"><span class="dot"></span>Designing a Career in world of fashion</button>
-            <button type="button" class="reg-seminar-chip" data-value="How to score well in Board Exams?"><span class="dot"></span>How to score well in Board Exams?</button>
-            <button type="button" class="reg-seminar-chip" data-value="If Career Plan A fails, remember there are 25 more letters"><span class="dot"></span>If Career Plan A fails, remember there are 25 more letters</button>
-            <button type="button" class="reg-seminar-chip" data-value="New age skills to build at 16"><span class="dot"></span>New age skills to build at 16</button>
-            <button type="button" class="reg-seminar-chip" data-value="Is CA / CS My Cup of Tea?"><span class="dot"></span>Is CA / CS My Cup of Tea?</button>
-            <button type="button" class="reg-seminar-chip" data-value="Liberated careers with liberal arts"><span class="dot"></span>Liberated careers with liberal arts</button>
-            <button type="button" class="reg-seminar-chip" data-value="Medicine in the 21st century"><span class="dot"></span>Medicine in the 21st century</button>
-            <button type="button" class="reg-seminar-chip" data-value="New-age Engineering Careers"><span class="dot"></span>New-age Engineering Careers</button>
-            <button type="button" class="reg-seminar-chip" data-value="Offbeat Careers"><span class="dot"></span>Offbeat Careers</button>
-            <button type="button" class="reg-seminar-chip" data-value="Real Careers with Artificial Intelligence"><span class="dot"></span>Real Careers with Artificial Intelligence</button>
-            <button type="button" class="reg-seminar-chip" data-value="In the Course of 'Law'"><span class="dot"></span>In the Course of 'Law'</button>
+            <button type="button" class="reg-seminar-chip" data-value="Do What You Love, Love What You Do"><span class="dot"></span>Do What You Love, Love What You Do</button>
+            <button type="button" class="reg-seminar-chip" data-value="Engineering Next: What’s Ahead?"><span class="dot"></span>Engineering Next: What’s Ahead?</button>
+            <button type="button" class="reg-seminar-chip" data-value="Design, Architecture & Creative Careers"><span class="dot"></span>Design, Architecture & Creative Careers</button>
+            <button type="button" class="reg-seminar-chip" data-value="The Future of Management Careers"><span class="dot"></span>The Future of Management Careers</button>
+            <button type="button" class="reg-seminar-chip" data-value="Liberal Arts: Careers Without Limits"><span class="dot"></span>Liberal Arts: Careers Without Limits</button>
+            <button type="button" class="reg-seminar-chip" data-value="Careers in Commerce & Finance"><span class="dot"></span>Careers in Commerce & Finance</button>
+            <button type="button" class="reg-seminar-chip" data-value="Your Journey to Study Abroad"><span class="dot"></span>Your Journey to Study Abroad</button>
+            <button type="button" class="reg-seminar-chip" data-value="Careers in Medicine & Health Sciences"><span class="dot"></span>Careers in Medicine & Health Sciences</button>
+            <button type="button" class="reg-seminar-chip" data-value="Building a Successful Career in Law"><span class="dot"></span>Building a Successful Career in Law</button>
+            <button type="button" class="reg-seminar-chip" data-value="Startups, Leadership & Entrepreneurship"><span class="dot"></span>Startups, Leadership & Entrepreneurship</button>
+            <button type="button" class="reg-seminar-chip" data-value="How to Fund Your Higher Education"><span class="dot"></span>How to Fund Your Higher Education</button>
+            <button type="button" class="reg-seminar-chip" data-value="Engineering: Careers of the Future"><span class="dot"></span>Engineering: Careers of the Future</button>
+            <button type="button" class="reg-seminar-chip" data-value="Careers Beyond the Usual"><span class="dot"></span>Careers Beyond the Usual</button>
+            <button type="button" class="reg-seminar-chip" data-value="How to Score Better in Board Exams?"><span class="dot"></span>How to Score Better in Board Exams?</button>
           </div>
           <div class="reg-hint">Pick up to 3; we'll save you a front-row seat.</div>
         </div>
@@ -8047,6 +8041,7 @@ var CU_ADMIN_API = (
   var OTP_PURPOSE = 'student_registration';
   var mobileVerified = false;
   var phoneVerificationToken = '';
+  var registrationAttemptId = '';
   var verifiedMobileNumber = '';
   var otpSentToMobile = '';
   var otpAwaitingVerification = false;
@@ -8147,9 +8142,9 @@ var CU_ADMIN_API = (
     updateStep1NextLabel();
   }
 
-  function postOtp(path, payload){
+  function postJson(path, payload, method){
     return fetch(CU_ADMIN_API + path, {
-      method: 'POST',
+      method: method || 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-cu-client': 'public'
@@ -8161,6 +8156,69 @@ var CU_ADMIN_API = (
       }).catch(function(){
         return { ok: res.ok, status: res.status, data: null };
       });
+    });
+  }
+
+  function postOtp(path, payload){
+    return postJson(path, payload, 'POST');
+  }
+
+  function selectedRegChip(group){
+    var selected = regForm.querySelector('.reg-chips[data-group="' + group + '"] .reg-chip.selected');
+    return selected ? selected.getAttribute('data-value') : '';
+  }
+
+  function startWebsiteAttempt(){
+    return postJson('/api/registration-attempts', {
+      eventId: CURRENT_EVENT_ID,
+      phone: document.getElementById('regMobile').value.trim(),
+      name: document.getElementById('regName').value.trim(),
+      email: document.getElementById('regEmail').value.trim(),
+      phoneVerificationToken: phoneVerificationToken
+    }).then(function(result){
+      if(!result.ok || !result.data || !result.data.attemptId){
+        showFormApiError(regForm, (result.data && result.data.error) ? result.data.error : 'Could not save your registration progress. Please try again.');
+        return false;
+      }
+      registrationAttemptId = result.data.attemptId;
+      return true;
+    });
+  }
+
+  function saveAcademicsProgress(){
+    if(!registrationAttemptId){
+      showFormApiError(regForm, 'Please verify your mobile number before continuing.');
+      return Promise.resolve(false);
+    }
+    return postJson('/api/registration-attempts/' + registrationAttemptId, {
+      phone: document.getElementById('regMobile').value.trim(),
+      phoneVerificationToken: phoneVerificationToken,
+      college: document.getElementById('regSchool').value.trim(),
+      classLabel: document.getElementById('regClass').value,
+      board: selectedRegChip('board'),
+      interestedStream: selectedRegChip('stream'),
+      city: document.getElementById('regCity').value.trim(),
+      gender: selectedRegChip('gender')
+    }, 'PATCH').then(function(result){
+      if(!result.ok){
+        showFormApiError(regForm, (result.data && result.data.error) ? result.data.error : 'Could not save your academic details. Please try again.');
+        return false;
+      }
+      return true;
+    });
+  }
+
+  function advanceFromVerifiedContact(){
+    regSubmitInFlight = true;
+    regNext.classList.add('loading');
+    return startWebsiteAttempt().then(function(ok){
+      regSubmitInFlight = false;
+      regNext.classList.remove('loading');
+      if(!ok) return;
+      clearRegSubmitError();
+      currentStep = Math.min(currentStep + 1, TOTAL_STEPS);
+      renderStep();
+      regForm.closest('.reg-card').querySelector('.reg-body').scrollTop = 0;
     });
   }
 
@@ -8412,7 +8470,8 @@ var CU_ADMIN_API = (
       board: getChip('board'),
       gender: getChip('gender'),
       city: getVal('regCity'),
-      seminarInterests: seminars
+      seminarInterests: seminars,
+      attemptId: registrationAttemptId || undefined
     };
   }
 
@@ -8564,10 +8623,7 @@ var CU_ADMIN_API = (
               regDuplicateBanner.scrollIntoView({ behavior:'smooth', block:'center' });
               return;
             }
-            clearRegSubmitError();
-            currentStep = Math.min(currentStep + 1, TOTAL_STEPS);
-            renderStep();
-            regForm.closest('.reg-card').querySelector('.reg-body').scrollTop = 0;
+            advanceFromVerifiedContact();
           });
         });
         return;
@@ -8594,16 +8650,30 @@ var CU_ADMIN_API = (
           regDuplicateBanner.scrollIntoView({ behavior:'smooth', block:'center' });
           return;
         }
-        clearRegSubmitError();
+        advanceFromVerifiedContact();
+      });
+      return;
+    }
+
+    var valid = true;
+    if(currentStep === 2){
+      if(!validateStep2()){
+        var academicsErr = regForm.querySelector('.reg-step.active .reg-field.err');
+        if(academicsErr) academicsErr.scrollIntoView({ behavior:'smooth', block:'center' });
+        return;
+      }
+      regSubmitInFlight = true;
+      regNext.classList.add('loading');
+      saveAcademicsProgress().then(function(ok){
+        regSubmitInFlight = false;
+        regNext.classList.remove('loading');
+        if(!ok) return;
         currentStep = Math.min(currentStep + 1, TOTAL_STEPS);
         renderStep();
         regForm.closest('.reg-card').querySelector('.reg-body').scrollTop = 0;
       });
       return;
     }
-
-    var valid = true;
-    if(currentStep === 2) valid = validateStep2();
     if(currentStep === 3) valid = validateStep3();
     if(!valid){
       var firstStepErr = regForm.querySelector('.reg-step.active .reg-field.err');
