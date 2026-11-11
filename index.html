@@ -3232,6 +3232,129 @@ select.reg-input{
 }
 .reg-email-note strong{ color:var(--ink); }
 
+/* ---- Post-registration social follow modal ---- */
+.reg-social-overlay{
+  position:fixed; inset:0; z-index:3100;
+  display:none; align-items:flex-end; justify-content:center;
+  background:rgba(20,18,26,0.55);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  backdrop-filter:blur(14px) saturate(140%);
+  padding:16px;
+  opacity:0;
+  transition:opacity .35s var(--ease);
+}
+.reg-social-overlay.open{ display:flex; opacity:1; }
+@media (min-width:760px){
+  .reg-social-overlay{ align-items:center; padding:40px 24px; }
+}
+.reg-social-card{
+  background:var(--paper); width:100%; max-width:560px;
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-soft);
+  position:relative;
+  max-height:min(90vh, 720px); overflow:auto;
+  opacity:0;
+  transform:translateY(18px) scale(0.96);
+  transition:opacity .38s var(--ease), transform .38s var(--ease);
+}
+.reg-social-overlay.open .reg-social-card{
+  opacity:1; transform:translateY(0) scale(1);
+}
+.reg-social-overlay.is-closing{ opacity:0; }
+.reg-social-overlay.is-closing .reg-social-card{
+  opacity:0; transform:translateY(10px) scale(0.98);
+}
+.reg-social-head{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:14px;
+  padding:22px 22px 0;
+}
+.reg-social-head-text h3{
+  font-family:var(--font-display); font-size:clamp(22px, 4.5vw, 28px);
+  line-height:1.15; margin-bottom:8px;
+}
+.reg-social-head-text p{
+  font-size:14.5px; color:var(--ink-soft); line-height:1.55; max-width:46ch;
+}
+.reg-social-body{ padding:20px 22px 22px; }
+.reg-social-wa{
+  background:linear-gradient(145deg, #fff 0%, var(--paper-dim) 100%);
+  border:2px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:18px 18px 16px;
+  margin-bottom:22px;
+  box-shadow:var(--shadow-card);
+}
+.reg-social-wa-label{
+  font-size:12px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-soft); margin-bottom:4px;
+}
+.reg-social-wa h4{
+  font-family:var(--font-display); font-size:20px; margin-bottom:4px;
+}
+.reg-social-wa p{ font-size:13.5px; color:var(--ink-soft); margin-bottom:14px; }
+.reg-social-wa .btn-wa-channel{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  width:100%; padding:15px 22px; border-radius:100px;
+  background:#128C7E; color:#fff; font-weight:800; font-size:15px;
+  box-shadow:0 10px 24px -10px rgba(18,140,126,0.55);
+  transition:transform .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease);
+}
+.reg-social-wa .btn-wa-channel:hover{
+  transform:translateY(-2px); background:#0D7368;
+  box-shadow:0 14px 28px -10px rgba(18,140,126,0.6);
+}
+.reg-social-wa .btn-wa-channel svg{ width:22px; height:22px; flex-shrink:0; }
+.reg-social-section-title{
+  font-size:13px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
+  color:var(--ink); margin-bottom:12px;
+}
+.reg-social-grid{
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;
+}
+@media (max-width:540px){
+  .reg-social-grid{ grid-template-columns:1fr; }
+}
+.reg-social-grid-card{
+  display:flex; flex-direction:column; align-items:flex-start; gap:10px;
+  padding:14px 14px 12px; border:2px solid var(--line); border-radius:var(--radius-sm);
+  background:#fff; text-align:left;
+  opacity:0; transform:translateY(8px);
+  transition:border-color .25s var(--ease), box-shadow .25s var(--ease), transform .25s var(--ease);
+}
+.reg-social-overlay.open .reg-social-grid-card{
+  animation:regSocialCardIn .38s var(--ease) forwards;
+}
+.reg-social-overlay.open .reg-social-grid-card:nth-child(1){ animation-delay:.08s; }
+.reg-social-overlay.open .reg-social-grid-card:nth-child(2){ animation-delay:.14s; }
+.reg-social-overlay.open .reg-social-grid-card:nth-child(3){ animation-delay:.2s; }
+@keyframes regSocialCardIn{
+  from{ opacity:0; transform:translateY(10px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+.reg-social-grid-card:hover{
+  border-color:rgba(229,55,43,0.35); box-shadow:0 8px 20px -12px rgba(20,18,26,0.2);
+}
+.reg-social-grid-card .ico{
+  width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+}
+.reg-social-grid-card .ico svg{ width:22px; height:22px; }
+.reg-social-grid-card .ico--ig{ background:linear-gradient(135deg, #F58529, #DD2A7B, #8134AF); color:#fff; }
+.reg-social-grid-card .ico--fb{ background:#1877F2; color:#fff; }
+.reg-social-grid-card .ico--yt{ background:#FF0000; color:#fff; }
+.reg-social-grid-card .name{ font-size:14px; font-weight:800; color:var(--ink); }
+.reg-social-grid-card .btn-follow{
+  margin-top:auto; width:100%; padding:10px 14px; border-radius:100px;
+  border:2px solid var(--ink); font-size:13px; font-weight:800; text-align:center;
+  transition:background .25s var(--ease), color .25s var(--ease), transform .2s var(--ease);
+}
+.reg-social-grid-card .btn-follow:hover{ background:var(--ink); color:var(--paper); transform:translateY(-1px); }
+.reg-social-foot{
+  padding:0 22px 20px; font-size:12.5px; color:var(--ink-soft); text-align:center; line-height:1.45;
+}
+@media (prefers-reduced-motion: reduce){
+  .reg-social-overlay.open .reg-social-grid-card{ animation:none; opacity:1; transform:none; }
+}
+
 .reg-duplicate{
   display:none; align-items:flex-start; gap:12px; background:var(--yellow-soft); border:2px solid var(--yellow);
   border-radius:0; padding:14px 16px; margin-top:14px; text-align:left;
@@ -7025,6 +7148,57 @@ footer{
 </div>
 
 <!-- ============================================================
+     POST-REGISTRATION SOCIAL FOLLOW MODAL
+     ============================================================ -->
+<div class="reg-social-overlay" id="regSocialOverlay" aria-hidden="true">
+  <div class="reg-social-card" role="dialog" aria-modal="true" aria-labelledby="regSocialTitle" aria-describedby="regSocialDesc">
+    <div class="reg-social-head">
+      <div class="reg-social-head-text">
+        <h3 id="regSocialTitle">You're in. Stay in the loop!</h3>
+        <p id="regSocialDesc">Your Career Uttsav pass is confirmed! Follow us for event updates, announcements, highlights and more.</p>
+      </div>
+      <button type="button" class="reg-close" id="regSocialClose" aria-label="Close social follow dialog">✕</button>
+    </div>
+    <div class="reg-social-body">
+      <div class="reg-social-wa">
+        <div class="reg-social-wa-label">Primary</div>
+        <h4>Join our WhatsApp Channel</h4>
+        <p>Get important Career Uttsav updates.</p>
+        <a class="btn-wa-channel allow-external" id="regSocialWaChannel" href="https://whatsapp.com/channel/0029Vb5JS7s7dmeWgCFiLe3m" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Join WhatsApp Channel
+        </a>
+      </div>
+      <p class="reg-social-section-title">Follow us on social media</p>
+      <div class="reg-social-grid">
+        <a class="reg-social-grid-card allow-external" href="https://www.instagram.com/careeruttsav/" target="_blank" rel="noopener noreferrer">
+          <span class="ico ico--ig" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </span>
+          <span class="name">Instagram</span>
+          <span class="btn-follow">Follow</span>
+        </a>
+        <a class="reg-social-grid-card allow-external" href="https://www.facebook.com/CareerUttsav/" target="_blank" rel="noopener noreferrer">
+          <span class="ico ico--fb" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </span>
+          <span class="name">Facebook</span>
+          <span class="btn-follow">Follow</span>
+        </a>
+        <a class="reg-social-grid-card allow-external" href="https://www.youtube.com/channel/UCgU4hSyfIP9xLnXe4TVoiRw" target="_blank" rel="noopener noreferrer">
+          <span class="ico ico--yt" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </span>
+          <span class="name">YouTube</span>
+          <span class="btn-follow">Subscribe</span>
+        </a>
+      </div>
+    </div>
+    <p class="reg-social-foot">Optional — your event pass is already confirmed.</p>
+  </div>
+</div>
+
+<!-- ============================================================
      PSYCHOMETRIC TEST INFO MODAL
      ============================================================ -->
 <div class="reg-overlay" id="psychoOverlay" aria-hidden="true">
@@ -7827,10 +8001,18 @@ var CU_ADMIN_API = (
   var regFoot = document.getElementById('regFoot');
   var regClose = document.getElementById('regClose');
   var regDone = document.getElementById('regDone');
+  var regSocialOverlay = document.getElementById('regSocialOverlay');
+  var regSocialClose = document.getElementById('regSocialClose');
+  var regSocialCard = regSocialOverlay ? regSocialOverlay.querySelector('.reg-social-card') : null;
+  var regSocialWaChannel = document.getElementById('regSocialWaChannel');
   var TOTAL_STEPS = 4;
   var currentStep = 1;
   var lastFocused = null;
   var regSubmitInFlight = false;
+  var regSocialFollowupPending = false;
+  var regSocialFollowupShown = false;
+  var regSocialOpenTimer = null;
+  var REG_SOCIAL_TRANSITION_MS = 320;
 
   var nextLabels = { 1:'Continue', 2:'Continue', 3:'Reserve My Seat →' };
   var regDuplicateBanner = document.getElementById('regDuplicateBanner');
@@ -7908,6 +8090,7 @@ var CU_ADMIN_API = (
 
   function openRegModal(fromEngage){
     lastFocused = document.activeElement;
+    regSocialFollowupPending = false;
     setRegChoiceCopy(!!fromEngage);
     regOverlay.classList.add('open');
     regOverlay.setAttribute('aria-hidden', 'false');
@@ -7922,10 +8105,75 @@ var CU_ADMIN_API = (
     var partnersBody = document.getElementById('regPartnersBody');
     if(partnersBody) partnersBody.scrollTop = 0;
   }
+  function getRegSocialFocusable(){
+    if(!regSocialCard) return [];
+    return Array.prototype.slice.call(
+      regSocialCard.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')
+    ).filter(function(el){ return el.offsetParent !== null || el === regSocialClose; });
+  }
+
+  function trapRegSocialFocus(e){
+    if(!regSocialOverlay || !regSocialOverlay.classList.contains('open') || e.key !== 'Tab') return;
+    var nodes = getRegSocialFocusable();
+    if(!nodes.length) return;
+    var first = nodes[0];
+    var last = nodes[nodes.length - 1];
+    if(e.shiftKey){
+      if(document.activeElement === first){ e.preventDefault(); last.focus(); }
+    } else if(document.activeElement === last){
+      e.preventDefault(); first.focus();
+    }
+  }
+
+  function openRegSocialModal(){
+    if(!regSocialOverlay) return;
+    regSocialOverlay.classList.remove('is-closing');
+    regSocialOverlay.classList.add('open');
+    regSocialOverlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    var focusTarget = regSocialWaChannel || regSocialClose;
+    window.setTimeout(function(){
+      if(focusTarget) focusTarget.focus();
+    }, 50);
+  }
+
+  function closeRegSocialModal(){
+    if(!regSocialOverlay || !regSocialOverlay.classList.contains('open')) return;
+    regSocialOverlay.classList.add('is-closing');
+    regSocialOverlay.classList.remove('open');
+    regSocialOverlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    window.setTimeout(function(){
+      if(regSocialOverlay) regSocialOverlay.classList.remove('is-closing');
+    }, REG_SOCIAL_TRANSITION_MS);
+    if(lastFocused && typeof lastFocused.focus === 'function'){
+      try{ lastFocused.focus(); }catch(err){}
+    }
+  }
+
+  function scheduleRegSocialModal(){
+    if(regSocialOpenTimer) window.clearTimeout(regSocialOpenTimer);
+    regSocialOpenTimer = window.setTimeout(function(){
+      regSocialOpenTimer = null;
+      openRegSocialModal();
+    }, REG_SOCIAL_TRANSITION_MS);
+  }
+
   function closeRegModal(){
+    if(!regOverlay.classList.contains('open')) return;
+    var offerSocial = regSocialFollowupPending && !regSocialFollowupShown && currentStep === TOTAL_STEPS;
+    if(offerSocial){
+      regSocialFollowupPending = false;
+      regSocialFollowupShown = true;
+    }
     regOverlay.classList.remove('open');
     regOverlay.setAttribute('aria-hidden', 'true');
+    if(offerSocial){
+      scheduleRegSocialModal();
+      return;
+    }
     document.body.style.overflow = '';
+    if(regSocialOverlay && regSocialOverlay.classList.contains('open')) return;
     if(lastFocused) lastFocused.focus();
   }
 
@@ -7938,8 +8186,18 @@ var CU_ADMIN_API = (
   regClose.addEventListener('click', closeRegModal);
   regDone.addEventListener('click', closeRegModal);
   regOverlay.addEventListener('click', function(e){ if(e.target === regOverlay) closeRegModal(); });
+  if(regSocialClose){
+    regSocialClose.addEventListener('click', closeRegSocialModal);
+  }
+  if(regSocialOverlay){
+    regSocialOverlay.addEventListener('click', function(e){
+      if(e.target === regSocialOverlay) closeRegSocialModal();
+    });
+    regSocialOverlay.addEventListener('keydown', trapRegSocialFocus);
+  }
   document.addEventListener('keydown', function(e){
     if(e.key !== 'Escape') return;
+    if(regSocialOverlay && regSocialOverlay.classList.contains('open')){ closeRegSocialModal(); return; }
     if(psychoOverlay && psychoOverlay.classList.contains('open')){ closePsychoModal(); return; }
     if(regOverlay.classList.contains('open')) closeRegModal();
   });
@@ -8547,6 +8805,8 @@ var CU_ADMIN_API = (
       }
       var passId = result.data && (result.data.registrationNumber || result.data.id);
       buildPass(passId);
+      regSocialFollowupPending = true;
+      regSocialFollowupShown = false;
       currentStep = 4;
       renderStep();
       regForm.closest('.reg-card').querySelector('.reg-body').scrollTop = 0;
