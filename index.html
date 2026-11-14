@@ -7939,6 +7939,79 @@ var CU_ADMIN_API = (
   )
 ).replace(/\/$/, '');
 
+  /* Lead attribution (session-scoped tracking code from ?ref=) */
+  var CU_ATTRIBUTION_STORAGE_KEY = 'cu_lead_attribution_tracking_code_v1';
+  var cuActiveTrackingCode = null;
+  var cuWhatsappPrefillUrl = null;
+
+  function storeTrackingCode(code){
+    cuActiveTrackingCode = code || null;
+    try {
+      if(code) sessionStorage.setItem(CU_ATTRIBUTION_STORAGE_KEY, code);
+      else sessionStorage.removeItem(CU_ATTRIBUTION_STORAGE_KEY);
+    } catch(e) {}
+  }
+
+  function readStoredTrackingCode(){
+    try { return sessionStorage.getItem(CU_ATTRIBUTION_STORAGE_KEY) || ''; } catch(e) { return ''; }
+  }
+
+  function clearAttributionAfterRegistration(){
+    storeTrackingCode(null);
+    cuWhatsappPrefillUrl = null;
+    applyWhatsAppRegistrationLinks();
+  }
+
+  function defaultWhatsAppHref(){
+    return 'https://api.whatsapp.com/send?phone=919035150139&text=' + encodeURIComponent('Hi! There ');
+  }
+
+  function applyWhatsAppRegistrationLinks(){
+    var url = cuWhatsappPrefillUrl || defaultWhatsAppHref();
+    var regChoice = document.getElementById('regChoiceWhatsApp');
+    if(regChoice) regChoice.href = url;
+    document.querySelectorAll('a[href*="api.whatsapp.com/send?phone=919035150139"]').forEach(function(a){
+      if(a.classList.contains('allow-external')) a.href = url;
+    });
+  }
+
+  function resolveLeadAttributionFromRef(ref){
+    if(!ref) return Promise.resolve(null);
+    return fetch(CU_ADMIN_API + '/api/public/lead-attribution?ref=' + encodeURIComponent(ref), {
+      headers: { 'x-cu-client': 'public' }
+    }).then(function(res){ return res.json(); }).then(function(data){
+      if(data && data.active && data.trackingCode){
+        storeTrackingCode(data.trackingCode);
+        cuWhatsappPrefillUrl = data.whatsappUrl || null;
+        applyWhatsAppRegistrationLinks();
+        return data.trackingCode;
+      }
+      return null;
+    }).catch(function(){ return null; });
+  }
+
+  (function initLeadAttribution(){
+    var params = new URLSearchParams(window.location.search);
+    var ref = params.get('ref');
+    if(ref){
+      void resolveLeadAttributionFromRef(ref);
+      return;
+    }
+    var stored = readStoredTrackingCode();
+    if(!stored) return;
+    cuActiveTrackingCode = stored;
+    void fetch(CU_ADMIN_API + '/api/public/lead-attribution?ref=' + encodeURIComponent(stored), {
+      headers: { 'x-cu-client': 'public' }
+    }).then(function(res){ return res.json(); }).then(function(data){
+      if(data && data.active){
+        cuWhatsappPrefillUrl = data.whatsappUrl || null;
+        applyWhatsAppRegistrationLinks();
+      } else {
+        storeTrackingCode(null);
+      }
+    }).catch(function(){});
+  })();
+
   function postRegistration(payload){
     return fetch(CU_ADMIN_API + '/api/registrations', {
       method: 'POST',
@@ -8430,7 +8503,8 @@ var CU_ADMIN_API = (
       phone: document.getElementById('regMobile').value.trim(),
       name: document.getElementById('regName').value.trim(),
       email: document.getElementById('regEmail').value.trim(),
-      phoneVerificationToken: phoneVerificationToken
+      phoneVerificationToken: phoneVerificationToken,
+      trackingCode: cuActiveTrackingCode || undefined
     }).then(function(result){
       if(!result.ok || !result.data || !result.data.attemptId){
         showFormApiError(regForm, (result.data && result.data.error) ? result.data.error : 'Could not save your registration progress. Please try again.');
@@ -8731,7 +8805,8 @@ var CU_ADMIN_API = (
       gender: getChip('gender'),
       city: getVal('regCity'),
       seminarInterests: seminars,
-      attemptId: registrationAttemptId || undefined
+      attemptId: registrationAttemptId || undefined,
+      trackingCode: cuActiveTrackingCode || undefined
     };
   }
 
@@ -8801,6 +8876,7 @@ var CU_ADMIN_API = (
       }
       var passId = result.data && (result.data.registrationNumber || result.data.id);
       buildPass(passId);
+      clearAttributionAfterRegistration();
       regSocialFollowupPending = true;
       regSocialFollowupShown = false;
       currentStep = 4;
