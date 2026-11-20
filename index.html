@@ -8877,6 +8877,7 @@ var CU_ADMIN_API = (
       var passId = result.data && (result.data.registrationNumber || result.data.id);
       buildPass(passId);
       clearAttributionAfterRegistration();
+      clearRegHubReturn();
       regSocialFollowupPending = true;
       regSocialFollowupShown = false;
       currentStep = 4;
@@ -9325,6 +9326,7 @@ var CU_ADMIN_API = (
         schoolFormEl.style.display = 'none';
         schoolFoot.style.display = 'none';
         schoolSuccessView.style.display = 'block';
+        clearRegHubReturn();
       })
       .catch(function(){
         schoolSubmit.classList.remove('loading');
@@ -9418,12 +9420,99 @@ var CU_ADMIN_API = (
         exhibitorFormEl.style.display = 'none';
         exhibitorFoot.style.display = 'none';
         exhibitorSuccessView.style.display = 'block';
+        clearRegHubReturn();
       })
       .catch(function(){
         exhibitorSubmit.classList.remove('loading');
         showFormApiError(exhibitorFormEl, 'Could not reach the registration server. Make sure the admin dashboard is running, then try again.');
       });
   });
+
+  var CU_REG_RETURN_KEY = 'cu_reg_hub_return_v1';
+
+  function readRegHubReturn(){
+    try { return sessionStorage.getItem(CU_REG_RETURN_KEY) || ''; } catch(e) { return ''; }
+  }
+  function clearRegHubReturn(){
+    try { sessionStorage.removeItem(CU_REG_RETURN_KEY); } catch(e) {}
+  }
+  function maybeReturnToRegHub(){
+    var path = readRegHubReturn();
+    if(!path) return false;
+    clearRegHubReturn();
+    window.location.href = path;
+    return true;
+  }
+
+  regClose.removeEventListener('click', closeRegModal);
+  regDone.removeEventListener('click', closeRegModal);
+  var _closeRegModalOrig = closeRegModal;
+  closeRegModal = function(){
+    _closeRegModalOrig();
+    if(currentStep >= TOTAL_STEPS) return;
+    if(readRegHubReturn() && !regOverlay.classList.contains('open')){
+      if(!regSocialOverlay || !regSocialOverlay.classList.contains('open')){
+        maybeReturnToRegHub();
+      }
+    }
+  };
+  regClose.addEventListener('click', closeRegModal);
+  regDone.addEventListener('click', closeRegModal);
+
+  var _closeSchoolModalOrig = closeSchoolModal;
+  closeSchoolModal = function(){
+    var wasSuccess = schoolSuccessView && schoolSuccessView.style.display === 'block';
+    _closeSchoolModalOrig();
+    if(wasSuccess) return;
+    if(readRegHubReturn() && !schoolOverlay.classList.contains('open')){
+      maybeReturnToRegHub();
+    }
+  };
+  schoolClose.removeEventListener('click', _closeSchoolModalOrig);
+  schoolDone.removeEventListener('click', _closeSchoolModalOrig);
+  schoolClose.addEventListener('click', closeSchoolModal);
+  schoolDone.addEventListener('click', closeSchoolModal);
+
+  var _closeExhibitorModalOrig = closeExhibitorModal;
+  closeExhibitorModal = function(){
+    var wasSuccess = exhibitorSuccessView && exhibitorSuccessView.style.display === 'block';
+    _closeExhibitorModalOrig();
+    if(wasSuccess) return;
+    if(readRegHubReturn() && !exhibitorOverlay.classList.contains('open')){
+      maybeReturnToRegHub();
+    }
+  };
+  exhibitorClose.removeEventListener('click', _closeExhibitorModalOrig);
+  exhibitorDone.removeEventListener('click', _closeExhibitorModalOrig);
+  exhibitorClose.addEventListener('click', closeExhibitorModal);
+  exhibitorDone.addEventListener('click', closeExhibitorModal);
+
+  (function handleCuOpenDeepLink(){
+    var params = new URLSearchParams(window.location.search);
+    var open = params.get('cu_open');
+    if(!open){
+      var path = window.location.pathname.replace(/\/$/, '');
+      if(path.endsWith('student-registration')) open = 'student';
+    }
+    if(!open) return;
+    var returnTo = params.get('return_to');
+    if(returnTo && returnTo.indexOf('/register') !== -1){
+      try { sessionStorage.setItem(CU_REG_RETURN_KEY, returnTo); } catch(e) {}
+    }
+    var handlers = {
+      student: function(){ openRegModal(false); },
+      school: function(){ openSchoolModal(); },
+      exhibitor: function(){ openExhibitorModal(); }
+    };
+    var run = handlers[open];
+    if(!run) return;
+    params.delete('cu_open');
+    params.delete('return_to');
+    var qs = params.toString();
+    var cleanUrl = window.location.pathname + (qs ? '?' + qs : '') + window.location.hash;
+    history.replaceState(null, '', cleanUrl);
+    window.setTimeout(run, 120);
+  })();
 
 })();
 </script>

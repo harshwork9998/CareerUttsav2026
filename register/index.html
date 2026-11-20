@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — Career Uttsav</title>
+<meta name="description" content="Register for Career Uttsav — students, schools, and exhibitors. Choose your path and get started in minutes.">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14121A;
+  --ink-soft:#3A3742;
+  --paper:#FBFAF3;
+  --cream:#FFF8E7;
+  --red:#E5372B;
+  --red-dark:#B82A20;
+  --blue:#1E3FE0;
+  --line:rgba(20,18,26,0.12);
+  --shadow-card:0 12px 30px -12px rgba(20,18,26,0.18);
+  --radius-lg:28px;
+  --radius-md:18px;
+  --font-display:'Bricolage Grotesque',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --ease:cubic-bezier(.16,.84,.44,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:var(--font-body);
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.5;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:4px;}
+
+.reg-hub{
+  max-width:1120px;
+  margin:0 auto;
+  padding:28px 20px 48px;
+}
+@media (min-width:768px){
+  .reg-hub{padding:40px 32px 64px;}
+}
+
+.reg-hub-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:32px;
+}
+.reg-hub-brand{
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:1.35rem;
+  letter-spacing:-0.02em;
+}
+.reg-hub-brand span{color:var(--red);}
+.reg-hub-home{
+  font-size:14px;
+  font-weight:600;
+  color:var(--ink-soft);
+  padding:10px 16px;
+  border-radius:100px;
+  border:1.5px solid var(--line);
+  background:#fff;
+}
+.reg-hub-home:hover{border-color:var(--ink);color:var(--ink);}
+
+.reg-hub-hero{text-align:center;margin-bottom:36px;}
+@media (min-width:768px){.reg-hub-hero{margin-bottom:48px;}}
+.reg-hub-hero h1{
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:clamp(2rem,6vw,2.75rem);
+  line-height:1.08;
+  letter-spacing:-0.02em;
+  margin-bottom:12px;
+}
+.reg-hub-hero p{
+  font-size:clamp(1.05rem,3.5vw,1.25rem);
+  color:var(--ink-soft);
+  max-width:520px;
+  margin:0 auto;
+}
+
+.reg-hub-grid{
+  display:grid;
+  gap:20px;
+}
+@media (min-width:900px){
+  .reg-hub-grid{
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+    align-items:stretch;
+  }
+}
+
+.reg-card{
+  display:flex;
+  flex-direction:column;
+  background:#fff;
+  border-radius:var(--radius-lg);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow-card);
+  overflow:hidden;
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease);
+}
+.reg-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 20px 48px -16px rgba(20,18,26,0.22);
+}
+
+.reg-card__media{
+  position:relative;
+  aspect-ratio:4/3;
+  background:var(--cream);
+  overflow:hidden;
+}
+.reg-card__media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.reg-card__media--error{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+  font-weight:600;
+  color:var(--ink-soft);
+  padding:16px;
+  text-align:center;
+}
+
+.reg-card__body{
+  padding:22px 22px 26px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  gap:12px;
+}
+.reg-card__body h2{
+  font-family:var(--font-display);
+  font-size:1.35rem;
+  font-weight:700;
+  letter-spacing:-0.01em;
+}
+.reg-card__body p{
+  font-size:15px;
+  color:var(--ink-soft);
+  line-height:1.55;
+  flex:1;
+}
+
+.reg-card__cta{
+  margin-top:8px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  padding:16px 22px;
+  border-radius:100px;
+  font-weight:700;
+  font-size:15px;
+  background:var(--red);
+  color:#fff;
+  box-shadow:0 10px 24px -8px rgba(229,55,43,0.5);
+  transition:transform .3s var(--ease),background .3s var(--ease);
+}
+.reg-card__cta:hover{
+  background:var(--red-dark);
+  transform:translateY(-2px);
+}
+.reg-card__cta:disabled{
+  opacity:.65;
+  cursor:wait;
+  transform:none;
+}
+
+.reg-hub-discover{
+  margin-top:36px;
+  padding:28px 24px;
+  border-radius:var(--radius-md);
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,#fff 0%,var(--cream) 100%);
+  text-align:center;
+  max-width:640px;
+  margin-left:auto;
+  margin-right:auto;
+}
+@media (min-width:768px){
+  .reg-hub-discover{margin-top:44px;padding:32px 36px;}
+}
+.reg-hub-discover h2{
+  font-family:var(--font-display);
+  font-size:clamp(1.25rem,4vw,1.5rem);
+  font-weight:700;
+  letter-spacing:-0.01em;
+  margin-bottom:10px;
+}
+.reg-hub-discover p{
+  font-size:15px;
+  color:var(--ink-soft);
+  line-height:1.55;
+  margin-bottom:18px;
+}
+.reg-hub-discover__btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px 28px;
+  border-radius:100px;
+  font-weight:700;
+  font-size:15px;
+  color:var(--ink);
+  background:#fff;
+  border:2px solid var(--ink);
+  transition:background .3s var(--ease),color .3s var(--ease),transform .3s var(--ease);
+}
+.reg-hub-discover__btn:hover{
+  background:var(--ink);
+  color:var(--paper);
+  transform:translateY(-2px);
+}
+
+.reg-hub-foot{
+  margin-top:40px;
+  padding-top:24px;
+  border-top:1px solid var(--line);
+  text-align:center;
+  font-size:13px;
+  color:var(--ink-soft);
+}
+.reg-hub-foot a{font-weight:600;color:var(--ink);}
+.reg-hub-foot a:hover{color:var(--red);}
+</style>
+</head>
+<body>
+<main class="reg-hub" id="top">
+  <header class="reg-hub-top">
+    <a href="https://careeruttsav.in/" class="reg-hub-brand">Career <span>Uttsav</span></a>
+    <a href="https://careeruttsav.in/" class="reg-hub-home">Main site</a>
+  </header>
+
+  <div class="reg-hub-hero">
+    <h1>Welcome to Career Uttsav</h1>
+    <p>How would you like to register?</p>
+  </div>
+
+  <div class="reg-hub-grid" id="regHubGrid">
+    <article class="reg-card">
+      <div class="reg-card__media" data-img-wrap>
+        <img src="../img/eventstudent.jpg" alt="Students attending a Career Uttsav seminar and exploring careers" width="640" height="480" loading="eager" decoding="async">
+      </div>
+      <div class="reg-card__body">
+        <h2>Students &amp; Parents</h2>
+        <p>Explore career opportunities, meet leading universities and attend expert sessions. Register now to get your free event pass.</p>
+        <button type="button" class="reg-card__cta" data-flow="student">Register as Student</button>
+      </div>
+    </article>
+
+    <article class="reg-card">
+      <div class="reg-card__media" data-img-wrap>
+        <img src="../engage-event-shot.png" alt="School groups and students at a Career Uttsav educational event" width="800" height="600" loading="lazy" decoding="async">
+      </div>
+      <div class="reg-card__body">
+        <h2>Schools</h2>
+        <p>Give your students an opportunity to explore careers, interact with universities and gain valuable guidance for their future.</p>
+        <button type="button" class="reg-card__cta" data-flow="school">Register Your School</button>
+      </div>
+    </article>
+
+    <article class="reg-card">
+      <div class="reg-card__media" data-img-wrap>
+        <img src="../img/stallstudent.jpg" alt="Students exploring university booths and exhibition stalls at Career Uttsav" width="640" height="480" loading="lazy" decoding="async">
+      </div>
+      <div class="reg-card__body">
+        <h2>Exhibitors &amp; Universities</h2>
+        <p>Showcase your institution, connect with students and parents, and explore opportunities to participate in Career Uttsav.</p>
+        <button type="button" class="reg-card__cta" data-flow="exhibitor">Register as Exhibitor</button>
+      </div>
+    </article>
+  </div>
+
+  <section class="reg-hub-discover" aria-labelledby="regHubDiscoverTitle">
+    <h2 id="regHubDiscoverTitle">Curious About Career Uttsav?</h2>
+    <p>Discover what Career Uttsav is all about, explore the opportunities awaiting you, and see how we&rsquo;re helping students shape their future.</p>
+    <a href="https://careeruttsav.in/" class="reg-hub-discover__btn">Explore Career Uttsav</a>
+  </section>
+
+  <footer class="reg-hub-foot">
+    <p>19–20 Dec &rsquo;26 &middot; Bengaluru &middot; <a href="tel:+919900795000">+91 99007 95000</a> &middot; <a href="mailto:info@careeruttsav.in">info@careeruttsav.in</a></p>
+    <p style="margin-top:8px;"><a href="https://careeruttsav.in/">careeruttsav.in</a></p>
+  </footer>
+</main>
+
+<script>
+(function(){
+  var CU_IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  var CU_ADMIN_API = (
+    window.CU_ADMIN_API ||
+    (CU_IS_LOCAL ? 'http://localhost:3002' : 'https://admin.careeruttsav.in')
+  ).replace(/\/$/, '');
+  var CU_ATTRIBUTION_STORAGE_KEY = 'cu_lead_attribution_tracking_code_v1';
+
+  function storeTrackingCode(code){
+    try {
+      if(code) sessionStorage.setItem(CU_ATTRIBUTION_STORAGE_KEY, code);
+      else sessionStorage.removeItem(CU_ATTRIBUTION_STORAGE_KEY);
+    } catch(e) {}
+  }
+
+  function resolveLeadAttributionFromRef(ref){
+    if(!ref) return Promise.resolve(null);
+    return fetch(CU_ADMIN_API + '/api/public/lead-attribution?ref=' + encodeURIComponent(ref), {
+      headers: { 'x-cu-client': 'public' }
+    }).then(function(res){ return res.json(); }).then(function(data){
+      if(data && data.active && data.trackingCode){
+        storeTrackingCode(data.trackingCode);
+        return data.trackingCode;
+      }
+      return null;
+    }).catch(function(){ return null; });
+  }
+
+  (function initLeadAttribution(){
+    var params = new URLSearchParams(window.location.search);
+    var ref = params.get('ref');
+    if(ref){
+      void resolveLeadAttributionFromRef(ref);
+      return;
+    }
+    /* General hub URL has no ref — do not reuse a prior session campaign code (e.g. AUTO-IN26). */
+    storeTrackingCode(null);
+  })();
+
+  function mainSiteBase(){
+    if(CU_IS_LOCAL) return new URL('../index.html', window.location.href).href.split('?')[0];
+    return 'https://careeruttsav.in/';
+  }
+
+  function registerHubReturnPath(){
+    var p = window.location.pathname;
+    if(!p.endsWith('/')) p += '/';
+    return p;
+  }
+
+  function buildFlowUrl(flow){
+    var params = new URLSearchParams();
+    params.set('cu_open', flow);
+    params.set('return_to', registerHubReturnPath());
+    var ref = new URLSearchParams(window.location.search).get('ref');
+    if(ref) params.set('ref', ref);
+    return mainSiteBase() + '?' + params.toString();
+  }
+
+  document.querySelectorAll('[data-flow]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var flow = btn.getAttribute('data-flow');
+      btn.disabled = true;
+      window.location.href = buildFlowUrl(flow);
+    });
+  });
+
+  document.querySelectorAll('[data-img-wrap] img').forEach(function(img){
+    img.addEventListener('error', function(){
+      var wrap = img.closest('[data-img-wrap]');
+      if(!wrap) return;
+      wrap.classList.add('reg-card__media--error');
+      wrap.innerHTML = 'Image could not be loaded.';
+    });
+  });
+})();
+</script>
+</body>
+</html>
