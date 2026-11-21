@@ -189,6 +189,10 @@ details.cu-card.cu-acc--closing > .cu-acc__body{
   grid-template-rows:0fr;border-top-color:transparent;
 }
 details.cu-card[open].cu-acc--closing .cu-acc__chev{transform:rotate(0deg);}
+details.cu-card[open].cu-acc--opening > .cu-acc__body{
+  grid-template-rows:0fr!important;border-top-color:transparent!important;
+}
+details.cu-card[open].cu-acc--opening .cu-acc__chev{transform:rotate(0deg);}
 .cu-acc__inner{overflow:hidden;min-height:0;display:flex;flex-direction:column;}
 .cu-card__img{aspect-ratio:16/10;}
 .cu-card__body{display:flex;flex-direction:column;align-items:center;gap:12px;padding:24px 24px 26px;flex:1;text-align:center;}
@@ -539,7 +543,7 @@ html.cu-page-exit::before{
       <p class="u-mob-only">Pick your path — we&rsquo;ll open the right form.</p>
     </div>
     <div class="cu-cards" id="regHubGrid">
-      <details class="cu-card cu-acc" data-reg-acc open>
+      <details class="cu-card cu-acc" data-reg-acc>
         <summary class="cu-acc__summary">
           <span class="cu-acc__titles">
             <span class="cu-acc__title">Universities and partners</span>
@@ -760,7 +764,7 @@ html.cu-page-exit::before{
     document.querySelectorAll('[data-reg-acc]').forEach(function(d, i){
       d.classList.remove('cu-acc--closing');
       if(desk) d.open = true;
-      else d.open = (i === 0);
+      else d.open = false;
     });
   }
   syncRegAccordion();
@@ -780,6 +784,12 @@ html.cu-page-exit::before{
   function openAcc(el){
     el.classList.remove('cu-acc--closing');
     el.open = true;
+    el.classList.add('cu-acc--opening');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        el.classList.remove('cu-acc--opening');
+      });
+    });
   }
 
   document.querySelectorAll('[data-reg-acc]').forEach(function(d){
