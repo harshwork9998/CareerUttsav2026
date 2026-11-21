@@ -1,0 +1,31 @@
+---
+description: Mobile layout frozen; new UI/CSS changes are desktop-only unless user asks for mobile
+globs: register/**,index.html
+alwaysApply: false
+---
+
+# Mobile frozen — desktop-only by default
+
+## Policy
+
+Mobile layouts for the registration hub and main site are **frozen**. Treat current mobile behavior and styles as locked.
+
+Unless the user **explicitly** asks for mobile (or “all breakpoints”), do **not** change:
+
+- Rules inside `@media (max-width: 767px)`
+- Mobile-only markup, classes (e.g. `u-mob-only`), or JS branches keyed to `max-width: 767px` / `matchMedia('(min-width:768px)')` when the change affects mobile UX
+
+## Default for new requests
+
+Put layout, typography, hero, accordion, header/footer, and visual tweaks in **`@media (min-width: 768px)`** (or new desktop-only blocks). Prefer overriding inside the existing desktop block (~line 227 in `register/index.html`) instead of editing shared base rules that would shift mobile.
+
+## When editing shared (unscoped) CSS
+
+If a change must touch global selectors, duplicate or scope so **computed styles at ≤767px stay identical** to the frozen state. Verify mentally or in devtools that mobile is unchanged.
+
+## Exceptions
+
+- Bug fixes that break mobile functionally (forms, links, OTP, API)
+- User says “mobile”, “phone”, “all screens”, or “responsive”
+
+Breakpoint: **768px** (`767` max / `768` min), matching existing `register/index.html`.

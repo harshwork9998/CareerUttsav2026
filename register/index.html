@@ -2,313 +2,680 @@
 <html lang="en-GB">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register — Career Uttsav</title>
-<meta name="description" content="Register for Career Uttsav — students, schools, and exhibitors. Choose your path and get started in minutes.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Career Uttsav 2026 — Register</title>
+<meta name="description" content="Register for Career Uttsav Bengaluru 2026. Students, schools, and exhibitors.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#DB371C">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#14121A;
-  --ink-soft:#3A3742;
-  --paper:#FBFAF3;
-  --cream:#FFF8E7;
-  --red:#E5372B;
-  --red-dark:#B82A20;
-  --blue:#1E3FE0;
-  --line:rgba(20,18,26,0.12);
-  --shadow-card:0 12px 30px -12px rgba(20,18,26,0.18);
-  --radius-lg:28px;
-  --radius-md:18px;
+  --cu-red:#DB371C;
+  --cu-red-dark:#B52C15;
+  --cu-ink:#2B2829;
+  --cu-body:#3A3637;
+  --cu-muted:#5A5556;
+  --cu-gray:#4F4B4C;
+  --cu-cream:#FFFEF0;
+  --cu-line:#EFE9CF;
+  --cu-border:#EEEAE0;
+  --cu-ph-bg:#E6E3DA;
+  --cu-gold:#E8A810;
+  --cu-accent:#F2B32C;
+  --max:1280px;
   --font-display:'Bricolage Grotesque',sans-serif;
-  --font-body:'Inter',sans-serif;
-  --ease:cubic-bezier(.16,.84,.44,1);
+  --font-body:'Inter',system-ui,sans-serif;
+  --section-y:clamp(48px,6vw,82px);
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
 body{
-  font-family:var(--font-body);
-  background:var(--paper);
-  color:var(--ink);
-  line-height:1.5;
-  min-height:100vh;
-  -webkit-font-smoothing:antialiased;
+  font-family:var(--font-body);color:var(--cu-body);background:#FFF;
+  line-height:1.5;-webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+  padding-bottom:var(--safe-bottom);
 }
-a{color:inherit;text-decoration:none;}
-button{font-family:inherit;cursor:pointer;border:none;background:none;}
-:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:4px;}
+h1,h2,h3,h4{
+  font-family:var(--font-display);font-weight:700;letter-spacing:-0.01em;line-height:1.02;
+}
+a{color:var(--cu-red);text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;touch-action:manipulation;}
+:focus-visible{outline:3px solid var(--cu-red);outline-offset:2px;}
+#register{scroll-margin-top:calc(72px + var(--safe-top));}
 
-.reg-hub{
-  max-width:1120px;
-  margin:0 auto;
-  padding:28px 20px 48px;
-}
-@media (min-width:768px){
-  .reg-hub{padding:40px 32px 64px;}
-}
+.u-mob-only{display:none;}
+.u-desk-only{}
 
-.reg-hub-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  margin-bottom:32px;
+.cu-wrap{max-width:var(--max);margin:0 auto;padding:0 24px;}
+.cu-panel{
+  background:var(--cu-cream) url(./assets/2c274bea40cf2a7c3b665760371952c1.jpg) no-repeat right -160px bottom -200px/620px auto;
 }
-.reg-hub-brand{
-  font-family:var(--font-display);
-  font-weight:800;
-  font-size:1.35rem;
-  letter-spacing:-0.02em;
+.cu-ph{overflow:hidden;border-radius:18px;background:var(--cu-ph-bg);}
+.cu-ph img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .7s ease,filter .5s ease;}
+@media (hover:hover){
+  .cu-ph img{filter:grayscale(1) contrast(1.05);}
+  .cu-ph:hover img,.cu-card:hover .cu-ph img{transform:scale(1.04);filter:grayscale(0);}
+  .cu-card:hover{transform:translateY(-4px);box-shadow:0 28px 50px -28px rgba(79,75,76,.4);}
 }
-.reg-hub-brand span{color:var(--red);}
-.reg-hub-home{
-  font-size:14px;
-  font-weight:600;
-  color:var(--ink-soft);
-  padding:10px 16px;
-  border-radius:100px;
-  border:1.5px solid var(--line);
-  background:#fff;
-}
-.reg-hub-home:hover{border-color:var(--ink);color:var(--ink);}
+.cu-btn{transition:background .2s,color .2s,transform .15s;}
+.cu-tel{font-weight:600;}
+.cu-tel:hover{text-decoration:underline;}
 
-.reg-hub-hero{text-align:center;margin-bottom:36px;}
-@media (min-width:768px){.reg-hub-hero{margin-bottom:48px;}}
-.reg-hub-hero h1{
-  font-family:var(--font-display);
-  font-weight:800;
-  font-size:clamp(2rem,6vw,2.75rem);
-  line-height:1.08;
-  letter-spacing:-0.02em;
-  margin-bottom:12px;
+.cu-header{padding:18px 0;}
+.cu-header__bar{
+  display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;gap:16px;width:100%;
 }
-.reg-hub-hero p{
-  font-size:clamp(1.05rem,3.5vw,1.25rem);
-  color:var(--ink-soft);
-  max-width:520px;
-  margin:0 auto;
+.cu-header__logo{justify-self:start;}
+.cu-header__logo img{height:72px;width:auto;display:block;}
+.cu-header__event{
+  justify-self:center;text-align:center;margin:0;max-width:min(420px,42vw);
+  font-size:clamp(13px,1.6vw,16px);font-weight:700;line-height:1.35;color:var(--cu-ink);
 }
+.cu-header__site{justify-self:end;}
+.cu-ghost{
+  display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 20px;
+  border-radius:999px;border:1.5px solid var(--cu-gray);font-weight:600;font-size:15px;color:var(--cu-ink);
+}
+.cu-ghost:hover{background:var(--cu-gray);color:#FFF;}
 
-.reg-hub-grid{
-  display:grid;
-  gap:20px;
+.cu-hero{padding:8px 0 var(--section-y);}
+.cu-hero__row{display:flex;flex-wrap:wrap;gap:14px;}
+.cu-hero__mosaic{
+  flex:1 1 340px;min-width:0;display:grid;grid-template-columns:repeat(2,1fr);
+  grid-auto-rows:minmax(120px,170px);gap:14px;
 }
-@media (min-width:900px){
-  .reg-hub-grid{
-    grid-template-columns:repeat(3,1fr);
-    gap:24px;
-    align-items:stretch;
+.cu-hero__mosaic .span-2{
+  grid-column:span 2;
+  aspect-ratio:16/9;
+  width:100%;
+  min-height:0;
+}
+.cu-hero__mosaic .span-2 img{
+  object-fit:cover;
+  object-position:center 58%;
+  transform:scale(1.16);
+  transform-origin:center 52%;
+}
+@media (hover:hover){
+  .cu-hero__mosaic .span-2:hover img{
+    transform:scale(1.16);
   }
 }
-
-.reg-card{
-  display:flex;
-  flex-direction:column;
-  background:#fff;
-  border-radius:var(--radius-lg);
-  border:1px solid var(--line);
-  box-shadow:var(--shadow-card);
-  overflow:hidden;
-  transition:transform .35s var(--ease),box-shadow .35s var(--ease);
+.cu-hero__panel{
+  flex:1.4 1 480px;min-width:0;position:relative;overflow:hidden;border-radius:28px;
+  padding:clamp(28px,4vw,56px);display:flex;flex-direction:column;gap:18px;
 }
-.reg-card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 20px 48px -16px rgba(20,18,26,0.22);
+.cu-badge{
+  align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:8px 14px;
+  border-radius:999px;background:#FFF;border:1px solid var(--cu-line);font-size:13px;font-weight:600;color:var(--cu-ink);
 }
-
-.reg-card__media{
-  position:relative;
-  aspect-ratio:4/3;
-  background:var(--cream);
-  overflow:hidden;
+.cu-badge__dot{width:8px;height:8px;border-radius:50%;background:#2E9E55;}
+.cu-hero__title{
+  font-size:clamp(28px,4.2vw,52px);line-height:1.08;letter-spacing:-0.02em;color:var(--cu-red);
 }
-.reg-card__media img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
+.cu-hero__panel p{font-size:16px;line-height:1.65;}
+.cu-hero__panel strong{color:var(--cu-ink);font-weight:700;}
+.cu-hero__actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px;}
+.cu-btn-red{
+  display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 24px;
+  border-radius:999px;background:var(--cu-red);color:#FFF;font-weight:700;font-size:16px;
 }
-.reg-card__media--error{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:13px;
-  font-weight:600;
-  color:var(--ink-soft);
-  padding:16px;
-  text-align:center;
+.cu-btn-red:hover{background:var(--cu-red-dark);}
+.cu-hero__loc{
+  display:inline-flex;align-items:center;gap:8px;min-height:52px;padding:0 18px;
+  border-radius:999px;background:#FFF;border:1px solid var(--cu-line);font-weight:600;font-size:15px;color:var(--cu-ink);
 }
 
-.reg-card__body{
-  padding:22px 22px 26px;
-  display:flex;
-  flex-direction:column;
-  flex:1;
-  gap:12px;
+.cu-stats{padding-bottom:var(--section-y);}
+.cu-stats__grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;
 }
-.reg-card__body h2{
-  font-family:var(--font-display);
-  font-size:1.35rem;
-  font-weight:700;
-  letter-spacing:-0.01em;
+.cu-stat{
+  display:flex;flex-direction:column;align-items:center;gap:6px;padding:22px 12px;text-align:center;
+  border-radius:18px;background:#FFF;border:1px solid var(--cu-border);
+  box-shadow:0 14px 30px -22px rgba(79,75,76,.45);
 }
-.reg-card__body p{
-  font-size:15px;
-  color:var(--ink-soft);
-  line-height:1.55;
-  flex:1;
+.cu-stat__n{font-family:var(--font-display);font-weight:700;font-size:clamp(26px,4vw,34px);color:var(--cu-red);letter-spacing:-0.02em;}
+.cu-stat__l{font-size:13px;font-weight:500;color:var(--cu-gray);line-height:1.35;white-space:pre-line;}
+
+.cu-register-sec{padding-bottom:var(--section-y);}
+.cu-sec-head{text-align:center;max-width:560px;margin:0 auto 36px;display:flex;flex-direction:column;gap:10px;align-items:center;}
+.cu-sec-head--left{align-items:flex-start;text-align:left;margin-left:0;margin-right:0;max-width:none;}
+.cu-pill{
+  display:inline-block;padding:6px 14px;border-radius:6px;background:var(--cu-red);
+  color:#FFF;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+}
+.cu-sec-head h2{font-size:clamp(26px,3vw,40px);color:var(--cu-ink);letter-spacing:-0.02em;line-height:1.15;}
+.cu-sec-head p{font-size:16px;color:var(--cu-muted);line-height:1.55;}
+
+.cu-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;}
+.cu-card{
+  border-radius:26px;background:var(--cu-cream);
+  border:1px solid var(--cu-line);overflow:hidden;transition:box-shadow .35s ease;
+}
+details.cu-card{display:block;}
+.cu-acc__summary{
+  list-style:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:18px 20px;min-height:56px;
+  -webkit-tap-highlight-color:transparent;
+}
+.cu-acc__summary::-webkit-details-marker{display:none;}
+.cu-acc__titles{display:flex;flex-direction:column;gap:4px;min-width:0;text-align:left;}
+.cu-acc__title{font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--cu-ink);line-height:1.25;letter-spacing:-0.01em;}
+.cu-acc__sub{font-size:13px;font-style:italic;font-weight:600;color:var(--cu-muted);line-height:1.35;}
+.cu-acc__chev{
+  flex-shrink:0;width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:#FFF;border:1px solid var(--cu-line);color:var(--cu-gray);
+  transition:transform .4s cubic-bezier(.22,.61,.36,1),background .25s ease;
+}
+details.cu-card[open] .cu-acc__chev{transform:rotate(180deg);background:var(--cu-cream);}
+details.cu-card[open]{box-shadow:0 12px 32px -18px rgba(43,40,41,.22);}
+.cu-acc__body{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .42s cubic-bezier(.22,.61,.36,1),border-color .3s ease;
+  border-top:1px solid transparent;
+}
+details.cu-card[open]:not(.cu-acc--closing) > .cu-acc__body{
+  grid-template-rows:1fr;border-top-color:var(--cu-line);
+}
+details.cu-card.cu-acc--closing > .cu-acc__body{
+  grid-template-rows:0fr;border-top-color:transparent;
+}
+details.cu-card[open].cu-acc--closing .cu-acc__chev{transform:rotate(0deg);}
+.cu-acc__inner{overflow:hidden;min-height:0;display:flex;flex-direction:column;}
+.cu-card__img{aspect-ratio:16/10;}
+.cu-card__body{display:flex;flex-direction:column;align-items:center;gap:12px;padding:24px 24px 26px;flex:1;text-align:center;}
+.cu-card__label{align-self:flex-start;padding:6px 12px;border-radius:6px;background:var(--cu-red);color:#FFF;font-size:15px;font-weight:700;}
+.cu-card__tag{font-size:15px;font-style:italic;font-weight:600;color:var(--cu-gray);}
+.cu-card__text{font-size:15px;line-height:1.65;}
+.cu-card__lead{font-size:15px;line-height:1.65;flex:1;}
+.cu-card__lead strong{color:var(--cu-red);}
+.cu-card__contacts{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;padding:12px 0 2px;border-top:1px dashed #E3DCBC;
+  font-size:13px;color:var(--cu-gray);font-weight:500;width:100%;
+}
+.cu-card__cta{
+  display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
+  min-height:52px;padding:0 22px;border-radius:14px;background:var(--cu-red);color:#FFF;font-weight:700;font-size:15px;
+  transition:transform .28s cubic-bezier(.22,.61,.36,1),background .2s ease,box-shadow .28s ease,opacity .28s ease;
+  box-shadow:0 10px 28px -16px rgba(219,55,28,.55);
+}
+.cu-card__cta:hover{background:var(--cu-red-dark);box-shadow:0 14px 32px -14px rgba(219,55,28,.65);}
+.cu-card__cta:active:not(:disabled){transform:scale(.985);}
+.cu-card__cta.is-navigating{
+  transform:scale(.97);opacity:.88;box-shadow:0 4px 16px -8px rgba(219,55,28,.45);
+}
+.cu-card__cta:disabled{opacity:.7;cursor:wait;}
+html.cu-page-exit body{
+  opacity:0;transform:translateY(-6px);
+  transition:opacity .42s ease,transform .42s cubic-bezier(.22,.61,.36,1);
+}
+html.cu-page-exit::before{
+  content:'';position:fixed;inset:0;z-index:9998;background:#FFF;
+  opacity:0;pointer-events:none;transition:opacity .38s ease;
+  animation:cuPageVeil .42s ease forwards;
+}
+@keyframes cuPageVeil{to{opacity:.92;}}
+@media (prefers-reduced-motion:reduce){
+  .cu-card__cta{transition:background .2s ease,opacity .2s ease;box-shadow:none;}
+  html.cu-page-exit body{transform:none;transition:opacity .15s ease;}
+  html.cu-page-exit::before{animation:none;opacity:.95;}
 }
 
-.reg-card__cta{
-  margin-top:8px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  padding:16px 22px;
-  border-radius:100px;
-  font-weight:700;
-  font-size:15px;
-  background:var(--red);
-  color:#fff;
-  box-shadow:0 10px 24px -8px rgba(229,55,43,0.5);
-  transition:transform .3s var(--ease),background .3s var(--ease);
+.cu-band{padding:0 24px var(--section-y);}
+.cu-band__inner{
+  max-width:var(--max);margin:0 auto;position:relative;overflow:hidden;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px;
+  padding:clamp(32px,5vw,56px);border-radius:28px;background:var(--cu-ink);color:#FFF;
 }
-.reg-card__cta:hover{
-  background:var(--red-dark);
-  transform:translateY(-2px);
+.cu-band h2{font-size:clamp(22px,3vw,38px);line-height:1.15;letter-spacing:-0.02em;max-width:640px;}
+.cu-band p{margin-top:12px;font-size:16px;line-height:1.6;color:#D8D4D5;}
+.cu-band .team{color:var(--cu-accent);font-weight:700;}
+.cu-band__actions{display:flex;flex-direction:column;gap:12px;}
+.cu-btn-line{
+  display:inline-flex;align-items:center;justify-content:space-between;gap:10px;min-height:50px;
+  padding:0 22px;border-radius:999px;border:1.5px solid #FFF;color:#FFF;font-weight:600;font-size:15px;
 }
-.reg-card__cta:disabled{
-  opacity:.65;
-  cursor:wait;
-  transform:none;
-}
+.cu-btn-line:hover{background:#FFF;color:var(--cu-ink);}
 
-.reg-hub-discover{
-  margin-top:36px;
-  padding:28px 24px;
-  border-radius:var(--radius-md);
-  border:1px solid var(--line);
-  background:linear-gradient(180deg,#fff 0%,var(--cream) 100%);
-  text-align:center;
-  max-width:640px;
-  margin-left:auto;
-  margin-right:auto;
-}
 @media (min-width:768px){
-  .reg-hub-discover{margin-top:44px;padding:32px 36px;}
+  .cu-header__event-date{color:var(--cu-ink);}
+  .cu-header__event-venue{color:var(--cu-red);}
+
+  .cu-hero__row{
+    display:grid;grid-template-columns:minmax(0,46%) minmax(0,1fr);
+    grid-template-areas:"upper upper" "thumbs thumbs";
+    column-gap:clamp(16px,2vw,22px);row-gap:clamp(22px,3vw,34px);align-items:stretch;
+  }
+  .cu-hero__upper{
+    grid-area:upper;display:flex;align-items:stretch;gap:clamp(16px,2vw,22px);min-width:0;
+  }
+  .cu-hero__aside{flex:1 1 0;min-width:min(100%,360px);min-height:0;}
+  .cu-hero__panel{
+    width:100%;
+    padding:clamp(22px,2.6vw,36px) clamp(24px,3.2vw,44px);
+    gap:clamp(11px,1.4vw,15px);
+    background-position:right -120px bottom -140px;
+    background-size:480px auto;
+  }
+  .cu-hero__title{font-size:clamp(26px,3.5vw,46px);}
+  .cu-hero__panel p{font-size:clamp(14px,1.05vw,16px);line-height:1.58;}
+  .cu-hero__actions{margin-top:2px;flex-shrink:0;}
+  .cu-hero__thumbs{
+    grid-area:thumbs;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;width:100%;min-width:0;
+  }
+  .cu-hero__thumbs .cu-ph{
+    aspect-ratio:16/10;min-height:0;border-radius:16px;
+  }
+  .cu-hero__thumbs .cu-ph img{
+    object-fit:cover;width:100%;height:100%;transform:none;
+  }
+  .cu-hero__thumbs .cu-ph--1 img{object-position:62% 40%;}
+  .cu-hero__thumbs .cu-ph--2 img{object-position:48% 36%;}
+  .cu-hero__thumbs .cu-ph--3 img{object-position:68% 14%;}
+  .cu-hero__thumbs .cu-ph--4 img{object-position:center 42%;}
+  .cu-hero__mosaic{
+    flex:0 0 46%;max-width:540px;width:100%;min-height:0;min-width:0;
+    display:flex;flex-direction:column;
+  }
+  .cu-hero__mosaic .span-2{
+    flex:1 1 auto;height:100%;min-height:0;width:100%;border-radius:20px;
+    aspect-ratio:auto;grid-column:auto;
+  }
+
+  .cu-acc__title{
+    font-size:clamp(18px,1.55vw,22px);font-weight:800;letter-spacing:-0.015em;
+    color:var(--cu-red);text-align:center;width:100%;text-wrap:balance;
+  }
+  .cu-acc__summary{
+    pointer-events:none;cursor:default;width:100%;
+    display:flex;align-items:center;justify-content:center;
+    min-height:clamp(76px,7.5vw,92px);
+    padding:clamp(16px,2vw,22px) clamp(18px,2.4vw,26px);
+  }
+  .cu-acc__summary .cu-acc__titles{
+    padding:0;width:100%;text-align:center;
+    align-items:center;justify-content:center;
+  }
+  .cu-acc__chev,.cu-acc__sub{display:none;}
+  .cu-acc__body{
+    flex:1 1 0%;display:flex!important;flex-direction:column;min-height:0;
+    grid-template-rows:unset!important;border-top:none!important;
+  }
+  #regHubGrid{grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;}
+  #regHubGrid>.cu-acc{min-height:100%;height:100%;}
+  details.cu-card.cu-acc{
+    display:grid!important;grid-template-rows:auto minmax(0,1fr);
+    height:100%;min-height:0;align-content:stretch;
+  }
+  .cu-acc__body{grid-row:2;min-height:0;height:100%;}
+  .cu-acc__inner{flex:1 1 auto;min-height:0;height:100%;display:flex!important;flex-direction:column;}
+  .cu-card__img{flex:0 0 auto;}
+  .cu-card__body{flex:1 1 auto;min-height:0;height:auto;width:100%;}
+  .cu-card__lead{flex:0 0 auto;}
+  .cu-card__foot{width:100%;margin-top:auto;display:flex;flex-direction:column;gap:12px;flex-shrink:0;}
+  .cu-card__cta{flex-shrink:0;margin-top:0;width:100%;}
+  .cu-card__contacts{flex-shrink:0;}
+  .cu-card__contacts--pad{visibility:hidden;border-top-color:transparent!important;pointer-events:none;user-select:none;}
+
+  .cu-band__actions{align-items:stretch;min-width:min(100%,320px);}
+  .cu-band__actions .cu-btn-red,
+  .cu-band__actions .cu-btn-line{
+    width:100%;min-height:52px;padding:0 24px;font-size:16px;font-weight:700;
+    justify-content:center;text-align:center;box-sizing:border-box;
+  }
+
+  details.cu-card[open]{box-shadow:none;}
 }
-.reg-hub-discover h2{
-  font-family:var(--font-display);
-  font-size:clamp(1.25rem,4vw,1.5rem);
-  font-weight:700;
-  letter-spacing:-0.01em;
-  margin-bottom:10px;
-}
-.reg-hub-discover p{
-  font-size:15px;
-  color:var(--ink-soft);
-  line-height:1.55;
-  margin-bottom:18px;
-}
-.reg-hub-discover__btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:14px 28px;
-  border-radius:100px;
-  font-weight:700;
-  font-size:15px;
-  color:var(--ink);
-  background:#fff;
-  border:2px solid var(--ink);
-  transition:background .3s var(--ease),color .3s var(--ease),transform .3s var(--ease);
-}
-.reg-hub-discover__btn:hover{
-  background:var(--ink);
-  color:var(--paper);
-  transform:translateY(-2px);
+@media (hover:hover){
+  .cu-card:hover{transform:translateY(-4px);box-shadow:0 28px 50px -28px rgba(79,75,76,.4);}
 }
 
-.reg-hub-foot{
-  margin-top:40px;
-  padding-top:24px;
-  border-top:1px solid var(--line);
-  text-align:center;
-  font-size:13px;
-  color:var(--ink-soft);
+.cu-strip{padding-bottom:var(--section-y);}
+.cu-strip__grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));grid-auto-rows:minmax(120px,150px);gap:14px;
 }
-.reg-hub-foot a{font-weight:600;color:var(--ink);}
-.reg-hub-foot a:hover{color:var(--red);}
+
+.cu-footer{background:var(--cu-cream);border-top:1px solid var(--cu-line);}
+.cu-footer__inner{
+  max-width:var(--max);margin:0 auto;padding:36px 24px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:20px;text-align:center;
+}
+.cu-footer__k2{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.cu-footer__k2 span{font-size:13px;font-weight:600;color:var(--cu-muted);}
+.cu-footer__k2 img{height:44px;width:auto;display:block;}
+.cu-footer__info{width:100%;}
+.cu-footer__links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;font-size:14px;}
+
+.cu-ph--error{display:flex;align-items:center;justify-content:center;padding:16px;font-size:12px;color:var(--cu-muted);}
+
+/* —— Mobile (FROZEN — change only if user explicitly asks for mobile) —— */
+@media (max-width:767px){
+  body{padding-bottom:calc(12px + var(--safe-bottom));}
+  #register{scroll-margin-top:calc(52px + var(--safe-top));}
+  .cu-wrap,.cu-band{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));}
+  :root{--section-y:clamp(28px,5.5vw,40px);}
+
+  .u-mob-only{display:block;}
+  .u-desk-only{display:none!important;}
+  p.u-mob-only{display:block;}
+
+  .cu-header{
+    position:sticky;top:0;z-index:40;
+    padding:calc(6px + var(--safe-top)) max(16px,env(safe-area-inset-left)) 8px max(16px,env(safe-area-inset-right));
+    background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--cu-line);
+  }
+  .cu-header .cu-header__bar{padding:0;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;}
+  .cu-header__logo img{height:44px;}
+  .cu-header__event{
+    max-width:none;font-size:clamp(10px,2.65vw,12px);line-height:1.3;padding:0 2px;
+  }
+  .cu-header__site.cu-ghost{font-size:12px;padding:0 12px;min-height:40px;white-space:nowrap;}
+
+  .cu-hero.cu-wrap,
+  .cu-hero + .cu-stats.cu-wrap{
+    padding-left:0;padding-right:0;max-width:none;
+  }
+  .cu-hero{padding:0;margin-bottom:0;}
+  .cu-hero > .cu-wrap{padding-top:0;padding-bottom:0;}
+  .cu-hero__row{
+    flex-direction:column;gap:12px;align-items:stretch;min-height:0;
+    border:none;border-radius:0;overflow:visible;
+    background:var(--cu-cream);
+  }
+  .cu-hero__upper{display:contents;}
+  .cu-hero__mosaic{
+    flex:0 0 auto!important;width:100%;
+    display:block;grid-template-columns:none;grid-auto-rows:auto;gap:0;
+  }
+  .cu-hero__mosaic .span-2,
+  .cu-hero__mosaic .span-2.cu-ph{
+    aspect-ratio:7/4;width:100%;border-radius:0;
+    grid-column:auto;
+  }
+  .cu-hero__mosaic .span-2 img{
+    object-position:center 54%;
+    transform:scale(1.2);
+    transform-origin:center 48%;
+  }
+  .cu-hero__panel{
+    flex:0 0 auto!important;width:100%;min-height:0!important;
+    padding:8px max(16px,env(safe-area-inset-right)) 14px max(16px,env(safe-area-inset-left));
+    gap:12px;margin:0;border-radius:0;
+    background-image:none;
+  }
+  .cu-hero__title{font-size:1.32rem;margin:0;}
+  .cu-hero__panel p{font-size:14px;line-height:1.55;margin:0;}
+  .cu-hero__actions{margin:6px 0 0;gap:0;width:100%;}
+  .cu-hero__actions .cu-hero__loc{display:none;}
+  .cu-hero__actions .cu-btn-red{width:100%;justify-content:center;min-height:46px;margin:0;}
+  .cu-ph img{filter:none!important;}
+
+  .cu-hero + .cu-stats{
+    padding-top:0;margin-top:0;padding-bottom:16px;
+  }
+  .cu-hero + .cu-stats > .cu-stats__grid{
+    border:none;border-top:1px dashed #E3DCBC;
+    border-radius:0;background:var(--cu-cream);
+    padding:10px max(8px,env(safe-area-inset-right)) 12px max(8px,env(safe-area-inset-left));
+    margin-top:0;
+  }
+  .cu-stats{padding-bottom:20px;padding-top:0;}
+  .cu-stats__grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+    overflow:visible;
+  }
+  .cu-stat{padding:12px 6px;gap:4px;border-radius:14px;box-shadow:0 8px 20px -16px rgba(79,75,76,.4);}
+  .cu-stat__n{font-size:20px;}
+  .cu-stat__l{font-size:10px;line-height:1.25;}
+
+  .cu-sec-head{margin-bottom:22px;align-items:flex-start;text-align:left;}
+  .cu-sec-head h2{font-size:1.28rem;}
+  .cu-sec-head p{font-size:13px;margin-top:0;}
+
+  .cu-cards{grid-template-columns:1fr;gap:10px;}
+  .cu-card{border-radius:16px;box-shadow:0 6px 20px -14px rgba(43,40,41,.15);}
+  details.cu-card:not([open]){box-shadow:0 4px 14px -12px rgba(43,40,41,.12);}
+  .cu-acc__summary{padding:14px 16px;min-height:52px;}
+  .cu-acc__title{font-size:15px;}
+  .cu-card__img{aspect-ratio:2.1/1;max-height:168px;}
+  .cu-card__body{padding:0 16px 16px;gap:10px;}
+  .cu-acc__body .cu-card__img{border-radius:12px;margin:0 16px;overflow:hidden;max-height:140px;aspect-ratio:16/9;}
+  .cu-card__tag{font-size:14px;}
+  .cu-card__text,.cu-card__lead{font-size:14px;line-height:1.55;}
+  .cu-card__contacts{font-size:12px;}
+  .cu-card__cta{min-height:50px;border-radius:12px;}
+
+  .cu-band__inner{padding:28px 20px;border-radius:22px;}
+  .cu-band h2{font-size:1.2rem;}
+  .cu-band p{font-size:14px;}
+  .cu-band__actions{width:100%;}
+  .cu-band__actions .cu-btn-red,.cu-band__actions .cu-btn-line{width:100%;justify-content:center;}
+
+  .cu-strip__grid{
+    display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;padding-bottom:4px;
+  }
+  .cu-strip__grid .cu-ph{flex:0 0 78%;max-width:280px;height:130px;scroll-snap-align:center;border-radius:16px;}
+
+  .cu-footer__inner{padding:28px 16px;flex-direction:column;text-align:center;gap:18px;}
+  .cu-footer__k2{gap:8px;width:100%;}
+  .cu-footer__k2 span{
+    display:block;width:100%;text-align:center;
+    font-size:12px;font-weight:600;line-height:1.4;letter-spacing:.04em;
+    color:var(--cu-gray);text-transform:none;
+  }
+}
 </style>
 </head>
 <body>
-<main class="reg-hub" id="top">
-  <header class="reg-hub-top">
-    <a href="https://careeruttsav.in/" class="reg-hub-brand">Career <span>Uttsav</span></a>
-    <a href="https://careeruttsav.in/" class="reg-hub-home">Main site</a>
-  </header>
 
-  <div class="reg-hub-hero">
-    <h1>Welcome to Career Uttsav</h1>
-    <p>How would you like to register?</p>
+<header class="cu-header">
+  <div class="cu-wrap cu-header__bar">
+    <a href="https://careeruttsav.in/" data-main-site class="cu-header__logo" aria-label="Career Uttsav">
+      <img src="./assets/37cbdfd1e8baf45945ca6dde69b4141e.png" alt="Career Uttsav" width="220" height="72">
+    </a>
+    <p class="cu-header__event">
+      <span class="cu-header__event-date">19 &amp; 20 December &rsquo;26</span><span class="cu-header__event-sep" aria-hidden="true"> &middot; </span><span class="cu-header__event-venue">Palace Grounds, Bengaluru</span>
+    </p>
+    <a href="https://careeruttsav.in/" data-main-site class="cu-ghost cu-header__site">Main site</a>
   </div>
+</header>
 
-  <div class="reg-hub-grid" id="regHubGrid">
-    <article class="reg-card">
-      <div class="reg-card__media" data-img-wrap>
-        <img src="../img/eventstudent.jpg" alt="Students attending a Career Uttsav seminar and exploring careers" width="640" height="480" loading="eager" decoding="async">
+<main>
+  <section class="cu-wrap cu-hero">
+    <div class="cu-hero__row">
+      <div class="cu-hero__upper">
+        <div class="cu-hero__mosaic" aria-hidden="true">
+          <div class="cu-ph span-2" data-img-wrap><img src="./assets/01-career-clarity.png" alt="Students raising hands at Career Uttsav for career clarity" width="800" height="450" decoding="async"></div>
+        </div>
+        <div class="cu-hero__aside">
+          <div class="cu-panel cu-hero__panel">
+            <h1 class="cu-hero__title">A Student&rsquo;s Future is a Shared Responsibility.</h1>
+            <p class="u-desk-only">For a student in <strong>Class 12</strong>, the question <strong>&ldquo;WHAT NEXT?&rdquo;</strong> carries the weight of a future. For their parents, it carries hope and the wish to help their child choose well. Together, we help them explore possibilities with clarity and confidence.</p>
+            <p class="u-desk-only"><strong>Since 2013, Career Uttsav has mentored over 15 lakh students,</strong> helping them make informed career decisions.</p>
+            <p class="u-desk-only">This December, we invite you to <strong>be part of Career Uttsav Bengaluru 2026</strong> at Palace Grounds.</p>
+            <p class="u-mob-only">For <strong>Class 12</strong> students, <strong>&ldquo;WHAT NEXT?&rdquo;</strong> shapes a lifetime. <strong>15 lakh students mentored since 2013.</strong> Join us at Palace Grounds this December.</p>
+            <div class="cu-hero__actions">
+              <a href="#register" class="cu-btn cu-btn-red">Register now</a>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="reg-card__body">
-        <h2>Students &amp; Parents</h2>
-        <p>Explore career opportunities, meet leading universities and attend expert sessions. Register now to get your free event pass.</p>
-        <button type="button" class="reg-card__cta" data-flow="student">Register as Student</button>
+      <div class="cu-hero__thumbs u-desk-only" aria-hidden="true">
+        <div class="cu-ph cu-ph--1" data-img-wrap><img src="./assets/f91930e39d65778338c33430f759f353.jpg" alt="Speaker engaging students with a microphone" loading="lazy"></div>
+        <div class="cu-ph cu-ph--2" data-img-wrap><img src="./assets/931dcfa3ceb62e566ba6a5078a697b3f.jpg" alt="Expert addressing an auditorium of students" loading="lazy"></div>
+        <div class="cu-ph cu-ph--3" data-img-wrap><img src="./assets/8d9b8337b9589be5b0cb7a40fb1d45a4.jpg" alt="Student asking a question in the audience" loading="lazy"></div>
+        <div class="cu-ph cu-ph--4" data-img-wrap><img src="./assets/81bf5178d554966da3ba1a9054a5420a.jpg" alt="Career Uttsav seminar on stage" loading="lazy"></div>
       </div>
-    </article>
-
-    <article class="reg-card">
-      <div class="reg-card__media" data-img-wrap>
-        <img src="../engage-event-shot.png" alt="School groups and students at a Career Uttsav educational event" width="800" height="600" loading="lazy" decoding="async">
-      </div>
-      <div class="reg-card__body">
-        <h2>Schools</h2>
-        <p>Give your students an opportunity to explore careers, interact with universities and gain valuable guidance for their future.</p>
-        <button type="button" class="reg-card__cta" data-flow="school">Register Your School</button>
-      </div>
-    </article>
-
-    <article class="reg-card">
-      <div class="reg-card__media" data-img-wrap>
-        <img src="../img/stallstudent.jpg" alt="Students exploring university booths and exhibition stalls at Career Uttsav" width="640" height="480" loading="lazy" decoding="async">
-      </div>
-      <div class="reg-card__body">
-        <h2>Exhibitors &amp; Universities</h2>
-        <p>Showcase your institution, connect with students and parents, and explore opportunities to participate in Career Uttsav.</p>
-        <button type="button" class="reg-card__cta" data-flow="exhibitor">Register as Exhibitor</button>
-      </div>
-    </article>
-  </div>
-
-  <section class="reg-hub-discover" aria-labelledby="regHubDiscoverTitle">
-    <h2 id="regHubDiscoverTitle">Curious About Career Uttsav?</h2>
-    <p>Discover what Career Uttsav is all about, explore the opportunities awaiting you, and see how we&rsquo;re helping students shape their future.</p>
-    <a href="https://careeruttsav.in/" class="reg-hub-discover__btn">Explore Career Uttsav</a>
+    </div>
   </section>
 
-  <footer class="reg-hub-foot">
-    <p>19–20 Dec &rsquo;26 &middot; Bengaluru &middot; <a href="tel:+919900795000">+91 99007 95000</a> &middot; <a href="mailto:info@careeruttsav.in">info@careeruttsav.in</a></p>
-    <p style="margin-top:8px;"><a href="https://careeruttsav.in/">careeruttsav.in</a></p>
+  <section class="cu-wrap cu-stats" aria-label="Event highlights">
+    <div class="cu-stats__grid">
+      <div class="cu-stat"><span class="cu-stat__n">60,000+</span><span class="cu-stat__l">Students &amp; Parents&#10;outreach</span></div>
+      <div class="cu-stat"><span class="cu-stat__n">9,000+</span><span class="cu-stat__l">Expected&#10;visitors</span></div>
+      <div class="cu-stat"><span class="cu-stat__n">180+</span><span class="cu-stat__l">Schools &amp;&#10;PU Colleges</span></div>
+      <div class="cu-stat"><span class="cu-stat__n">75+</span><span class="cu-stat__l">Exhibitors</span></div>
+      <div class="cu-stat"><span class="cu-stat__n">45+</span><span class="cu-stat__l">Expert&#10;speakers</span></div>
+      <div class="cu-stat"><span class="cu-stat__n">12+</span><span class="cu-stat__l">Seminars&#10;&amp; workshops</span></div>
+    </div>
+  </section>
+
+  <section class="cu-wrap cu-register-sec" id="register">
+    <div class="cu-sec-head cu-sec-head--left">
+      <span class="cu-pill">Register</span>
+      <h2>How would you like to be part of it?</h2>
+      <p class="u-desk-only">Choose your registration below. Each one connects you to the right team.</p>
+      <p class="u-mob-only">Pick your path — we&rsquo;ll open the right form.</p>
+    </div>
+    <div class="cu-cards" id="regHubGrid">
+      <details class="cu-card cu-acc" data-reg-acc open>
+        <summary class="cu-acc__summary">
+          <span class="cu-acc__titles">
+            <span class="cu-acc__title">Universities and partners</span>
+            <span class="cu-acc__sub">Showcase opportunities · inspire leaders</span>
+          </span>
+          <span class="cu-acc__chev" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+          </span>
+        </summary>
+        <div class="cu-acc__body">
+          <div class="cu-acc__inner">
+            <div class="cu-ph cu-card__img" data-img-wrap>
+              <img src="./assets/fa5200b9ce4be40ed0c13271eaafa6c3.jpg" alt="University exhibitor stall" loading="eager">
+            </div>
+            <div class="cu-card__body">
+              <p class="cu-card__tag u-desk-only">Showcase Opportunities. Inspire Future Leaders.</p>
+              <p class="cu-card__text u-desk-only">Career Uttsav connects your institution with students and families exploring higher education options.</p>
+              <p class="cu-card__lead"><strong>Be part of the conversations that shape tomorrow&rsquo;s careers.</strong> <span class="u-desk-only">Showcase your strengths and connect with your next generation of learners.</span></p>
+              <div class="cu-card__foot">
+                <div class="cu-card__contacts">
+                  <span>Neha: <a class="cu-tel" href="tel:+919113064877">9113064877</a></span>
+                  <span>Rahul: <a class="cu-tel" href="tel:+919986207755">9986207755</a></span>
+                </div>
+                <button type="button" class="cu-card__cta cu-btn" data-flow="exhibitor">Register as exhibitor →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+      <details class="cu-card cu-acc" data-reg-acc>
+        <summary class="cu-acc__summary">
+          <span class="cu-acc__titles">
+            <span class="cu-acc__title">Schools and PU colleges</span>
+            <span class="cu-acc__sub">Bring opportunities closer to your students</span>
+          </span>
+          <span class="cu-acc__chev" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+          </span>
+        </summary>
+        <div class="cu-acc__body">
+          <div class="cu-acc__inner">
+            <div class="cu-ph cu-card__img" data-img-wrap>
+              <img src="./assets/1db0f8e9ee86c9fda718b30a3ba2f071.jpg" alt="School groups at Career Uttsav" loading="lazy">
+            </div>
+            <div class="cu-card__body">
+              <p class="cu-card__tag u-desk-only">Bring Career Opportunities Closer to Your Students.</p>
+              <p class="cu-card__text u-desk-only">Your guidance shapes students&rsquo; futures beyond the classroom. University interactions, career sessions and expert conversations complement your efforts.</p>
+              <p class="cu-card__lead"><strong>Bring your students closer to the opportunities that await them.</strong> <span class="u-desk-only">Join us with Class 12 students and parents for meaningful career exploration.</span></p>
+              <div class="cu-card__foot">
+                <div class="cu-card__contacts">
+                  <span>Chirag: <a class="cu-tel" href="tel:+916364224321">6364224321</a></span>
+                  <span>Sanket: <a class="cu-tel" href="tel:+919677034593">9677034593</a></span>
+                </div>
+                <button type="button" class="cu-card__cta cu-btn" data-flow="school">Register your school →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+      <details class="cu-card cu-acc" data-reg-acc>
+        <summary class="cu-acc__summary">
+          <span class="cu-acc__titles">
+            <span class="cu-acc__title">Students and parents</span>
+            <span class="cu-acc__sub">Dream. Discover. Decide.</span>
+          </span>
+          <span class="cu-acc__chev" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+          </span>
+        </summary>
+        <div class="cu-acc__body">
+          <div class="cu-acc__inner">
+            <div class="cu-ph cu-card__img" data-img-wrap>
+              <img src="./assets/162d0772185a29ef634310ed7fb19286.jpg" alt="Students at Career Uttsav" loading="lazy">
+            </div>
+            <div class="cu-card__body">
+              <p class="cu-card__tag u-desk-only">Dream. Discover. Decide.</p>
+              <p class="cu-card__text u-desk-only">Explore career opportunities, meet leading universities and attend expert sessions that help you answer &ldquo;What next?&rdquo; with confidence.</p>
+              <p class="cu-card__lead"><strong>Register now to get your FREE Passport.</strong> <span class="u-desk-only">Your entry to two days of career clarity at Palace Grounds.</span></p>
+              <div class="cu-card__foot">
+                <div class="cu-card__contacts cu-card__contacts--pad u-desk-only" aria-hidden="true">
+                  <span>Neha: 0000000000</span><span>Rahul: 0000000000</span>
+                </div>
+                <button type="button" class="cu-card__cta cu-btn" data-flow="student">Get your FREE Passport →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="cu-band">
+    <div class="cu-band__inner">
+      <div>
+        <h2>The Future They Choose Depends On The Guidance We Give.</h2>
+        <p>Your participation can make that difference.</p>
+        <p class="u-desk-only"><em>Together, for their future,</em> <span class="team">Team Career Uttsav</span></p>
+      </div>
+      <div class="cu-band__actions">
+        <a href="#register" class="cu-btn cu-btn-red">Be part of Career Uttsav 2026</a>
+        <a href="https://careeruttsav.in/" data-main-site class="cu-btn cu-btn-line">Explore Career Uttsav</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cu-wrap cu-strip" aria-label="Moments from Career Uttsav">
+    <div class="cu-strip__grid">
+      <div class="cu-ph" data-img-wrap><img src="./assets/f2460b2521ffb255e191d3f6dd2eb458.jpg" alt="" loading="lazy"></div>
+      <div class="cu-ph" data-img-wrap><img src="./assets/128d58944fc055f9965b5c88c188b221.jpg" alt="" loading="lazy"></div>
+      <div class="cu-ph" data-img-wrap><img src="./assets/620e5e16be018b76566d3a30c1c1dbd6.jpg" alt="" loading="lazy"></div>
+      <div class="cu-ph u-desk-only" data-img-wrap><img src="./assets/14d274c80cb4c408828c9092f823cab0.jpg" alt="" loading="lazy"></div>
+      <div class="cu-ph u-desk-only" data-img-wrap><img src="./assets/f828616a98f615c847e749056c4ce227.jpg" alt="" loading="lazy"></div>
+      <div class="cu-ph u-desk-only" data-img-wrap><img src="./assets/e6acd9fe025c10712f331aff09287d32.jpg" alt="" loading="lazy"></div>
+    </div>
+  </section>
+
+  <footer class="cu-footer">
+    <div class="cu-footer__inner">
+      <div class="cu-footer__k2">
+        <span>An initiative by</span>
+        <img src="./assets/e46f789359355d023cb16570b4085d0e.png" alt="K2 Learning" width="160" height="44" loading="lazy">
+      </div>
+      <div class="cu-footer__info">
+        <div class="cu-footer__links">
+          <a class="cu-tel" href="tel:+919900795000">+91 99007 95000</a>
+          <a class="cu-tel" href="mailto:info@careeruttsav.in">info@careeruttsav.in</a>
+        </div>
+      </div>
+    </div>
   </footer>
 </main>
 
 <script>
 (function(){
   var CU_IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  var CU_ADMIN_API = (
-    window.CU_ADMIN_API ||
-    (CU_IS_LOCAL ? 'http://localhost:3002' : 'https://admin.careeruttsav.in')
-  ).replace(/\/$/, '');
+  var CU_ADMIN_API = (window.CU_ADMIN_API || (CU_IS_LOCAL ? 'http://localhost:3002' : 'https://admin.careeruttsav.in')).replace(/\/$/, '');
   var CU_ATTRIBUTION_STORAGE_KEY = 'cu_lead_attribution_tracking_code_v1';
 
   function storeTrackingCode(code){
@@ -323,29 +690,22 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
     return fetch(CU_ADMIN_API + '/api/public/lead-attribution?ref=' + encodeURIComponent(ref), {
       headers: { 'x-cu-client': 'public' }
     }).then(function(res){ return res.json(); }).then(function(data){
-      if(data && data.active && data.trackingCode){
-        storeTrackingCode(data.trackingCode);
-        return data.trackingCode;
-      }
+      if(data && data.active && data.trackingCode){ storeTrackingCode(data.trackingCode); return data.trackingCode; }
       return null;
     }).catch(function(){ return null; });
   }
 
   (function initLeadAttribution(){
-    var params = new URLSearchParams(window.location.search);
-    var ref = params.get('ref');
-    if(ref){
-      void resolveLeadAttributionFromRef(ref);
-      return;
-    }
-    /* General hub URL has no ref — do not reuse a prior session campaign code (e.g. AUTO-IN26). */
-    storeTrackingCode(null);
+    var ref = new URLSearchParams(window.location.search).get('ref');
+    if(ref) void resolveLeadAttributionFromRef(ref);
+    else storeTrackingCode(null);
   })();
 
   function mainSiteBase(){
     if(CU_IS_LOCAL) return new URL('../index.html', window.location.href).href.split('?')[0];
     return 'https://careeruttsav.in/';
   }
+  document.querySelectorAll('[data-main-site]').forEach(function(a){ a.href = mainSiteBase(); });
 
   function registerHubReturnPath(){
     var p = window.location.pathname;
@@ -362,11 +722,91 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
     return mainSiteBase() + '?' + params.toString();
   }
 
+  var FLOW_NAV_MS = 420;
+
+  function prefersReducedMotion(){
+    try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e) { return false; }
+  }
+
+  function navigateFlow(btn){
+    var flow = btn.getAttribute('data-flow');
+    if(!flow || btn.disabled) return;
+    btn.disabled = true;
+    btn.classList.add('is-navigating');
+    var url = buildFlowUrl(flow);
+    if(prefersReducedMotion()){
+      window.location.href = url;
+      return;
+    }
+    document.documentElement.classList.add('cu-page-exit');
+    window.setTimeout(function(){
+      window.location.href = url;
+    }, FLOW_NAV_MS);
+  }
+
   document.querySelectorAll('[data-flow]').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var flow = btn.getAttribute('data-flow');
-      btn.disabled = true;
-      window.location.href = buildFlowUrl(flow);
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      e.preventDefault();
+      navigateFlow(btn);
+    });
+  });
+
+  var accMq = window.matchMedia('(min-width:768px)');
+  var ACC_MS = 420;
+
+  function syncRegAccordion(){
+    var desk = accMq.matches;
+    document.querySelectorAll('[data-reg-acc]').forEach(function(d, i){
+      d.classList.remove('cu-acc--closing');
+      if(desk) d.open = true;
+      else d.open = (i === 0);
+    });
+  }
+  syncRegAccordion();
+  if(accMq.addEventListener) accMq.addEventListener('change', syncRegAccordion);
+  else accMq.addListener(syncRegAccordion);
+
+  function closeAccAnimated(el, done){
+    if(!el.open){ if(done) done(); return; }
+    el.classList.add('cu-acc--closing');
+    window.setTimeout(function(){
+      el.open = false;
+      el.classList.remove('cu-acc--closing');
+      if(done) done();
+    }, ACC_MS);
+  }
+
+  function openAcc(el){
+    el.classList.remove('cu-acc--closing');
+    el.open = true;
+  }
+
+  document.querySelectorAll('[data-reg-acc]').forEach(function(d){
+    var summary = d.querySelector('.cu-acc__summary');
+    if(!summary) return;
+    summary.addEventListener('click', function(e){
+      if(accMq.matches) return;
+      e.preventDefault();
+      if(d.open){
+        closeAccAnimated(d);
+        return;
+      }
+      var others = [];
+      document.querySelectorAll('[data-reg-acc]').forEach(function(o){
+        if(o !== d && o.open) others.push(o);
+      });
+      if(!others.length){
+        openAcc(d);
+        return;
+      }
+      var left = others.length;
+      others.forEach(function(o){
+        closeAccAnimated(o, function(){
+          left -= 1;
+          if(left === 0) openAcc(d);
+        });
+      });
     });
   });
 
@@ -374,8 +814,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
     img.addEventListener('error', function(){
       var wrap = img.closest('[data-img-wrap]');
       if(!wrap) return;
-      wrap.classList.add('reg-card__media--error');
-      wrap.innerHTML = 'Image could not be loaded.';
+      wrap.classList.add('cu-ph--error');
+      wrap.innerHTML = 'Image unavailable';
     });
   });
 })();
